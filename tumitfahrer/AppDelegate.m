@@ -56,8 +56,11 @@
     
     [self setupNavigationController];
     [self setupRestKit];
-//    RKLogConfigureByName("RestKit/ObjectMapping", RKLogLevelTrace);
-//    RKLogConfigureByName("RestKit/Network", RKLogLevelTrace);
+    
+    //Logging, remove for release version.
+    RKLogConfigureByName("RestKit/ObjectMapping", RKLogLevelTrace);
+    RKLogConfigureByName("RestKit/Network", RKLogLevelTrace);
+    
     [self setupCurrentUser];
     [self setupObservers];
     

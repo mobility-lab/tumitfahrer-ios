@@ -110,7 +110,7 @@
     
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
     [objectManager.HTTPClient setDefaultHeader:@"Authorization: Basic" value:[ActionManager encryptCredentialsWithEmail:self.emailTextField.text password:self.passwordTextField.text]];
-    
+    RKLogError(@"Email=%@, pw=%@, baseUrl=%@", self.emailTextField.text, self.passwordTextField.text, objectManager.baseURL);
     [objectManager postObject:nil path:@"/api/v2/sessions" parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         
         User *user = (User *)[mappingResult firstObject];

@@ -69,7 +69,6 @@
 		E5078552195A252100E7CD06 /* MichaelPhoto@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E5078550195A252100E7CD06 /* MichaelPhoto@2x.jpg */; };
 		E5078565195AA90B00E7CD06 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5078564195AA90B00E7CD06 /* CoreText.framework */; };
 		E507856B195AAA2E00E7CD06 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5078567195AAA2E00E7CD06 /* HockeySDK.framework */; };
-		E507856C195AAA2E00E7CD06 /* HockeySDK.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E5078569195AAA2E00E7CD06 /* HockeySDK.xcconfig */; };
 		E507856D195AAA2E00E7CD06 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E507856A195AAA2E00E7CD06 /* HockeySDKResources.bundle */; };
 		E507C437193901B5005F1083 /* CustomAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = E507C436193901B5005F1083 /* CustomAnnotation.m */; };
 		E507C43F193A298D005F1083 /* RideRequestInformationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E507C43D193A298D005F1083 /* RideRequestInformationCell.m */; };
@@ -2066,7 +2065,7 @@
 		E522BAAE18AE13F600ECD375 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = "Pawel Kwiecien";
 				TargetAttributes = {
 					E522BAB518AE13F600ECD375 = {
@@ -2108,7 +2107,6 @@
 				E501647B1956E0C0004DA38A /* bg1@2x.jpg in Resources */,
 				E5FEF3691945E5CD00E326BB /* FeedbackViewController.xib in Resources */,
 				E5E215651907A95F00B0B150 /* SearchRideViewController.xib in Resources */,
-				E507856C195AAA2E00E7CD06 /* HockeySDK.xcconfig in Resources */,
 				E5CD59381951C39D00E97DEC /* Facebook-iOS-SDK.txt in Resources */,
 				E5FEF3521945A02300E326BB /* SearchResultViewController.xib in Resources */,
 				E50263BA19558F000041E21A /* PawelPhoto.jpg in Resources */,
@@ -2593,6 +2591,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "tumitfahrer/tumitfahrer-Prefix.pch";
 				INFOPLIST_FILE = "tumitfahrer/tumitfahrer-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/system",
@@ -2628,6 +2627,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "tumitfahrer/tumitfahrer-Prefix.pch";
 				INFOPLIST_FILE = "tumitfahrer/tumitfahrer-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/system",
