@@ -71,7 +71,7 @@
     if (section == 0) {
         return [self.predefinedDestinations count];
     } else
-        return [searchResultPlaces count] + 8;
+        return [searchResultPlaces count] ;
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -175,7 +175,12 @@
 #pragma mark UISearchBar Delegate
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-    [self handleSearchForSearchString:searchText];
+    if(searchText.length==0){
+        searchResultPlaces = [[NSArray alloc] initWithObjects:nil];
+        [self.tableView reloadData];
+    } else {
+        [self handleSearchForSearchString:searchText];
+    }
 }
 
 -(BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
@@ -183,10 +188,8 @@
     return YES;
 }
 
--(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-    [self.searchBar setShowsCancelButton:NO animated:YES];
-    [self.searchBar resignFirstResponder];
-}
+
+
 
 -(void)dealloc {
     self.delegate = nil;
