@@ -31,7 +31,7 @@
 #import "UIColor+LayoutColors.h"
 
 static NSString * const SALT = @"toj369sbz1f316sx";
-static NSString * const API_ADDRESS = @"http://vmkrcmar61.informatik.tu-muenchen.de";//@"http://tumitfahrer.herokuapp.com";
+static NSString * const API_ADDRESS = @"http://vmkrcmar61.informatik.tu-muenchen.de"; //ASL:tumitfahrer@
 
 # pragma mark - Constants
 static int const TableSingleRowHeight = 45;

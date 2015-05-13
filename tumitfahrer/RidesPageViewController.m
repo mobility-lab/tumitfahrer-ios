@@ -102,8 +102,9 @@
     UINavigationController *navController = self.navigationController;
     [NavigationBarUtilities setupNavbar:&navController withColor:self.pageColor];
     self.navigationController.navigationBar.translucent = YES;
-    
-    self.logo = [[LogoView alloc] initWithFrame:CGRectMake(0, 0, 200, 41) title:[[self.pageTitles objectAtIndex:self.RideType] objectAtIndex:0]];
+    if(self.logo==nil){
+        self.logo = [[LogoView alloc] initWithFrame:CGRectMake(0, 0, 200, 41) title:[[self.pageTitles objectAtIndex:self.RideType] objectAtIndex:0]];
+    }
     [self.navigationItem setTitleView:self.logo];
 }
 
@@ -134,7 +135,6 @@
 }
 
 - (RidesViewController *)viewControllerAtIndex:(NSUInteger)index {
-    
     RidesViewController *ridesViewController = [[RidesViewController alloc] init];
     ridesViewController.index = index;
     ridesViewController.delegate = self;
