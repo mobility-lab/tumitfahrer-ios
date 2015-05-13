@@ -122,7 +122,7 @@
         [self.view addSubview:webview];
         [self.view addSubview:arrowLeft];
         [self.view bringSubviewToFront:arrowLeft];
-        self.tableView.tableFooterView.hidden = YES;
+        self.tableView.hidden = YES;
     } else {
         [arrowLeft removeFromSuperview];
         [webview removeFromSuperview];
