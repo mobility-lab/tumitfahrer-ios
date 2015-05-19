@@ -28,6 +28,7 @@
 #import "MeetingPointViewController.h"
 #import "DestinationViewController.h"
 #import "FreeSeatsTableViewCell.h"
+#import "ConnectionManager.h"
 
 @interface AddRideViewController () <SegmentedControlCellDelegate, SwitchTableViewCellDelegate, CustomRepeatViewController, RMDateSelectionViewControllerDelegate, MeetingPointDelegate, DestinationViewControllerDelegate, FreeSeatsCellDelegate>
 
@@ -354,6 +355,13 @@ NSString *const kRideType = @"Ride Type";
 }
 
 -(void)addRideButtonPressed {
+    //Check Internet Connection, prompts an alert if no connection is available
+    ConnectionManager *cm = [ConnectionManager sharedInstance];
+    if(![cm serverIsOnline:YES]){
+        return;
+    }
+    
+    
     // prevent from adding same ride twice
     addActionCell.actionButton.enabled = NO;
     
@@ -471,6 +479,7 @@ NSString *const kRideType = @"Ride Type";
         addActionCell.actionButton.enabled = YES;
         RKLogError(@"Load failed with error: %@", error);
     }];
+    
 }
 
 
