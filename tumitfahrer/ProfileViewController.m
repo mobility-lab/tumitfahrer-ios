@@ -19,6 +19,7 @@
 #import "EditDepartmentViewController.h"
 #import "RidesStore.h"
 #import "User.h"
+#import "ChangePasswordViewController.h"
 #import "AWSUploader.h"
 
 @interface ProfileViewController () <AWSUploaderDelegate, HeaderContentViewDelegate>
@@ -232,7 +233,11 @@
         EditDepartmentViewController *editDepartmentVC = [[EditDepartmentViewController alloc] init];
         editDepartmentVC.title = @"Department";
         [self.navigationController pushViewController:editDepartmentVC animated:YES];
-    } else {
+    } else if(indexPath.row == [self.cellDescriptions count]-2){ //Change PW
+        ChangePasswordViewController *changePW = [[ChangePasswordViewController alloc] init];
+        [self.navigationController pushViewController:changePW animated:YES];
+    
+    }else {
         EditProfileFieldViewController *editProfileVC = [[EditProfileFieldViewController alloc] init];
         editProfileVC.title = [self.editDescriptions objectAtIndex:indexPath.row];
         editProfileVC.initialDescription = [self.cellDescriptions objectAtIndex:indexPath.row];
