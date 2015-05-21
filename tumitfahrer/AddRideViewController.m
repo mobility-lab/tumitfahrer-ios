@@ -356,8 +356,7 @@ NSString *const kRideType = @"Ride Type";
 
 -(void)addRideButtonPressed {
     //Check Internet Connection, prompts an alert if no connection is available
-    ConnectionManager *cm = [ConnectionManager sharedInstance];
-    if(![cm serverIsOnline:YES]){
+    if(![ConnectionManager serverIsOnline:YES]){
         return;
     }
     

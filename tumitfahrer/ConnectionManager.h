@@ -9,8 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface ConnectionManager : NSObject
-+(ConnectionManager*) sharedInstance;
 
--(BOOL) internetConnection:(BOOL) withAlert;
--(BOOL) serverIsOnline:(BOOL) withAlert;
++(BOOL) internetConnection:(BOOL) withAlert;
++(BOOL) serverIsOnline:(BOOL) withAlert;
 @end

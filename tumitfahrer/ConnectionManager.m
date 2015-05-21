@@ -11,21 +11,10 @@
 
 @implementation ConnectionManager
 
-__strong static id conManager = nil;
-
-+(ConnectionManager*) sharedInstance{
-    static dispatch_once_t p = 0;
-    dispatch_once(&p, ^{
-        conManager = [[self alloc] init];
-    });
-    
-    return conManager;
-}
-
 /*! @brief Tests whether there is an internet connection
     @param withAlert whether the user should be notfied via Alert
   */
--(BOOL) internetConnection:(BOOL)withAlert{
++(BOOL) internetConnection:(BOOL)withAlert{
     BOOL ic = [self testInternetConnectionForURL:@"www.google.de"];
     if(ic){
         return true;
@@ -40,7 +29,7 @@ __strong static id conManager = nil;
   @brief Tests whether there is a connection to the Server&Internet. Better than the internetConnection methode.
    @param withAlert: Whether or not an alert should be presented to the user
  */
--(BOOL) serverIsOnline:(BOOL)withAlert {
++(BOOL) serverIsOnline:(BOOL)withAlert {
     BOOL serverIsOnline = [self testInternetConnectionForURL:API_ADDRESS];
     if(serverIsOnline){
         return true;
@@ -55,7 +44,7 @@ __strong static id conManager = nil;
     return false;
 }
 
--(BOOL) testInternetConnectionForURL:(NSString*) url{
++(BOOL) testInternetConnectionForURL:(NSString*) url{
     NSURL *scriptUrl = [NSURL URLWithString:url];
     NSData *data = [NSData dataWithContentsOfURL:scriptUrl];
     if (data){

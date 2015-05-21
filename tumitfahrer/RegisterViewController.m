@@ -13,6 +13,7 @@
 #import "LoginViewController.h"
 #import "FacultyManager.h"
 #import "CustomIOS7AlertView.h"
+#import "ConnectionManager.h"
 
 @interface RegisterViewController () <CustomIOS7AlertViewDelegate>
 
@@ -78,6 +79,9 @@
 }
 
 - (IBAction)registerButtonPressed:(id)sender {
+    //Check internet connection
+//    [ConnectionManager serverIsOnline:YES];
+    
     NSString *email = [[self.emailTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSString *firstName = [[self.firstNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSString *lastName = [[self.lastNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -92,13 +96,19 @@
 
     // send a register request to the backend
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
-    
     NSDictionary *queryParams;
     // add enum
     queryParams = @{@"email": self.emailTextField.text, @"first_name": self.firstNameTextField.text, @"last_name":self.lastNameTextField.text, @"department": [NSNumber numberWithInt:(int)[[FacultyManager sharedInstance] indexForFacultyName:self.departmentNameTextField.text]]};
     NSDictionary *userParams = @{@"user": queryParams};
-    
     [objectManager postObject:nil path:@"/api/v2/users" parameters:userParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+
+//        if([[[mappingResult firstObject] objectForKey:@"message"] isEqual:@"Could not create the user"]){
+////            //The network-operation was succesfull but not creating the user
+//////            [ActionManager showAlertViewWithTitle:@"Error" description:@"Could not create new user."];
+////            NSLog(@"EEEERRRORR");
+//        }
+
+        
         LoginViewController *loginVC = (LoginViewController*)self.presentingViewController;
         loginVC.statusLabel.text = @"Please check your email";
         [self storeEmailInDefaults];
