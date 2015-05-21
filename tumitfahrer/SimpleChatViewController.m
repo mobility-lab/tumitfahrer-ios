@@ -225,6 +225,7 @@
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
     [ConversationUtilities updateSeenTimeForConversation:self.conversation];
 }
 
