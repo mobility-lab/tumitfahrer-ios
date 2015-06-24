@@ -114,8 +114,8 @@
 -(void)fetchResults {
     
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
-    [[[RKObjectManager sharedManager] HTTPClient] setDefaultHeader:@"apiKey" value:[[CurrentUser sharedInstance] user].apiKey];
-    
+    [[[RKObjectManager sharedManager] HTTPClient] setDefaultHeader:@"Authorization" value:[[CurrentUser sharedInstance] user].apiKey];
+    objectManager.requestSerializationMIMEType = RKMIMETypeJSON ;
     [objectManager postObject:nil path:API_SEARCH parameters:self.queryParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         
         NSArray* rides = [mappingResult array];

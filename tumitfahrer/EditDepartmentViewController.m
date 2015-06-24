@@ -73,20 +73,20 @@
 -(void)rightBarButtonPressed {
     
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
-    [objectManager.HTTPClient setDefaultHeader:@"Authorization: Basic" value:[ActionManager encryptCredentialsWithEmail:[CurrentUser sharedInstance].user.email encryptedPassword:[CurrentUser sharedInstance].user.password]];
+     objectManager.requestSerializationMIMEType = RKMIMETypeJSON ;
+//    [objectManager.HTTPClient setDefaultHeader:@"Authorization: Basic" value:[ActionManager encryptCredentialsWithEmail:[CurrentUser sharedInstance].user.email encryptedPassword:[CurrentUser sharedInstance].user.password]];
     
-    NSString *encryptedPassword = [CurrentUser sharedInstance].user.password;
 
-    NSMutableDictionary *queryParams = [NSMutableDictionary dictionaryWithObjectsAndKeys:encryptedPassword, @"password", encryptedPassword, @"password_confirmation", [CurrentUser sharedInstance].user.car, @"car",[CurrentUser sharedInstance].user.phoneNumber, @"phone_number", [CurrentUser sharedInstance].user.firstName,@"first_name" , [CurrentUser sharedInstance].user.lastName,  @"last_name",  [CurrentUser sharedInstance].user.department,@"department", nil];
+    NSMutableDictionary *queryParams = [NSMutableDictionary dictionaryWithObjectsAndKeys:[CurrentUser sharedInstance].user.car, @"car",[CurrentUser sharedInstance].user.phoneNumber, @"phone_number", [CurrentUser sharedInstance].user.firstName,@"first_name" , [CurrentUser sharedInstance].user.lastName,  @"last_name",  [CurrentUser sharedInstance].user.department,@"department", nil];
     
     NSDictionary *userParams = @{@"user": queryParams};
     NSNumber *facultyNumber =[NSNumber numberWithInt:(int)self.chosenFaculty];
     [queryParams setValue:facultyNumber forKey:@"department"];
 
-    [objectManager putObject:nil path:[NSString stringWithFormat:@"/api/v2/users/%@", [CurrentUser sharedInstance].user.userId] parameters:userParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+    [objectManager putObject:nil path:[NSString stringWithFormat:@"/api/v3/users/%@", [CurrentUser sharedInstance].user.userId] parameters:userParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         [CurrentUser sharedInstance].user.department = facultyNumber;
         [self.navigationController popViewControllerAnimated:YES];
-        
+        NSLog(@"Updated user deparment.");
         NSError *error;
         if (![[CurrentUser sharedInstance].user.managedObjectContext saveToPersistentStore:&error]) {
             NSLog(@"Whoops. Could not save edited values for user profile.");
