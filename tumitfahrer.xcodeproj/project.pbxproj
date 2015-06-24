@@ -11,7 +11,6 @@
 		6E4E133C1913F7B300D0C453 /* XCTest+GCovFlush.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4E133B1913F7B300D0C453 /* XCTest+GCovFlush.m */; };
 		6E4E133F1913F7BF00D0C453 /* UIApplication+GCovFlush.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4E133E1913F7BF00D0C453 /* UIApplication+GCovFlush.m */; };
 		6E52E8401B0B8A2300CCDEE3 /* ConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E52E83F1B0B8A2300CCDEE3 /* ConnectionManager.m */; };
-		6E89558D1B31889100DCDBC2 /* AuthenticationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E89558C1B31889100DCDBC2 /* AuthenticationManager.m */; };
 		6E97A2361B0E0DA4004FF9EF /* ChangePassword.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E97A2351B0E0DA4004FF9EF /* ChangePassword.xib */; };
 		6E97A2391B0E10E9004FF9EF /* ChangePasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E97A2381B0E10E9004FF9EF /* ChangePasswordViewController.m */; };
 		6EB5C89A191CEFDA0026A886 /* FacultyManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB5C899191CEFDA0026A886 /* FacultyManagerTests.m */; };
@@ -325,8 +324,6 @@
 		6E4E133E1913F7BF00D0C453 /* UIApplication+GCovFlush.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+GCovFlush.m"; sourceTree = "<group>"; };
 		6E52E83E1B0B8A2300CCDEE3 /* ConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionManager.h; sourceTree = "<group>"; };
 		6E52E83F1B0B8A2300CCDEE3 /* ConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConnectionManager.m; sourceTree = "<group>"; };
-		6E89558B1B31889100DCDBC2 /* AuthenticationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthenticationManager.h; sourceTree = "<group>"; };
-		6E89558C1B31889100DCDBC2 /* AuthenticationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuthenticationManager.m; sourceTree = "<group>"; };
 		6E97A2351B0E0DA4004FF9EF /* ChangePassword.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChangePassword.xib; sourceTree = "<group>"; };
 		6E97A2371B0E10E9004FF9EF /* ChangePasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangePasswordViewController.h; sourceTree = "<group>"; };
 		6E97A2381B0E10E9004FF9EF /* ChangePasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangePasswordViewController.m; sourceTree = "<group>"; };
@@ -1699,8 +1696,6 @@
 				E5E2D6731983A72B00A81EB4 /* StomtUtilities.m */,
 				6E52E83E1B0B8A2300CCDEE3 /* ConnectionManager.h */,
 				6E52E83F1B0B8A2300CCDEE3 /* ConnectionManager.m */,
-				6E89558B1B31889100DCDBC2 /* AuthenticationManager.h */,
-				6E89558C1B31889100DCDBC2 /* AuthenticationManager.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -2095,7 +2090,7 @@
 				ORGANIZATIONNAME = "Pawel Kwiecien";
 				TargetAttributes = {
 					E522BAB518AE13F600ECD375 = {
-						DevelopmentTeam = 587RCBSB3N;
+						DevelopmentTeam = AUPD4RMDPC;
 					};
 					E522BAD618AE13F600ECD375 = {
 						TestTargetID = E522BAB518AE13F600ECD375;
@@ -2454,7 +2449,6 @@
 				E58889DC191383570062D0DF /* OwnerOfferViewController.m in Sources */,
 				E522BAC618AE13F600ECD375 /* main.m in Sources */,
 				E507C437193901B5005F1083 /* CustomAnnotation.m in Sources */,
-				6E89558D1B31889100DCDBC2 /* AuthenticationManager.m in Sources */,
 				E50DB28518F86F8800E87E62 /* SessionMapping.m in Sources */,
 				E5FDDBF118F0059D00CE7B01 /* ActionManager.m in Sources */,
 				E58889E1191385110062D0DF /* HeaderContentView.m in Sources */,

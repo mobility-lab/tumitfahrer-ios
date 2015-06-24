@@ -14,9 +14,6 @@
 +(instancetype)sharedInstance;
 
 @property (nonatomic, strong) User *user;
-@property (nonatomic, strong) NSString  *authorization;
-
-
 
 + (User *)fetchUserFromCoreDataWithEmail:(NSString *)email encryptedPassword:(NSString *)encryptedPassword;
 + (User *)fetchUserFromCoreDataWithEmail:(NSString *)email;

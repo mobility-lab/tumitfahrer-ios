@@ -321,7 +321,7 @@
         if (user != nil) {
             [[CurrentUser sharedInstance] initCurrentUser:user];
             RKObjectManager *objectManager = [RKObjectManager sharedManager];
-            [objectManager.HTTPClient setDefaultHeader:@"Authorization" value:[CurrentUser sharedInstance].user.apiKey];
+            [objectManager.HTTPClient setDefaultHeader:@"apiKey" value:[CurrentUser sharedInstance].user.apiKey];
         }
     }
 }

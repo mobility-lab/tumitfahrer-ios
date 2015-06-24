@@ -58,7 +58,7 @@
         return;
     }
     
-    NSString *urlString = [API_ADDRESS stringByAppendingString:[NSString stringWithFormat:@"/api/v3/feedback"]];
+    NSString *urlString = [API_ADDRESS stringByAppendingString:[NSString stringWithFormat:@"/api/v2/feedback"]];
     NSURL *url = [[NSURL alloc] initWithString:urlString];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
                                                            cachePolicy:NSURLRequestUseProtocolCachePolicy

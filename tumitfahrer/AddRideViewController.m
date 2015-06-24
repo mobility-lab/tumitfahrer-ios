@@ -426,8 +426,8 @@ NSString *const kRideType = @"Ride Type";
             return;
         }
         
-        queryParams = @{@"departure_place": departurePlace, @"destination": destination,  @"free_seats": freeSeats, @"meeting_point": meetingPoint, @"ride_type": [NSNumber numberWithInt:self.RideType], @"car": car, @"is_driving": [NSNumber numberWithBool:YES], @"departure_latitude" : [NSNumber numberWithDouble:self.departureCoordinate.latitude], @"departure_longitude" : [NSNumber numberWithDouble:self.departureCoordinate.longitude], @"destination_latitude": [NSNumber numberWithDouble:self.destinationCoordinate.latitude],
-                        @"destination_longitude" : [NSNumber numberWithDouble:self.destinationCoordinate.longitude], @"repeat_dates" : self.repeatDates}; //@"departure_time": time,
+        queryParams = @{@"departure_place": departurePlace, @"destination": destination, @"departure_time": time, @"free_seats": freeSeats, @"meeting_point": meetingPoint, @"ride_type": [NSNumber numberWithInt:self.RideType], @"car": car, @"is_driving": [NSNumber numberWithBool:YES], @"departure_latitude" : [NSNumber numberWithDouble:self.departureCoordinate.latitude], @"departure_longitude" : [NSNumber numberWithDouble:self.departureCoordinate.longitude], @"destination_latitude": [NSNumber numberWithDouble:self.destinationCoordinate.latitude],
+                        @"destination_longitude" : [NSNumber numberWithDouble:self.destinationCoordinate.longitude], @"repeat_dates" : self.repeatDates};
         
         rideParams = @{@"ride": queryParams};
         
@@ -445,12 +445,7 @@ NSString *const kRideType = @"Ride Type";
         rideParams = @{@"ride": queryParams};
     }
     
-//    [objectManager.HTTPClient setValue:@"application/json" forKey:@"Content-Type"];
-    objectManager.requestSerializationMIMEType = RKMIMETypeJSON ;
-    [objectManager.HTTPClient setDefaultHeader:@"Authorization" value:[CurrentUser sharedInstance].user.apiKey];
-    RKLogError(@"Ride Params: %@", rideParams);
-
-    [objectManager postObject:nil path:[NSString stringWithFormat:@"%@/%@/rides",API_USERS, [CurrentUser sharedInstance].user.userId] parameters:rideParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+    [objectManager postObject:nil path:[NSString stringWithFormat:@"/api/v2/users/%@/rides", [CurrentUser sharedInstance].user.userId] parameters:rideParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         
         for (Ride *ride in [mappingResult array]) {
             

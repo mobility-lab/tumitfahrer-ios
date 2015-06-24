@@ -284,7 +284,7 @@
     
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
     NSDictionary *queryParams = @{@"reason": self.textView.text};
-    [objectManager deleteObject:self.ride path:[NSString stringWithFormat:@"/api/v3/rides/%@", self.ride.rideId] parameters:queryParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+    [objectManager deleteObject:self.ride path:[NSString stringWithFormat:@"/api/v2/rides/%@", self.ride.rideId] parameters:queryParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         
         [KGStatusBar showSuccessWithStatus:@"Ride successfully deleted"];
         [[CurrentUser sharedInstance].user removeRidesAsOwnerObject:self.ride];
@@ -301,7 +301,7 @@
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
     NSDictionary *queryParams = @{@"reason": self.textView.text, @"regular_ride_id": self.ride.regularRideId};
     NSNumber *regularRideId = self.ride.regularRideId;
-    [objectManager deleteObject:self.ride path:[NSString stringWithFormat:@"/api/v3/rides/%@", self.ride.rideId] parameters:queryParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+    [objectManager deleteObject:self.ride path:[NSString stringWithFormat:@"/api/v2/rides/%@", self.ride.rideId] parameters:queryParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
 
         [KGStatusBar showSuccessWithStatus:@"Regular rides successfully deleted"];
 

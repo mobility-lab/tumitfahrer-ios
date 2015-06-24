@@ -220,7 +220,6 @@
         
         Request *request = [self requestFoundInCoreData];
         RKObjectManager *objectManager = [RKObjectManager sharedManager];
-        objectManager.requestSerializationMIMEType = RKMIMETypeJSON ;
         
         if (request == nil) {
             NSDictionary *queryParams;
@@ -228,9 +227,7 @@
             NSString *userId = [NSString stringWithFormat:@"%@", [CurrentUser sharedInstance].user.userId];
             queryParams = @{@"passenger_id": userId};
             
-
-            
-            [objectManager postObject:nil path:[NSString stringWithFormat:@"/api/v3/rides/%@/requests", self.ride.rideId] parameters:queryParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+            [objectManager postObject:nil path:[NSString stringWithFormat:@"/api/v2/rides/%@/requests", self.ride.rideId] parameters:queryParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
                 [KGStatusBar showSuccessWithStatus:@"Request was sent"];
                 
                 Request *rideRequest = (Request *)[mappingResult firstObject];
@@ -243,8 +240,7 @@
                 RKLogError(@"Load failed with error: %@", error);
             }];
         } else {
-             NSLog(@"<<< leave");
-            [objectManager deleteObject:request path:[NSString stringWithFormat:@"/api/v3/rides/%@/requests/%d", self.ride.rideId, [request.requestId intValue]] parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+            [objectManager deleteObject:request path:[NSString stringWithFormat:@"/api/v2/rides/%@/requests/%d", self.ride.rideId, [request.requestId intValue]] parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
                 
                 [KGStatusBar showSuccessWithStatus:@"Request canceled"];
                 [[RidesStore sharedStore] deleteRideRequest:request];
@@ -256,7 +252,6 @@
             }];
         }
     } else {
-        NSLog(@"<<< meh");
         [WebserviceRequest removePassengerWithId:[CurrentUser sharedInstance].user.userId rideId:self.ride.rideId block:^(BOOL fetched) {
             if (fetched) {
                 [[RidesStore sharedStore] removePassengerForRide:self.ride.rideId passenger:[CurrentUser sharedInstance].user];

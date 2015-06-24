@@ -102,7 +102,7 @@
     }
     NSDictionary *userParams = @{@"user": queryParams};
     
-    [objectManager putObject:nil path:[NSString stringWithFormat:@"/api/v3/users/%@", [CurrentUser sharedInstance].user.userId] parameters:userParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+    [objectManager putObject:nil path:[NSString stringWithFormat:@"/api/v2/users/%@", [CurrentUser sharedInstance].user.userId] parameters:userParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         [self updateLocalValues:trimmedString];
         [self.navigationController popViewControllerAnimated:YES];
 

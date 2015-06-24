@@ -268,7 +268,7 @@
     
     [[[RKObjectManager sharedManager] HTTPClient] setDefaultHeader:@"apiKey" value:[[CurrentUser sharedInstance] user].apiKey];
     
-    [objectManager putObject:self.ride path:[NSString stringWithFormat:@"/api/v3/users/%@/rides/%@", [CurrentUser sharedInstance].user.userId, self.ride.rideId] parameters:rideParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+    [objectManager putObject:self.ride path:[NSString stringWithFormat:@"/api/v2/users/%@/rides/%@", [CurrentUser sharedInstance].user.userId, self.ride.rideId] parameters:rideParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
 
         // put return no content (according to HTTP spec), so to update a ride we need to do another get request or update params manually
         self.ride.departurePlace = departurePlace;
