@@ -272,11 +272,12 @@ static int activity_id = 0;
     }
     
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
-    [objectManager.HTTPClient setDefaultHeader:@"apiKey" value:[CurrentUser sharedInstance].user.apiKey];
+    [objectManager.HTTPClient setDefaultHeader:@"Authorization" value:[CurrentUser sharedInstance].user.apiKey];
     
-    [objectManager getObjectsAtPath:[NSString stringWithFormat:@"/api/v2/users/%@/rides", [CurrentUser sharedInstance].user.userId] parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+    [objectManager getObjectsAtPath:[NSString stringWithFormat:@"/api/v3/users/%@/rides", [CurrentUser sharedInstance].user.userId] parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         [self updateBadgesWithType:ContentTypeCampusRides];
         [self updateBadgesWithType:ContentTypeActivityRides];
+        NSLog(@"<<<<<fetchRidesForCurrentUser");
         block(YES);
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         RKLogError(@"Load failed with error: %@", error);
@@ -288,7 +289,7 @@ static int activity_id = 0;
     
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
     
-    [objectManager getObjectsAtPath:[NSString stringWithFormat:@"/api/v2/rides?page=%d", activity_id] parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+    [objectManager getObjectsAtPath:[NSString stringWithFormat:@"/api/v3/rides?page=%d", activity_id] parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         if ([[mappingResult array] count] > 0) {
             activity_id++;
 //            [self updateBadges];
@@ -305,7 +306,7 @@ static int activity_id = 0;
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
     NSDictionary *queryParams = @{@"from_date": date, @"ride_type" : [NSNumber numberWithInt:(int)rideType]};
     
-    [objectManager getObjectsAtPath:[NSString stringWithFormat:@"/api/v2/rides"] parameters:queryParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+    [objectManager getObjectsAtPath:[NSString stringWithFormat:@"/api/v3/rides"] parameters:queryParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         if ([[mappingResult array] count] > 0) {
             [self updateBadgesWithType:rideType];
         }
@@ -328,7 +329,7 @@ static int activity_id = 0;
 -(void)fetchSingleRideFromWebserviceWithId:(NSNumber *)rideId block:(rideCompletionHandler)block {
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
 
-    [objectManager getObject:nil path:[NSString stringWithFormat:@"/api/v2/rides/%@", rideId] parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+    [objectManager getObject:nil path:[NSString stringWithFormat:@"/api/v3/rides/%@", rideId] parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         Ride *ride = [mappingResult firstObject];
         block(ride);
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
@@ -352,7 +353,7 @@ static int activity_id = 0;
     }
     
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
-    [objectManager getObjectsAtPath:@"/api/v2/rides/ids" parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+    [objectManager getObjectsAtPath:@"/api/v3/rides/ids" parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         IdsMapping *mapping = [mappingResult firstObject];
         [self compareRides:mapping.ids];
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
@@ -557,6 +558,7 @@ static int activity_id = 0;
 
 // add nearby ride to the array with nearby rides. Rides are ordered by departure place, so in the loop determine the right location
 - (void)addNearbyRide:(Ride*)ride{
+    NSLog(@"<<<addNearbyRide");
     int index = 0;
     if ([ride.rideType intValue] == ContentTypeActivityRides) {
         if ([[self activityRidesNearby] containsObject:ride]) {
@@ -602,6 +604,7 @@ static int activity_id = 0;
 }
 
 -(void)checkIfRideNearby:(Ride *)ride block:(boolCompletionHandler)block{
+
     [self fetchLocationForRide:ride block:^(BOOL fetched) {
         if ([self isCurrentLocationNearbyRide:ride]) {
             block(YES);
@@ -678,6 +681,7 @@ static int activity_id = 0;
 -(BOOL)isCurrentLocationNearbyRide:(Ride *)ride {
     CLLocation *currentLocation = [LocationController sharedInstance].currentLocation;
     if (currentLocation == nil) {
+        NSLog(@"<<<location is nil");
         return NO;
     }
     

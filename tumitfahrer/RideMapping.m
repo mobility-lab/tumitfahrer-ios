@@ -24,8 +24,12 @@
     [rideMapping addAttributeMappingsFromDictionary:@{@"id": @"rideId",
                                                       @"departure_place": @"departurePlace",
                                                       @"destination": @"destination",
+                                                      @"departure_latitude": @"departureLatitude",
+                                                      @"departure_longitude":@"departureLongitude",
+                                                      @"destination_latitude" : @"destinationLatitude",
+                                                      @"destination_longitude" : @"destinationLongitude",
                                                       @"meeting_point":@"meetingPoint",
-                                                      @"departure_time":@"departureTime",
+                                                     
                                                       @"free_seats":@"freeSeats",
                                                       @"ride_type":@"rideType",
                                                       @"is_ride_request":@"isRideRequest",
@@ -33,10 +37,10 @@
                                                       @"is_paid":@"isPaid",
                                                       @"car":@"car",
                                                       @"last_cancel_time":@"lastCancelTime",
-                                                      @"regular_ride_id":@"regularRideId",
-                                                      @"created_at": @"createdAt",
-                                                      @"updated_at": @"updatedAt"
-                                                      }];
+                                                      @"regular_ride_id":@"regularRideId",@"departure_time":@"departureTime", @"created_at": @"createdAt",    @"updated_at": @"updatedAt"
+                                                     
+                                                      }];//
+
     
     [rideMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"ride_owner" toKeyPath:@"rideOwner" withMapping:[UserMapping userMapping]]];
     
@@ -59,7 +63,7 @@
 
 +(RKResponseDescriptor *)getRideIdsresponseDescriptorWithMapping:(RKObjectMapping *)mapping {
     // create response description for user's session
-    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mapping                                                                                            method:RKRequestMethodGET                                                                                       pathPattern:@"/api/v2/rides/ids"                                                                                           keyPath:nil                                                                                     statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mapping                                                                                            method:RKRequestMethodGET                                                                                       pathPattern:@"/api/v3/rides/ids"                                                                                           keyPath:nil                                                                                     statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
     
     return responseDescriptor;
 }
@@ -80,7 +84,7 @@
 
 +(RKResponseDescriptor *)getSingleRideResponseDescriptorWithMapping:(RKEntityMapping *)mapping {
     // create response description for rides
-    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mapping                                                                                            method:RKRequestMethodGET pathPattern:@"/api/v2/rides/:rideId" keyPath:@"ride"                                                                                      statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mapping                                                                                            method:RKRequestMethodGET pathPattern:@"/api/v3/rides/:rideId" keyPath:@"ride"                                                                                      statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
     
     return responseDescriptor;
 }

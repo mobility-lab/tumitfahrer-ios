@@ -259,7 +259,7 @@ static int activity_id = 0;
     
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
     
-    [objectManager getObjectsAtPath:[NSString stringWithFormat:@"/api/v2/activities?activity_id=%d", activity_id] parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+    [objectManager getObjectsAtPath:[NSString stringWithFormat:@"%@?activity_id=%d", API_ACTIVITIES,activity_id] parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         Activity *activity = [mappingResult firstObject];
         if (activity != nil && (activity.rides.count > 0 || activity.rideSearches.count > 0 || activity.requests.count > 0)) {
             activity_id++;
