@@ -20,6 +20,8 @@
 #import "ControllerUtilities.h"
 #import "TeamViewController.h"
 #import "StomtViewController.h"
+#import "CurrentUser.h"
+#import "AppDelegate.h"
 
 @interface SettingsViewController () <EAIntroDelegate>
 
@@ -185,13 +187,8 @@
 }
 
 - (IBAction)logoutButtonPressed:(id)sender {
-    
-    [[NSUserDefaults standardUserDefaults] setValue:nil forKey:@"emailLoggedInUser"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    LoginViewController *loginVC = [[LoginViewController alloc] init];
-    loginVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-    [self presentViewController:loginVC animated:YES completion:nil];
+    AppDelegate *delegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [delegate logoutCurrentUser];
 }
 
 #pragma mark - Button Handlers

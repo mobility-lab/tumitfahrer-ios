@@ -16,4 +16,5 @@
 @property (strong, nonatomic) RKObjectManager *panoramioObjectManager;
 @property (strong, nonatomic) RKObjectManager *stomtObjectManager;
 
+-(void) logoutCurrentUser;
 @end

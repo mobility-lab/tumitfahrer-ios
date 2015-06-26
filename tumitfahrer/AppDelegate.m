@@ -325,6 +325,23 @@
         }
     }
 }
+-(void) logoutCurrentUser {
+    [[NSUserDefaults standardUserDefaults] setValue:nil forKey:@"emailLoggedInUser"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    LoginViewController *loginVC = [[LoginViewController alloc] init];
+    loginVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    [self.window.rootViewController presentViewController:loginVC animated:YES completion:nil];
+    
+    RKObjectManager *objectManager = [RKObjectManager sharedManager];
+    [objectManager.HTTPClient setDefaultHeader:@"Authorization" value:[CurrentUser sharedInstance].user.apiKey];
+    [CurrentUser sharedInstance].user.apiKey = nil;
+    [objectManager deleteObject:nil path:API_SESSIONS parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        NSLog(@"logout sucessfull");
+    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+        NSLog(@"logout NOT sucessfull");
+    }];
+}
 
 -(void)setupObservers {
     // for getting location of a specific photo
