@@ -8,9 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		068F5848AB864309B2DEC0B8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BAEC5882914944C4B8E2DE24 /* libPods.a */; };
+		6E3147261B41749600886A53 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6E3147251B41749600886A53 /* GoogleService-Info.plist */; };
 		6E4E133C1913F7B300D0C453 /* XCTest+GCovFlush.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4E133B1913F7B300D0C453 /* XCTest+GCovFlush.m */; };
 		6E4E133F1913F7BF00D0C453 /* UIApplication+GCovFlush.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4E133E1913F7BF00D0C453 /* UIApplication+GCovFlush.m */; };
 		6E52E8401B0B8A2300CCDEE3 /* ConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E52E83F1B0B8A2300CCDEE3 /* ConnectionManager.m */; };
+		6E6261751B40390B00F90134 /* ProfilePictureManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6261741B40390B00F90134 /* ProfilePictureManager.m */; };
 		6E89558D1B31889100DCDBC2 /* AuthenticationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E89558C1B31889100DCDBC2 /* AuthenticationManager.m */; };
 		6E97A2361B0E0DA4004FF9EF /* ChangePassword.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E97A2351B0E0DA4004FF9EF /* ChangePassword.xib */; };
 		6E97A2391B0E10E9004FF9EF /* ChangePasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E97A2381B0E10E9004FF9EF /* ChangePasswordViewController.m */; };
@@ -319,12 +321,15 @@
 
 /* Begin PBXFileReference section */
 		21C7515A720A4BD98246E980 /* libPods-UI Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-UI Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6E3147251B41749600886A53 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6E4E133A1913F7B300D0C453 /* XCTest+GCovFlush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XCTest+GCovFlush.h"; sourceTree = "<group>"; };
 		6E4E133B1913F7B300D0C453 /* XCTest+GCovFlush.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XCTest+GCovFlush.m"; sourceTree = "<group>"; };
 		6E4E133D1913F7BF00D0C453 /* UIApplication+GCovFlush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+GCovFlush.h"; sourceTree = "<group>"; };
 		6E4E133E1913F7BF00D0C453 /* UIApplication+GCovFlush.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+GCovFlush.m"; sourceTree = "<group>"; };
 		6E52E83E1B0B8A2300CCDEE3 /* ConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionManager.h; sourceTree = "<group>"; };
 		6E52E83F1B0B8A2300CCDEE3 /* ConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConnectionManager.m; sourceTree = "<group>"; };
+		6E6261731B40390B00F90134 /* ProfilePictureManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfilePictureManager.h; sourceTree = "<group>"; };
+		6E6261741B40390B00F90134 /* ProfilePictureManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfilePictureManager.m; sourceTree = "<group>"; };
 		6E89558B1B31889100DCDBC2 /* AuthenticationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthenticationManager.h; sourceTree = "<group>"; };
 		6E89558C1B31889100DCDBC2 /* AuthenticationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuthenticationManager.m; sourceTree = "<group>"; };
 		6E97A2351B0E0DA4004FF9EF /* ChangePassword.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChangePassword.xib; sourceTree = "<group>"; };
@@ -1248,6 +1253,7 @@
 		E522BAC018AE13F600ECD375 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				6E3147251B41749600886A53 /* GoogleService-Info.plist */,
 				E50785301959CEE200E7CD06 /* Video */,
 				E502639C19558D060041E21A /* Images */,
 				E5CD59441951C6DB00E97DEC /* Privacy */,
@@ -1701,6 +1707,8 @@
 				6E52E83F1B0B8A2300CCDEE3 /* ConnectionManager.m */,
 				6E89558B1B31889100DCDBC2 /* AuthenticationManager.h */,
 				6E89558C1B31889100DCDBC2 /* AuthenticationManager.m */,
+				6E6261731B40390B00F90134 /* ProfilePictureManager.h */,
+				6E6261741B40390B00F90134 /* ProfilePictureManager.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -2233,6 +2241,7 @@
 				E5CD59431951C3EA00E97DEC /* SPGooglePlacesAutocompletePlace.txt in Resources */,
 				E5FD9EC819234A8500902502 /* TimelineMapViewController.xib in Resources */,
 				E5FEF3911946F85100E326BB /* EditRequestViewController.xib in Resources */,
+				6E3147261B41749600886A53 /* GoogleService-Info.plist in Resources */,
 				E52EA4D4192C019C00E78B6D /* RideDetailMapViewController.xib in Resources */,
 				E5DE44EE192618270034AF6F /* SegmentedControlCell.xib in Resources */,
 			);
@@ -2451,6 +2460,7 @@
 				E5E2D6741983A72B00A81EB4 /* StomtUtilities.m in Sources */,
 				E50263CC1955ADB00041E21A /* Photo.m in Sources */,
 				E504D9D2190A7FC50036FFA8 /* SPGooglePlacesAutocompleteUtilities.m in Sources */,
+				6E6261751B40390B00F90134 /* ProfilePictureManager.m in Sources */,
 				E58889DC191383570062D0DF /* OwnerOfferViewController.m in Sources */,
 				E522BAC618AE13F600ECD375 /* main.m in Sources */,
 				E507C437193901B5005F1083 /* CustomAnnotation.m in Sources */,

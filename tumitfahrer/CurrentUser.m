@@ -162,6 +162,7 @@
 #pragma mark - user utility functions
 
 -(void)didDownloadImageData:(NSData *)imageData user:(User *)user {
+    NSLog(@"<<didDownloadImageData - CurrentUser");
     self.user.profileImageData = imageData;
     [CurrentUser saveUserToPersistentStore:self.user];
 }
@@ -174,6 +175,7 @@
 }
 
 +(void)saveUserToPersistentStore:(User *)user {
+    NSLog(@"<<saveUserToPersistentStore");
     NSManagedObjectContext *context = user.managedObjectContext;
     NSError *error;
     if (![context saveToPersistentStore:&error]) {

@@ -24,3 +24,8 @@ pod 'Facebook-iOS-SDK',  '~> 3.23.0'
 # pod for communicating with Pebble
 #pod 'PebbleKit'
 
+#GCM:
+pod 'Google/CloudMessaging'
+
+#Imagedonwloader for ProfileImage
+pod 'AsyncImageDownloader', '~> 1.0.0'

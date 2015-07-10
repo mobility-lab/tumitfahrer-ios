@@ -15,6 +15,7 @@
 
 @property (nonatomic, strong) User *user;
 @property (nonatomic, strong) NSString  *authorization;
+@property (nonatomic, retain) NSDate * profileImageLastUpdate;
 
 
 
