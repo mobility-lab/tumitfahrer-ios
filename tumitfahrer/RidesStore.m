@@ -18,6 +18,7 @@
 #import "RecentPlaceUtilities.h"
 #import "RecentPlace.h"
 #import "Photo.h"
+#import "AppDelegate.h"
 
 @interface RidesStore ()
 
@@ -286,19 +287,26 @@ static int activity_id = 0;
 }
 
 -(void)fetchNewRides:(boolCompletionHandler)block {
-    
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
-    
+    [objectManager.HTTPClient setDefaultHeader:@"Authorization" value:[CurrentUser sharedInstance].user.apiKey];
     [objectManager getObjectsAtPath:[NSString stringWithFormat:@"/api/v3/rides?page=%d", activity_id] parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         if ([[mappingResult array] count] > 0) {
+            NSLog(@"<<<<<< fetchnewrides success");
             activity_id++;
 //            [self updateBadges];
         }
         block(YES);
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+        if([[[error userInfo] objectForKey:AFNetworkingOperationFailingURLResponseErrorKey] statusCode] == 401){//Unauthorized
+            [ActionManager showAlertViewWithTitle:@"Error" description:@"Your session has expired"];
+            AppDelegate *delegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+            [delegate logoutCurrentUser];
+        }
         RKLogError(@"Load failed with error: %@", error);
+
         block(NO);
     }];
+    [objectManager.HTTPClient setDefaultHeader:@"Authorization" value:[CurrentUser sharedInstance].user.apiKey];
 }
 
 -(void)fetchRidesfromDate:(NSDate *)date rideType:(NSInteger)rideType block:(boolCompletionHandler)block {
