@@ -17,6 +17,7 @@
 #import "TimelineMapViewController.h"
 #import "MenuViewController.h"
 #import "ActionManager.h"
+#import "LocationController.h"
 
 @interface YourRidesPageViewController () <YourRidesViewControllerDelegate>
 
@@ -84,6 +85,9 @@
         return nil;
     }
     index--;
+    if(index==2){//Around me, request location
+        [[LocationController sharedInstance] startUpdatingLocation];
+    }
     
     return [self viewControllerAtIndex:index];
     
@@ -96,6 +100,9 @@
     index++;
     if (index == 3) {
         return nil;
+    }
+    if(index==2){//Around me, request location
+        [[LocationController sharedInstance] startUpdatingLocation];
     }
     
     return [self viewControllerAtIndex:index];

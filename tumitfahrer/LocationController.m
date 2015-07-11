@@ -25,6 +25,9 @@
         self.locationManager = [[CLLocationManager alloc] init];
         self.locationManager.delegate = self;
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {//Make it work on iOs8+
+            [self.locationManager requestWhenInUseAuthorization];
+        }
         self.isLocationFetched = NO;
         self.observers = [[NSMutableArray alloc] init];
     }

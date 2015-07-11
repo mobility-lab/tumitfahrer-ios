@@ -49,5 +49,9 @@
 	<false/>
 	<key>ubertesters_project_id</key>
 	<string>00b13d06-bc8c-11e3-b56e-22000ac44c54</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>To show you rides around you.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string></string>
 </dict>
 </plist>

@@ -18,6 +18,7 @@
 #import "MenuViewController.h"
 #import "ActionManager.h"
 #import "ActivityStore.h"
+#import "LocationController.h"
 
 @interface TimelinePageViewController () <TimelineViewControllerDelegate>
 
@@ -119,6 +120,9 @@
     }
     
     index--;
+    if(index==2){//Around me, request location
+        [[LocationController sharedInstance] startUpdatingLocation];
+    }
     
     return [self viewControllerAtIndex:index];
     
@@ -129,6 +133,10 @@
     NSUInteger index = [(TimelineViewController *)viewController index];
     
     index++;
+    
+    if(index==2){//Around me, request location
+        [[LocationController sharedInstance] startUpdatingLocation];
+    }
     
     if (index == 3) {
         return nil;
