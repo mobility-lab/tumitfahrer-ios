@@ -154,12 +154,12 @@
 #pragma mark UISearchDisplayDelegate
 
 - (void)handleSearchForSearchString:(NSString *)searchString {
-    
+//    NSLog(@"<<<LOC: lat:%f   long:%f",[[LocationController sharedInstance] currentLocation].coordinate.latitude, [[LocationController sharedInstance] currentLocation].coordinate.longitude);
     searchQuery.input = searchString;
     searchQuery.location = [[LocationController sharedInstance] currentLocation].coordinate ;
     searchQuery.types = SPPlaceTypeGeocode; // Only return geocoding (address) results.
     searchQuery.radius = 100.0;
-    searchQuery.language = @"en";
+    searchQuery.language = @"de";
     [searchQuery fetchPlaces:^(NSArray *places, NSError *error) {
         if (error) {
             SPPresentAlertViewWithErrorAndTitle(error, @"Could not fetch Places");
