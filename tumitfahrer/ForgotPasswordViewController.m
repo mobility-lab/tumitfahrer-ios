@@ -41,7 +41,7 @@
 }
 -(NSURLRequest*)buildUrlRequest {
     
-    NSString *urlString = [API_ADDRESS stringByAppendingString:[NSString stringWithFormat:@"/api/v2/forgot?email=%@", self.emailTextField.text]];
+    NSString *urlString = [API_ADDRESS stringByAppendingString:[NSString stringWithFormat:@"/api/v3/password/forgot?email=%@", self.emailTextField.text]];
     NSURL *url = [[NSURL alloc] initWithString:urlString];
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
     [urlRequest setHTTPMethod:@"POST"];
