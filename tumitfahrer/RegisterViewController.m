@@ -100,7 +100,8 @@
     // add enum
     queryParams = @{@"email": self.emailTextField.text, @"first_name": self.firstNameTextField.text, @"last_name":self.lastNameTextField.text, @"department": [NSNumber numberWithInt:(int)[[FacultyManager sharedInstance] indexForFacultyName:self.departmentNameTextField.text]]};
     NSDictionary *userParams = @{@"user": queryParams};
-    [objectManager postObject:nil path:@"/api/v2/users" parameters:userParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+     objectManager.requestSerializationMIMEType = RKMIMETypeJSON ;
+    [objectManager postObject:nil path:@"/api/v3/users" parameters:userParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
 
 //        if([[[mappingResult firstObject] objectForKey:@"message"] isEqual:@"Could not create the user"]){
 ////            //The network-operation was succesfull but not creating the user
