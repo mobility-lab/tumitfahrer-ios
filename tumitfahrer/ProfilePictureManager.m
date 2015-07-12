@@ -8,6 +8,7 @@
 
 #import "ProfilePictureManager.h"
 #import "CurrentUser.h"
+#import "ActionManager.h"
 
 @implementation ProfilePictureManager
 
@@ -47,6 +48,12 @@
 
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    if([httpResponse statusCode]==200){
+        [ActionManager showAlertViewWithTitle:@"Success" description:@"Your profile picture has been changed"];
+    } else {
+        [ActionManager showAlertViewWithTitle:@"Failure" description:@"An error occured changing your profile picture. Please try again later."];
+    }
     NSLog(@"ProfilePictureManager-didRecieveResponse: %@",response);
     NSLog(@"ProfilePictureManager-didRecieveResponse: %@",response.debugDescription);
         NSLog(@"ProfilePictureManager-didRecieveResponse: %@",response.description);

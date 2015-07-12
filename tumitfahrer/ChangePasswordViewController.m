@@ -9,6 +9,8 @@
 #import "ChangePasswordViewController.h"
 #import "ConnectionManager.h"
 #import "ActionManager.h"
+#import "CurrentUser.h"
+
 
 @interface ChangePasswordViewController ()
 
@@ -58,8 +60,39 @@
         return;
     }
     
-    [ActionManager showAlertViewWithTitle:@"Success" description:@"Sobald der Server läuft wird dein PW geändert.."];
-    [[self navigationController] popViewControllerAnimated:YES];
+    //The old pw is checked via the authorization string
+    NSString *authStr = [NSString stringWithFormat:@"%@:%@", [CurrentUser sharedInstance].user.email, oldpw];
+    NSData *authData = [authStr dataUsingEncoding:NSUTF8StringEncoding ];
+    NSString *authValue = [NSString stringWithFormat:@"Basic %@", [authData base64EncodedStringWithOptions:NSDataBase64EncodingEndLineWithLineFeed]];
     
+    //
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",API_ADDRESS, API_CHANGE_PASSWORD]]];
+    [request setHTTPMethod:@"PUT"];
+    [request setValue:authValue forHTTPHeaderField:@"Authorization"];
+    [request setHTTPBody:[[NSString stringWithFormat:@"{\"password\":\"%@\"}",np] dataUsingEncoding:NSUTF8StringEncoding]];//[NSKeyedArchiver archivedDataWithRootObject:@{@"password":np}]];
+    [request setValue:@"application/json" forHTTPHeaderField: @"Content-Type"];
+
+    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    [conn start];
+    
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    if([httpResponse statusCode]==200){
+        [ActionManager showAlertViewWithTitle:@"Success" description:@"Your password has been changed."];
+        [[self navigationController] popViewControllerAnimated:YES];
+    } else {
+        [ActionManager showAlertViewWithTitle:@"Failure" description:@"An error occured changing your password. Please try again later."];
+    }
+    NSLog(@"ChangePasswordViewController-didRecieveResponse: %ld",(long)[httpResponse statusCode]);
+    NSLog(@"ChangePasswordViewController-didRecieveResponse: %@",response.debugDescription);
+    NSLog(@"ChangePasswordViewController-didRecieveResponse: %@",response.description);
+}
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    NSLog(@"ChangePasswordViewController-connectionDidFinishLoading");
+}
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    NSLog(@"ChangePasswordViewController-Error: %@",error);
 }
 @end

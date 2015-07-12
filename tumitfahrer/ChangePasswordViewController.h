@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ChangePasswordViewController : UIViewController
+@interface ChangePasswordViewController : UIViewController <NSURLConnectionDataDelegate>
 @property (strong, nonatomic) IBOutlet UIView *view;
 - (IBAction)cancel:(id)sender;
 - (IBAction)save:(id)sender;

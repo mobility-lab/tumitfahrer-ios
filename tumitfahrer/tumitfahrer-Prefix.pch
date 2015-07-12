@@ -144,6 +144,7 @@ static NSString *API_SEARCH = @"/api/v3/search";
 static NSString *API_ACTIVITIES = @"/api/v3/activities";
 static NSString *API_ACTIVITIES_BADGES = @"/api/v3/activities/badges";
 static NSString *API_AVATAR = @"/api/v3/users/:userId/avatar";
+static NSString *API_CHANGE_PASSWORD = @"/api/v3/password";
 #else
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <CoreServices/CoreServices.h>
