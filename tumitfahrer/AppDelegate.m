@@ -38,21 +38,33 @@
 #import "GAI.h"
 #import "StomtMapping.h"
 #import "StomtAgreementMapping.h"
+#import "Google/CloudMessaging.h"
+#import "GGLInstanceID.h"
 
 @interface AppDelegate ()
 
-@property (nonatomic,strong) MMDrawerController * drawerController;
-
+    @property (nonatomic,strong) MMDrawerController * drawerController;
+    //@property kGGLInstanceIDRegisterAPNSOption _registrationOptions;
+    @property(nonatomic, strong) void (^registrationHandler)
+    (NSString *registrationToken, NSError *error);
+    @property(nonatomic, assign) BOOL connectedToGCM;
+    @property(nonatomic, strong) NSString* registrationToken;
+    @property(nonatomic, assign) BOOL subscribedToTopic;
 @end
 
+NSString *const SubscriptionTopic = @"/topics/global";
+
+
 @implementation AppDelegate
+
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     // register app for receiving push notifications
-    [self setupPushNotifications];
+    [self setupPushNotifications: application];
     
     [self setupNavigationController];
     [self setupRestKit];
@@ -104,6 +116,16 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    // Connect to the GCM server to receive non-APNS notifications
+    [[GCMService sharedInstance] connectWithHandler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Could not connect to GCM: %@", error.localizedDescription);
+        } else {
+            _connectedToGCM = true;
+            NSLog(@"Connected to GCM");
+            // ...
+        }
+    }];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -122,29 +144,178 @@
 }
 
 -(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    NSLog(@" <y<< GOT NOTIFICATION");
+    [[GCMService sharedInstance] appDidReceiveMessage:userInfo];
+    
+    
 
+    
+}
+- (void)application:(UIApplication *)application
+didReceiveRemoteNotification:(NSDictionary *)userInfo
+fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
+    NSLog(@"<y<< Notification received: %@", userInfo);
+    // This works only if the app started the GCM service
+    [[GCMService sharedInstance] appDidReceiveMessage:userInfo];
+    // Handle the received message
+    // Invoke the completion handler passing the appropriate UIBackgroundFetchResult value
+    // ...
+    
+    if (application.applicationState == UIApplicationStateActive ) {
+        NSLog(@" <y<< ACTIVE");
+        NSDictionary *aps = [userInfo valueForKey:@"aps"];
+        NSDictionary *alert = [aps valueForKey:@"alert"];
+        [ActionManager showAlertViewWithTitle: [alert valueForKey:@"title"] description:[alert valueForKey:@"body"]];
+
+    }
 }
 
 
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken {
-    const unsigned *tokenBytes = [deviceToken bytes];
-    NSString *hexToken = [NSString stringWithFormat:@"%08x%08x%08x%08x%08x%08x%08x%08x",
-                          ntohl(tokenBytes[0]), ntohl(tokenBytes[1]), ntohl(tokenBytes[2]),
-                          ntohl(tokenBytes[3]), ntohl(tokenBytes[4]), ntohl(tokenBytes[5]),
-                          ntohl(tokenBytes[6]), ntohl(tokenBytes[7])];
-    NSLog(@"Device token is: %@", hexToken);
+    NSLog(@" <y< GOT DEVICE TOKEN %@", deviceToken);
     
-    [[Device sharedInstance] setDeviceToken:hexToken];
+    //GCM implementation
+    // Start the GGLInstanceID shared instance with the default config and request a registration
+    // token to enable reception of notifications
+    [[GGLInstanceID sharedInstance] startWithConfig:[GGLInstanceIDConfig defaultConfig]];
+    _registrationOptions = @{kGGLInstanceIDRegisterAPNSOption:deviceToken,
+                             kGGLInstanceIDAPNSServerTypeSandboxOption:@YES};
+    
+    [[GGLInstanceID sharedInstance] tokenWithAuthorizedEntity:@"919031243448"
+                                                        scope:kGGLInstanceIDScopeGCM
+                                                      options:_registrationOptions
+                                                      handler:_registrationHandler];
+
 }
+- (void)onTokenRefresh {
+    // A rotation of the registration tokens is happening, so the app needs to request a new token.
+    NSLog(@" <y< The GCM registration token needs to be changed.");
+    [[GGLInstanceID sharedInstance] tokenWithAuthorizedEntity:_gcmSenderID
+                                                        scope:kGGLInstanceIDScopeGCM
+                                                      options:_registrationOptions
+                                                      handler:_registrationHandler];
+}
+
 
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error {
-	NSLog(@"Failed to get token, error: %@", error);
+	NSLog(@" <y<  Failed to get token, error: %@", error);
 }
 
--(void)setupPushNotifications {
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
-     (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+-(void)setupPushNotifications: (UIApplication *)application {
+    NSLog(@" <y<  setupPushNotifications -- get token");
+    // [START_EXCLUDE]
+    _registrationKey = @"onRegistrationCompleted";
+    _messageKey = @"onMessageReceived";
+    // Configure the Google context: parses the GoogleService-Info.plist, and initializes
+    // the services that have entries in the file
+    NSError* configureError;
+    [[GGLContext sharedInstance] configureWithError:&configureError];
+    if (configureError != nil) {
+        NSLog(@"Error configuring the Google context: %@", configureError);
+    }
+    _gcmSenderID = [[[GGLContext sharedInstance] configuration] gcmSenderID];
+    
+    //
+        //register to receive notifications
+        UIRemoteNotificationType myTypes = UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIUserNotificationTypeNone;
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:myTypes];
+    // Register for remote notifications
+    if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_7_1) {
+        // iOS 7.1 or earlier
+        UIRemoteNotificationType allNotificationTypes =
+        (UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge);
+        [application registerForRemoteNotificationTypes:allNotificationTypes];
+    } else {
+        // iOS 8 or later
+        // [END_EXCLUDE]
+        UIUserNotificationType allNotificationTypes =
+        (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
+        UIUserNotificationSettings *settings =
+        [UIUserNotificationSettings settingsForTypes:allNotificationTypes categories:nil];
+        [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+        [[UIApplication sharedApplication] registerForRemoteNotifications];
+    }
+    //
+    // [START start_gcm_service]
+    [[GCMService sharedInstance] startWithConfig:[GCMConfig defaultConfig]];
+
+    __weak typeof(self) weakSelf = self;
+    // Handler for registration token request
+    _registrationHandler = ^(NSString *registrationToken, NSError *error){
+        if (registrationToken != nil) {
+            weakSelf.registrationToken = registrationToken;
+            NSLog(@"<y< Registration Token: %@", registrationToken);
+            [weakSelf subscribeToTopic];
+            NSDictionary *userInfo = @{@"registrationToken":registrationToken};
+            [[NSNotificationCenter defaultCenter] postNotificationName:weakSelf.registrationKey
+                                                                object:nil
+                                                              userInfo:userInfo];
+            [weakSelf uploadRegistrationToken: registrationToken];
+        } else {
+            NSLog(@"Registration to GCM failed with error: %@", error.localizedDescription);
+            NSDictionary *userInfo = @{@"error":error.localizedDescription};
+            [[NSNotificationCenter defaultCenter] postNotificationName:weakSelf.registrationKey
+                                                                object:nil
+                                                              userInfo:userInfo];
+        }
+    };
+
 }
+
+-(void) uploadRegistrationToken: (NSString*) registrationToken {
+    NSLog(@"<y< uploadDeviceToken");
+
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/api/v3/users/%@/devices",API_ADDRESS,[CurrentUser sharedInstance].user.userId]]];
+    [request setHTTPMethod:@"POST"];
+    NSString *bodyString =[NSString stringWithFormat: @"{\"device\":{\"token\":\"%@\", \"enabled\":true, \"platform\":\"ios\", \"language\":\"de\" }}", registrationToken ];
+    NSData *body = [bodyString dataUsingEncoding:NSUTF8StringEncoding];
+    [request setValue:[CurrentUser sharedInstance].user.apiKey forHTTPHeaderField:@"Authorization"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody: body];
+
+    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    [conn start];
+}
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"<y<ChangePasswordViewController-didRecieveResponse: %ld",(long)[httpResponse statusCode]);
+    NSLog(@"<y<ChangePasswordViewController-didRecieveResponse: %@",response.debugDescription);
+    NSLog(@"<y<ChangePasswordViewController-didRecieveResponse: %@",response);
+}
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    NSLog(@"ChangePasswordViewController-connectionDidFinishLoading");
+}
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    NSLog(@"ChangePasswordViewController-Error: %@",error);
+}
+
+- (void)subscribeToTopic {
+    NSLog(@"<y< registration token %@", _registrationToken);
+    // If the app has a registration token and is connected to GCM, proceed to subscribe to the
+    // topic
+    if (_registrationToken && _connectedToGCM) {
+            NSLog(@"<y<2 device token %@", _registrationToken);
+        [[GCMPubSub sharedInstance] subscribeWithToken:_registrationToken
+                                                 topic:SubscriptionTopic
+                                               options:nil
+                                               handler:^(NSError *error) {
+                                                   if (error) {
+                                                       // Treat the "already subscribed" error more gently
+                                                       if (error.code == 3001) {
+                                                           NSLog(@"Already subscribed to %@",
+                                                                 SubscriptionTopic);
+                                                       } else {
+                                                           NSLog(@"Subscription failed: %@",
+                                                                 error.localizedDescription);
+                                                       }
+                                                   } else {
+                                                       self.subscribedToTopic = true;
+                                                       NSLog(@"Subscribed to %@", SubscriptionTopic);
+                                                   }
+                                               }];
+    }
+}
+
 
 -(void)setupHockeyApp {
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"6ca33e4226218908f6d423fd04772a60"];
@@ -242,6 +413,7 @@
     [objectManager addResponseDescriptor:[SessionMapping postSessionResponseDescriptorWithMapping:postSessionMapping]];
     RKObjectMapping *postUserMapping =[UserMapping postUserMapping];
     [objectManager addResponseDescriptor:[UserMapping postUserResponseDescriptorWithMapping:postUserMapping]];
+
     [objectManager addResponseDescriptor:[UserMapping putUserResponseDescriptorWithMapping:postUserMapping]];
     RKEntityMapping *generalRidesMapping = [RideMapping generalRideMapping];
     [objectManager addResponseDescriptor:[RideMapping getRidesResponseDescriptorWithMapping:generalRidesMapping]];
@@ -279,6 +451,7 @@
     
     RKEntityMapping *getUserMapping =[UserMapping userMapping];
     [objectManager addResponseDescriptor:[UserMapping getUserResponseDescriptorWithMapping:getUserMapping]];
+    
     
     RKEntityMapping *getBadgesMapping =[BadgeMapping badgeMapping];
     [objectManager addResponseDescriptor:[BadgeMapping getBadgesResponseDescriptorWithMapping:getBadgesMapping]];
@@ -325,6 +498,7 @@
         }
     }
 }
+
 -(void) logoutCurrentUser {
     [[NSUserDefaults standardUserDefaults] setValue:nil forKey:@"emailLoggedInUser"];
     [[NSUserDefaults standardUserDefaults] synchronize];
