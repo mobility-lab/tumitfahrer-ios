@@ -396,8 +396,9 @@ NSString *const kRideType = @"Ride Type";
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyy-MM-dd HH:mm"];
     [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"de_DE"]];
+    [formatter setTimeZone:[NSTimeZone localTimeZone]];
     NSDate *dateString = [formatter dateFromString:departureTime];
-    [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZ"];
+    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ssZZZ"];//'T' removed from timestring
     NSString *time = [formatter stringFromDate:dateString];
     
     if ([dateString compare:[NSDate date]] == NSOrderedAscending) {
@@ -405,7 +406,7 @@ NSString *const kRideType = @"Ride Type";
         addActionCell.actionButton.enabled = YES;
         return;
     }
-    
+    NSLog(@"<y< time: %@", time);
     NSDictionary *rideParams = nil;
     if(self.TableType == Driver) {
         
@@ -426,8 +427,8 @@ NSString *const kRideType = @"Ride Type";
             return;
         }
         
-        queryParams = @{@"departure_place": departurePlace, @"destination": destination,  @"free_seats": freeSeats, @"meeting_point": meetingPoint, @"ride_type": [NSNumber numberWithInt:self.RideType], @"car": car, @"is_driving": [NSNumber numberWithBool:YES], @"departure_latitude" : [NSNumber numberWithDouble:self.departureCoordinate.latitude], @"departure_longitude" : [NSNumber numberWithDouble:self.departureCoordinate.longitude], @"destination_latitude": [NSNumber numberWithDouble:self.destinationCoordinate.latitude],
-                        @"destination_longitude" : [NSNumber numberWithDouble:self.destinationCoordinate.longitude], @"repeat_dates" : self.repeatDates}; //@"departure_time": time,
+        queryParams = @{@"departure_place": departurePlace, @"destination": destination, @"price":@0,@"title":@"TITLE", @"free_seats": freeSeats, @"meeting_point": meetingPoint,@"departure_time": time, @"ride_type": [NSNumber numberWithInt:self.RideType], @"car": car, @"driver": [NSNumber numberWithBool:YES],@"is_ride_request":[NSNumber numberWithBool:NO], @"departure_latitude" : [NSNumber numberWithDouble:self.departureCoordinate.latitude], @"departure_longitude" : [NSNumber numberWithDouble:self.departureCoordinate.longitude], @"destination_latitude": [NSNumber numberWithDouble:self.destinationCoordinate.latitude],
+                        @"destination_longitude" : [NSNumber numberWithDouble:self.destinationCoordinate.longitude], @"repeat_dates" : self.repeatDates};
         
         rideParams = @{@"ride": queryParams};
         
@@ -440,7 +441,7 @@ NSString *const kRideType = @"Ride Type";
             return;
         }
         
-        queryParams = @{@"departure_place": departurePlace, @"destination": destination, @"departure_time": time, @"ride_type": [NSNumber numberWithInt:self.RideType], @"is_driving": [NSNumber numberWithBool:NO], @"meeting_point" : meetingPoint};
+        queryParams = @{@"departure_place": departurePlace, @"destination": destination, @"departure_time": time, @"ride_type": [NSNumber numberWithInt:self.RideType],@"is_ride_request":[NSNumber numberWithBool:YES], @"is_driving": [NSNumber numberWithBool:NO], @"meeting_point" : meetingPoint, @"destination_latitude": [NSNumber numberWithDouble:self.destinationCoordinate.latitude],  @"destination_longitude" : [NSNumber numberWithDouble:self.destinationCoordinate.longitude], @"departure_latitude" : [NSNumber numberWithDouble:self.departureCoordinate.latitude], @"departure_longitude" : [NSNumber numberWithDouble:self.departureCoordinate.longitude]};
         
         rideParams = @{@"ride": queryParams};
     }

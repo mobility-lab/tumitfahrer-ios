@@ -21,7 +21,7 @@
  *  @param description String with description of the alert view.
  */
 + (void)showAlertViewWithTitle:(NSString *)title description:(NSString*)description;
-
++ (UIAlertView *) createPleaseWaitAlertView;
 // image utilities
 /**
  *  Color an original image to another color. Esp. usefull for icon. However, shouldn't be overused as it's a costly operation.

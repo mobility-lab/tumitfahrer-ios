@@ -285,18 +285,27 @@ static int activity_id = 0;
         block(NO);
     }];
 }
+-(void) dismissWaitAlert: (UIAlertView*)alert {
+    [alert dismissWithClickedButtonIndex:0 animated:YES];
+}
 
 -(void)fetchNewRides:(boolCompletionHandler)block {
+    UIAlertView *waitAlert = [ActionManager createPleaseWaitAlertView];
+    [waitAlert show];
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
     [objectManager.HTTPClient setDefaultHeader:@"Authorization" value:[CurrentUser sharedInstance].user.apiKey];
     [objectManager getObjectsAtPath:[NSString stringWithFormat:@"/api/v3/rides?page=%d", activity_id] parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        
+        
         if ([[mappingResult array] count] > 0) {
             NSLog(@"<<<<<< fetchnewrides success");
             activity_id++;
 //            [self updateBadges];
         }
         block(YES);
+        [self performSelector: @selector(dismissWaitAlert:)  withObject:waitAlert afterDelay:5.0];//needs some time after the loaded rides are displayed.
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+       [waitAlert dismissWithClickedButtonIndex:0 animated:YES];
         if([[[error userInfo] objectForKey:AFNetworkingOperationFailingURLResponseErrorKey] statusCode] == 401){//Unauthorized
             [ActionManager showAlertViewWithTitle:@"Error" description:@"Your session has expired"];
             AppDelegate *delegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];

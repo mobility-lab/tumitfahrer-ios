@@ -52,10 +52,10 @@
     NSString *oldpw = self.currentPW.text;
     
     if(![np isEqual:nprepeat]){
-          [ActionManager showAlertViewWithTitle:@"Invalid input" description:@"Old Passwords don't match"];
+          [ActionManager showAlertViewWithTitle:@"Invalid input" description:@"New Passwords don't match"];
         return;
     }
-    if([oldpw length] < 6){
+    if([np length] < 6){
           [ActionManager showAlertViewWithTitle:@"Invalid input" description:@"Password needs to be at least 6 characters long"];
         return;
     }
@@ -82,6 +82,8 @@
     if([httpResponse statusCode]==200){
         [ActionManager showAlertViewWithTitle:@"Success" description:@"Your password has been changed."];
         [[self navigationController] popViewControllerAnimated:YES];
+    } else if ([httpResponse statusCode] == 400){
+        [ActionManager showAlertViewWithTitle:@"Error" description:@"Your old password was incorrect."];
     } else {
         [ActionManager showAlertViewWithTitle:@"Failure" description:@"An error occured changing your password. Please try again later."];
     }

@@ -172,6 +172,7 @@
 -(void)initFields {
     self.rideDetail.departureLabel.text = self.ride.departurePlace;
     self.rideDetail.destinationLabel.text = self.ride.destination;
+    NSLog(@"<y<initFields time %@", self.ride.departureTime);
     self.rideDetail.timeLabel.text = [ActionManager timeStringFromDate:self.ride.departureTime];
     self.rideDetail.calendarLabel.text = [ActionManager dateStringFromDate:self.ride.departureTime];
 }
