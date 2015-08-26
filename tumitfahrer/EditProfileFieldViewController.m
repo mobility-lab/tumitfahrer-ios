@@ -87,17 +87,23 @@
     switch (self.updatedFiled) {
         case FirstName:
             body = [NSString stringWithFormat:@"{\"user\": {\"car\":\"%@\", \"department\":\"%@\", \"first_name\":\"%@\", \"last_name\":\"%@\", \"phone_number\":\"%@\"}}",user.car, user.department, escapedString, user.lastName, user.phoneNumber];
+            user.firstName = trimmedString;
             break;
         case LastName:
-            body = [NSString stringWithFormat:@"{\"user\": {\"car\":\"%@\", \"department\":\"%@\", \"first_name\":\"%@\", \"last_name\":\"%@\", \"phone_number\":\"%@\"}}",user.car, user.department, user.firstName, escapedString, user.phoneNumber];            break;
+            body = [NSString stringWithFormat:@"{\"user\": {\"car\":\"%@\", \"department\":\"%@\", \"first_name\":\"%@\", \"last_name\":\"%@\", \"phone_number\":\"%@\"}}",user.car, user.department, user.firstName, escapedString, user.phoneNumber];
+                user.lastName = trimmedString;
+            break;
         case Phone:
             body = [NSString stringWithFormat:@"{\"user\": {\"car\":\"%@\", \"department\":\"%@\", \"first_name\":\"%@\", \"last_name\":\"%@\", \"phone_number\":\"%@\"}}",user.car, user.department, user.firstName, user.lastName, escapedString];
+            user.phoneNumber = trimmedString;
             break;
         case Car:
            body = [NSString stringWithFormat:@"{\"user\": {\"car\":\"%@\", \"department\":\"%@\", \"first_name\":\"%@\", \"last_name\":\"%@\", \"phone_number\":\"%@\"}}",escapedString, user.department, user.firstName, user.lastName, user.phoneNumber];
+            user.car = trimmedString;
             break;
         case Department:
             body = [NSString stringWithFormat:@"{\"user\": {\"car\":\"%@\", \"department\":\"%@\", \"first_name\":\"%@\", \"last_name\":\"%@\", \"phone_number\":\"%@\"}}",user.car, escapedString, user.firstName, user.lastName, user.phoneNumber];
+            user.car = trimmedString;
             break;
         default:
             break;
@@ -117,7 +123,7 @@
     
     
 //    [objectManager putObject:nil path:[NSString stringWithFormat:@"/api/v3/users/%@", [CurrentUser sharedInstance].user.userId] parameters:userParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        [self updateLocalValues:trimmedString];
+    
 //        NSLog(@"<y< PAASt");
 //        [self.navigationController popViewControllerAnimated:YES];
 //
@@ -137,9 +143,9 @@
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
     if([httpResponse statusCode]==200){
+        [CurrentUser saveUserToPersistentStore: [CurrentUser sharedInstance].user];
         [ActionManager showAlertViewWithTitle:@"Success" description:@"Your data has been changed."];
         [[self navigationController] popViewControllerAnimated:YES];
-        
     } else {
         [ActionManager showAlertViewWithTitle:@"Failure" description:@"An error occured changing your data. Please try again later."];
     }
@@ -154,33 +160,6 @@
     NSLog(@"EditProfileField-Error: %@",error);
 }
 
--(void)updateLocalValues:(NSString *)string {
-    switch (self.updatedFiled) {
-        case FirstName:
-            [CurrentUser sharedInstance].user.firstName = string;
-            break;
-        case LastName:
-            [CurrentUser sharedInstance].user.lastName = string;
-            break;
-        case Email:
-            break;
-        case Phone:
-            [CurrentUser sharedInstance].user.phoneNumber = string;
-            break;
-        case Car:
-            [CurrentUser sharedInstance].user.car = string;
-            break;
-        case Password:
-            [CurrentUser sharedInstance].user.password  = [ActionManager createSHA512:self.passwordString];
-            break;
-        case Department:
-            [CurrentUser sharedInstance].user.department  = [NSNumber numberWithInt:[string intValue]];
-            break;
-        default:
-            break;
-    }
-    [CurrentUser saveUserToPersistentStore:[CurrentUser sharedInstance].user];
-}
 
 -(void)textViewDidChange:(UITextView *)textView {
     

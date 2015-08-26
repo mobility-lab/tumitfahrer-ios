@@ -188,7 +188,7 @@
     // Set the action button
     localNotif.alertAction = @"View";
     localNotif.soundName = UILocalNotificationDefaultSoundName;
-    localNotif.applicationIconBadgeNumber = 1;
+    localNotif.applicationIconBadgeNumber =+1;
     [[UIApplication sharedApplication] scheduleLocalNotification:localNotif];
 }
 

@@ -144,6 +144,7 @@ NSString *const SubscriptionTopic = @"/topics/global";
 }
 
 -(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    [UIApplication sharedApplication].applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber+1;
     NSLog(@" <y<< GOT NOTIFICATION");
     [[GCMService sharedInstance] appDidReceiveMessage:userInfo];
     
@@ -154,6 +155,7 @@ NSString *const SubscriptionTopic = @"/topics/global";
 - (void)application:(UIApplication *)application
 didReceiveRemoteNotification:(NSDictionary *)userInfo
 fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
+        [UIApplication sharedApplication].applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber+1;
     NSLog(@"<y<< Notification received: %@", userInfo);
     // This works only if the app started the GCM service
     [[GCMService sharedInstance] appDidReceiveMessage:userInfo];
