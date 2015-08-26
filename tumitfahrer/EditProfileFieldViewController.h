@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EditProfileFieldViewController : UIViewController <UITextViewDelegate>
+@interface EditProfileFieldViewController : UIViewController <UITextViewDelegate, NSURLConnectionDataDelegate>
 
 typedef enum {
     FirstName = 0,

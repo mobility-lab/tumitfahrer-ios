@@ -65,56 +65,93 @@
         [ActionManager showAlertViewWithTitle:@"Invalid input" description:@"Password needs to be at least 6 characters long"];
     }
     
-    RKObjectManager *objectManager = [RKObjectManager sharedManager];
-    [objectManager.HTTPClient setDefaultHeader:@"Authorization: Basic" value:[ActionManager encryptCredentialsWithEmail:[CurrentUser sharedInstance].user.email encryptedPassword:[CurrentUser sharedInstance].user.password]];
-    
-    NSString *encryptedPassword = [CurrentUser sharedInstance].user.password;
+//    RKObjectManager *objectManager = [RKObjectManager sharedManager];
+//    objectManager.requestSerializationMIMEType = RKMIMETypeJSON ;
+//    [objectManager.HTTPClient setDefaultHeader:@"Authorization" value:[CurrentUser sharedInstance].user.apiKey];
+//    
 
-    NSMutableDictionary *queryParams = [NSMutableDictionary dictionaryWithObjectsAndKeys:encryptedPassword, @"password", encryptedPassword, @"password_confirmation", [CurrentUser sharedInstance].user.car, @"car",[CurrentUser sharedInstance].user.phoneNumber, @"phone_number", [CurrentUser sharedInstance].user.firstName,@"first_name" , [CurrentUser sharedInstance].user.lastName,  @"last_name",  [CurrentUser sharedInstance].user.department,@"department", nil];
+//    NSMutableDictionary *queryParams = [NSMutableDictionary dictionaryWithObjectsAndKeys
+//: [CurrentUser sharedInstance].user.car, @"car",[CurrentUser sharedInstance].user.phoneNumber, @"phone_number", [CurrentUser sharedInstance].user.firstName,@"first_name" , [CurrentUser sharedInstance].user.lastName,  @"last_name",  [CurrentUser sharedInstance].user.department,@"department", nil];
     
     NSString *trimmedString = [self.textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     NSString *escapedString = [trimmedString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//    [queryParams setValue:[CurrentUser sharedInstance].user.firstName forKey:@"first_name"];
+//    [queryParams setValue:[CurrentUser sharedInstance].user.lastName forKey:@"last_name"];
+//    [queryParams setValue:[CurrentUser sharedInstance].user.phoneNumber forKey:@"phone_number"];
+//    [queryParams setValue:[CurrentUser sharedInstance].user.car forKey:@"car"];
+//    [queryParams setValue:[CurrentUser sharedInstance].user.department forKey:@"department"];
     
     // add enum
+    NSString *body;
+    User *user = [CurrentUser sharedInstance].user;
     switch (self.updatedFiled) {
         case FirstName:
-            [queryParams setValue:escapedString forKey:@"first_name"];
+            body = [NSString stringWithFormat:@"{\"user\": {\"car\":\"%@\", \"department\":\"%@\", \"first_name\":\"%@\", \"last_name\":\"%@\", \"phone_number\":\"%@\"}}",user.car, user.department, escapedString, user.lastName, user.phoneNumber];
             break;
         case LastName:
-            [queryParams setValue:escapedString forKey:@"last_name"];
-            break;
+            body = [NSString stringWithFormat:@"{\"user\": {\"car\":\"%@\", \"department\":\"%@\", \"first_name\":\"%@\", \"last_name\":\"%@\", \"phone_number\":\"%@\"}}",user.car, user.department, user.firstName, escapedString, user.phoneNumber];            break;
         case Phone:
-            [queryParams setValue:escapedString forKey:@"phone_number"];
+            body = [NSString stringWithFormat:@"{\"user\": {\"car\":\"%@\", \"department\":\"%@\", \"first_name\":\"%@\", \"last_name\":\"%@\", \"phone_number\":\"%@\"}}",user.car, user.department, user.firstName, user.lastName, escapedString];
             break;
         case Car:
-            [queryParams setValue:escapedString forKey:@"car"];
-            break;
-        case Password:
-            encryptedPassword = [ActionManager createSHA512:self.passwordString];
-            [queryParams setValue:encryptedPassword forKey:@"password"];
-            [queryParams setValue:encryptedPassword forKey:@"password_confirmation"];
+           body = [NSString stringWithFormat:@"{\"user\": {\"car\":\"%@\", \"department\":\"%@\", \"first_name\":\"%@\", \"last_name\":\"%@\", \"phone_number\":\"%@\"}}",escapedString, user.department, user.firstName, user.lastName, user.phoneNumber];
             break;
         case Department:
-            [queryParams setValue:escapedString forKey:@"department"];
+            body = [NSString stringWithFormat:@"{\"user\": {\"car\":\"%@\", \"department\":\"%@\", \"first_name\":\"%@\", \"last_name\":\"%@\", \"phone_number\":\"%@\"}}",user.car, escapedString, user.firstName, user.lastName, user.phoneNumber];
             break;
         default:
             break;
     }
-    NSDictionary *userParams = @{@"user": queryParams};
     
-    [objectManager putObject:nil path:[NSString stringWithFormat:@"/api/v3/users/%@", [CurrentUser sharedInstance].user.userId] parameters:userParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+    
+    //
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/api/v3/users/%@",API_ADDRESS, [CurrentUser sharedInstance].user.userId]]];
+    [request setHTTPMethod:@"PUT"];
+    [request setValue:[CurrentUser sharedInstance].user.apiKey  forHTTPHeaderField:@"Authorization"];
+    [request setHTTPBody:[body dataUsingEncoding:NSUTF8StringEncoding]];//[NSKeyedArchiver archivedDataWithRootObject:@{@"password":np}]];
+    [request setValue:@"application/json" forHTTPHeaderField: @"Content-Type"];
+    
+    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    [conn start];
+    
+    
+    
+//    [objectManager putObject:nil path:[NSString stringWithFormat:@"/api/v3/users/%@", [CurrentUser sharedInstance].user.userId] parameters:userParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         [self updateLocalValues:trimmedString];
-        [self.navigationController popViewControllerAnimated:YES];
-
-        NSError *error;
-        if (![[CurrentUser sharedInstance].user.managedObjectContext saveToPersistentStore:&error]) {
-            NSLog(@"Whoops. Could not save edited values for user profile.");
-        }
-        
-    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        RKLogError(@"Load failed with error: %@", error);
-    }];
+//        NSLog(@"<y< PAASt");
+//        [self.navigationController popViewControllerAnimated:YES];
+//
+//        NSError *error;
+//        if (![[CurrentUser sharedInstance].user.managedObjectContext saveToPersistentStore:&error]) {
+//            [ActionManager showAlertViewWithTitle:@"Error" description:@"Could not save edited values for user profile."];
+//            NSLog(@"Whoops. Could not save edited values for user profile.");
+//        }
+//        
+//    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+//        
+//        RKLogError(@"Load failed with error: %@", error);
+//    }];
     
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    if([httpResponse statusCode]==200){
+        [ActionManager showAlertViewWithTitle:@"Success" description:@"Your data has been changed."];
+        [[self navigationController] popViewControllerAnimated:YES];
+        
+    } else {
+        [ActionManager showAlertViewWithTitle:@"Failure" description:@"An error occured changing your data. Please try again later."];
+    }
+    NSLog(@"EditProfileField-didRecieveResponse: %ld",(long)[httpResponse statusCode]);
+    NSLog(@"EditProfileField-didRecieveResponse: %@",response.debugDescription);
+    NSLog(@"EditProfileField-didRecieveResponse: %@",response.description);
+}
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    NSLog(@"EditProfileField-connectionDidFinishLoading");
+}
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    NSLog(@"EditProfileField-Error: %@",error);
 }
 
 -(void)updateLocalValues:(NSString *)string {
@@ -142,6 +179,7 @@
         default:
             break;
     }
+    [CurrentUser saveUserToPersistentStore:[CurrentUser sharedInstance].user];
 }
 
 -(void)textViewDidChange:(UITextView *)textView {
