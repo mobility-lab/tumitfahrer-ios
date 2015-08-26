@@ -115,7 +115,11 @@
         [self storeEmailInDefaults];
         [self backToLoginButtonPressed:nil];
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        [ActionManager showAlertViewWithTitle:@"Error" description:@"Could not create new user"];
+        if(operation.HTTPRequestOperation.response.statusCode ==400){
+            [ActionManager showAlertViewWithTitle:@"Error" description: @"Not a valid mail address. Use one of these: tum.de, cs.tum.edu, mytum.de" ];
+        } else {
+            [ActionManager showAlertViewWithTitle:@"Error" description: @"An error occured." ];
+        }
         RKLogError(@"Load failed with error: %@", error);
     }];
 }
