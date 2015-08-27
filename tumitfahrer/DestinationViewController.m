@@ -41,6 +41,8 @@
     self.searchBar.placeholder = @"Search Address";
     self.searchBar.tintColor = [UIColor blueColor];
     
+
+    
 #ifdef DEBUG
     [self.searchBar setAccessibilityLabel:@"Search Bar"];
     [self.searchBar setIsAccessibilityElement:YES];
@@ -58,6 +60,10 @@
 -(void)viewWillAppear:(BOOL)animated {
     [self.searchBar becomeFirstResponder];
     self.view.backgroundColor = [UIColor customLightGray];
+}
+
+-(void) viewDidAppear:(BOOL)animated {
+    
 }
 
 -(void)saveButtonPressed {
@@ -184,10 +190,15 @@
 }
 
 -(BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
-    [self.searchBar setShowsCancelButton:YES animated:YES];
+    [self.searchBar setShowsCancelButton:NO animated:YES];
     return YES;
 }
 
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    [self.searchBar resignFirstResponder];
+    // Do the search...
+}
 
 
 
