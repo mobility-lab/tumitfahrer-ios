@@ -168,7 +168,6 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
         NSDictionary *aps = [userInfo valueForKey:@"aps"];
         NSDictionary *alert = [aps valueForKey:@"alert"];
         [ActionManager showAlertViewWithTitle: [alert valueForKey:@"title"] description:[alert valueForKey:@"body"]];
-
     }
 }
 

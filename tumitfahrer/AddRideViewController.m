@@ -474,11 +474,11 @@ NSString *const kRideType = @"Ride Type";
         
         [self resetTables];
         if(self.potentialRequestedRide != nil) {
-            [self addPassengerToNewRide:[mappingResult firstObject]];
+//            [self addPassengerToNewRide:[mappingResult firstObject]];
         } else {
-            [self redirectToRideDetailsWithRide:[mappingResult firstObject]];
+            
         }
-        
+        [self redirectToRideDetailsWithRide:[mappingResult firstObject]];
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         [ActionManager showAlertViewWithTitle:@"Error" description:@"Could not add a ride"];
         addActionCell.actionButton.enabled = YES;
