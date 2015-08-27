@@ -382,7 +382,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
     
     // register date formatter compliant with the date format in the backend
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ssZZZZ"]; //'T'
     [[RKValueTransformer defaultValueTransformer] insertValueTransformer:dateFormatter atIndex:0];
     
     // add mappings to object manager

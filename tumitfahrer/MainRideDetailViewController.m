@@ -78,7 +78,7 @@
     editButton.frame = CGRectMake(220, 25, 30, 30);
     [editButton setImage:[UIImage imageNamed:@"EditIcon"] forState:UIControlStateNormal];
     [editButton addTarget:self action:@selector(editButtonTapped) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:editButton];
+//    [self.view addSubview:editButton];
     
     self.rideDetail.shouldDisplayGradient = YES;
     self.view.backgroundColor = [UIColor customLightGray];
