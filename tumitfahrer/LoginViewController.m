@@ -132,6 +132,9 @@
         [self checkDeviceToken];
         RKLogError(@"Authentication: %@", auth);
         [self storeCurrentUserInDefaults:auth];
+        UIApplication *application = [UIApplication sharedApplication];
+        AppDelegate *delegate = (AppDelegate*) application.delegate;
+        [delegate setupPushNotifications:application];
         [self dismissViewControllerAnimated:YES completion:nil];
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         [ActionManager showAlertViewWithTitle:@"Invalid email/password" description:@"Could not login, please check your email and password."];

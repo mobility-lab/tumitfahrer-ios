@@ -26,4 +26,5 @@
 @property(nonatomic, readonly, strong) NSDictionary *registrationOptions;
 
 -(void) logoutCurrentUser;
+-(void)setupPushNotifications: (UIApplication *)a;
 @end

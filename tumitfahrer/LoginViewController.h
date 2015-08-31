@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "GAITrackedViewController.h"
+#import "AppDelegate.h"
 
 @interface LoginViewController : GAITrackedViewController <UITextFieldDelegate, UIGestureRecognizerDelegate>
 

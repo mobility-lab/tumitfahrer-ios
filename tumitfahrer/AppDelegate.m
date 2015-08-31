@@ -64,7 +64,7 @@ NSString *const SubscriptionTopic = @"/topics/global";
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     // register app for receiving push notifications
-    [self setupPushNotifications: application];
+//    [self setupPushNotifications: application];
     
     [self setupNavigationController];
     [self setupRestKit];
@@ -201,7 +201,6 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error {
 	NSLog(@" <y<  Failed to get token, error: %@", error);
 }
-
 -(void)setupPushNotifications: (UIApplication *)application {
     NSLog(@" <y<  setupPushNotifications -- get token");
     // [START_EXCLUDE]
