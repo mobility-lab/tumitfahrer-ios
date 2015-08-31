@@ -68,7 +68,7 @@
     NSString *fullURL = @"https://carsharing.mvg-mobil.de/";
     NSURL *url = [NSURL URLWithString:fullURL];
     NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
-    webview = [[UIWebView alloc] initWithFrame:CGRectMake(50, 0, [UIScreen mainScreen].bounds.size.width-50,  [UIScreen mainScreen].bounds.size.height)];
+    webview = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width,  [UIScreen mainScreen].bounds.size.height)];
     [webview stringByEvaluatingJavaScriptFromString:[ActionManager prepareJavaScriptCodeWithGeolocation:[LocationController sharedInstance].currentLocation]];
     [webview loadRequest:requestObj];
     
@@ -120,9 +120,27 @@
     
     if (self.index == 2) {
         [self.view addSubview:webview];
-        [self.view addSubview:arrowLeft];
+//        [self.view addSubview:arrowLeft];
         [self.view bringSubviewToFront:arrowLeft];
         self.tableView.hidden = YES;
+        
+        //Navbar
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+            UINavigationController *navController = self.navigationController;
+        [NavigationBarUtilities setupNavbar:&navController withColor:[UIColor colorWithRed:0 green:0.361 blue:0.588 alpha:1]];
+            self.navigationController.navigationBar.translucent = YES;
+        self.navigationItem.title = @"Get a car";
+        
+        MMDrawerBarButtonItem * leftDrawerButton = [[MMDrawerBarButtonItem alloc] initWithTarget:self action:@selector(leftMenuButtonPressed)];
+        
+        [self.navigationItem setLeftBarButtonItem:leftDrawerButton animated:YES];
+        
+        
+//            if(self.logo==nil){
+//                self.logo = [[LogoView alloc] initWithFrame:CGRectMake(0, 0, 200, 41) title:[[self.pageTitles objectAtIndex:self.RideType] objectAtIndex:0]];
+//            }
+//            [self.navigationItem setTitleView:self.logo];
+        
     } else {
         [arrowLeft removeFromSuperview];
         [webview removeFromSuperview];
@@ -132,6 +150,10 @@
         [self checkPhotosOfRides];
     }
 }
+-(void) leftMenuButtonPressed {
+    [self.sideBarController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
+}
+
 
 -(void)checkPhotosOfRides {
     for (Ride *ride in [self ridesForCurrentIndex]) {

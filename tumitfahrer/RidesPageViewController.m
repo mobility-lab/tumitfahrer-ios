@@ -33,8 +33,8 @@
 -(instancetype)initWithContentType:(ContentType)contentType {
     self = [super init];
     if (self) {
-        NSArray *campusTitles = [NSArray arrayWithObjects:@"All Campus", @"Around you", @"Get a car", nil];
-        NSArray *activityTitles = [NSArray arrayWithObjects:@"All Activity", @"Around you", @"Get a car", nil];
+        NSArray *campusTitles = [NSArray arrayWithObjects:@"All Campus", @"Around you", nil];
+        NSArray *activityTitles = [NSArray arrayWithObjects:@"All Activity", @"Around you", nil];
         self.pageTitles = [NSArray arrayWithObjects:campusTitles, activityTitles, nil];
         self.pageColor = [UIColor colorWithRed:0 green:0.361 blue:0.588 alpha:1];
         self.RideType = contentType;
@@ -49,7 +49,6 @@
     
     self.pageController.dataSource = self;
     [[self.pageController view] setFrame:[[self view] bounds]];
-    
     RidesViewController *initialViewController = [self viewControllerAtIndex:0];
 
     NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
@@ -59,6 +58,7 @@
     [self addChildViewController:self.pageController];
     [[self view] addSubview:[self.pageController view]];
     [self.pageController didMoveToParentViewController:self];
+    self.logo.pageControl.numberOfPages = 2;
     self.view.backgroundColor = [UIColor customLightGray];
     self.automaticallyAdjustsScrollViewInsets = NO;
     
@@ -105,6 +105,7 @@
     if(self.logo==nil){
         self.logo = [[LogoView alloc] initWithFrame:CGRectMake(0, 0, 200, 41) title:[[self.pageTitles objectAtIndex:self.RideType] objectAtIndex:0]];
     }
+    self.logo.pageControl.numberOfPages = 2;
     [self.navigationItem setTitleView:self.logo];
 }
 
@@ -127,7 +128,7 @@
     
     index++;
     
-    if (index == 3) {
+    if (index == 2) {
         return nil;
     }
     

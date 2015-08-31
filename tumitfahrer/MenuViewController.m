@@ -22,6 +22,7 @@
 #import "CircularImageView.h"
 #import "WebserviceRequest.h"
 #import "Badge.h"
+#import "RidesViewController.h"
 
 @interface MenuViewController ()
 
@@ -66,7 +67,9 @@
     // section 0 - view controllers
     RidesPageViewController *campusRidesVC = [[RidesPageViewController alloc] initWithContentType:ContentTypeCampusRides];
     RidesPageViewController *activityRidesVC = [[RidesPageViewController alloc] initWithContentType:ContentTypeActivityRides];
-    self.browseRidesViewControllers = [NSArray arrayWithObjects:campusRidesVC, activityRidesVC, nil];
+    RidesViewController *getACar =  [[RidesViewController alloc] init];
+    [getACar setIndex:2];
+    self.browseRidesViewControllers = [NSArray arrayWithObjects:campusRidesVC, activityRidesVC,getACar, nil];
     
     
     // section 1 - view controllers
@@ -89,7 +92,7 @@
 
 -(void)initCellTitles {
     self.timelineSection = [NSArray arrayWithObjects:@"Timeline", nil];
-    self.browseRidesSection = [NSArray arrayWithObjects:@"Campus Rides", @"Activity Rides", nil];
+    self.browseRidesSection = [NSArray arrayWithObjects:@"Campus Rides", @"Activity Rides",@"Get a car",  nil];
     self.addRidesSection = [NSArray arrayWithObjects:@"Add", @"Search", nil];
     self.profileSection = [NSArray arrayWithObjects:@"Your Profile", @"Your Rides", nil];
     self.allMenuItems = [NSArray arrayWithObjects:self.timelineSection, self.browseRidesSection, self.addRidesSection, self.profileSection, nil];
@@ -97,7 +100,7 @@
 
 -(void)initCellIcons {
     self.timelineIcons = [NSArray arrayWithObjects:@"NewsFeedIcon", nil];
-    self.browseRidesIcons = [NSArray arrayWithObjects:@"CampusIcon", @"ActivityIcon", nil];
+    self.browseRidesIcons = [NSArray arrayWithObjects:@"CampusIcon", @"ActivityIcon",@"SearchIcon", nil];
     self.addRidesIcons = [NSArray arrayWithObjects:@"AddIcon", @"SearchIcon", nil];
     self.profileIcons = [NSArray arrayWithObjects:@"ProfileIcon", @"ScheduleIcon", nil];
     self.allIcons = [NSArray arrayWithObjects:self.timelineIcons, self.browseRidesIcons, self.addRidesIcons, self.profileIcons, nil];

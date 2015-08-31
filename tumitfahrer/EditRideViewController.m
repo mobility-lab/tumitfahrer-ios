@@ -340,7 +340,7 @@
 #pragma mark - Button Handlers
 
 -(void)leftDrawerButtonPress:(id)sender{
-    [self.sideBarController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
+    ;
 }
 
 -(void)segmentedControlChangedToIndex:(NSInteger)index segmentedControlId:(NSInteger)controlId{
