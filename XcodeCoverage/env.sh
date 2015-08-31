@@ -1,5 +1,5 @@
-export BUILT_PRODUCTS_DIR="/Users/danielboning/Library/Developer/Xcode/DerivedData/Build/Products/Release-iphoneos"
+export BUILT_PRODUCTS_DIR="/Users/danielboning/Library/Developer/Xcode/DerivedData/Build/Intermediates/ArchiveIntermediates/tumitfahrer/BuildProductsPath/Release-iphoneos"
 export CURRENT_ARCH="arm64"
-export OBJECT_FILE_DIR_normal="/Users/danielboning/Library/Developer/Xcode/DerivedData/Build/Intermediates/tumitfahrer.build/Release-iphoneos/mitfahrer-app.build/Objects-normal"
-export OBJROOT="/Users/danielboning/Library/Developer/Xcode/DerivedData/Build/Intermediates"
+export OBJECT_FILE_DIR_normal="/Users/danielboning/Library/Developer/Xcode/DerivedData/Build/Intermediates/ArchiveIntermediates/tumitfahrer/IntermediateBuildFilesPath/tumitfahrer.build/Release-iphoneos/mitfahrer-app.build/Objects-normal"
+export OBJROOT="/Users/danielboning/Library/Developer/Xcode/DerivedData/Build/Intermediates/ArchiveIntermediates/tumitfahrer/IntermediateBuildFilesPath"
 export SRCROOT="/Users/danielboning/Workspace/TUMitfahrer/tumitfahrer-ios"
