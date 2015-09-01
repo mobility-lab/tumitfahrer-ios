@@ -396,7 +396,7 @@ NSString *const kRideType = @"Ride Type";
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyy-MM-dd HH:mm"];
     [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"de_DE"]];
-    [formatter setTimeZone:[NSTimeZone localTimeZone]];
+//    [formatter setTimeZone:[NSTimeZone localTimeZone]];
     NSDate *dateString = [formatter dateFromString:departureTime];
     [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ssZZZ"];//'T' removed from timestring
     NSString *time = [formatter stringFromDate:dateString];

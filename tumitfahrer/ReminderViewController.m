@@ -103,7 +103,7 @@
         NSCalendar *calendar = [NSCalendar currentCalendar];
         NSDateComponents *components = [calendar components:(NSHourCalendarUnit | NSMinuteCalendarUnit)
                                                    fromDate:[NSDate date]];
-        components.timeZone = [NSTimeZone localTimeZone];
+//        components.timeZone = [NSTimeZone localTimeZone];
         [components setCalendar:calendar];
         components.hour = [hour intValue];
         components.minute = [minute intValue];
@@ -181,7 +181,7 @@
     [dateComps setSecond:[timeComponents second]];
     NSDate *itemDate = [calendar dateFromComponents:dateComps];
     localNotif.fireDate = itemDate;
-    localNotif.timeZone = [NSTimeZone defaultTimeZone];
+//    localNotif.timeZone = [NSTimeZone defaultTimeZone];
     
     // Notification details
     localNotif.alertBody = [NSString stringWithFormat:@"Reminder: Tomorrow you have a ride from %@ to %@ at %@", ride.departurePlace, ride.destination, ride.departureTime];

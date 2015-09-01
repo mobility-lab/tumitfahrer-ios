@@ -110,7 +110,7 @@
 +(void)getUserWithIdFromWebService:(NSNumber *)userId block:(userCompletionHandler)block {
     NSString *requestString = [NSString stringWithFormat:@"/api/v3/users/%@", userId];
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
-    [objectManager.HTTPClient setDefaultHeader:@"Authorization: Basic" value:[ActionManager encryptCredentialsWithEmail:[CurrentUser sharedInstance].user.email encryptedPassword:[CurrentUser sharedInstance].user.password]];
+    [objectManager.HTTPClient setDefaultHeader:@"Authorization:" value:[CurrentUser sharedInstance].user.apiKey];//[ActionManager encryptCredentialsWithEmail:[CurrentUser sharedInstance].user.email encryptedPassword:[CurrentUser sharedInstance].user.password]];
     
     [objectManager getObjectsAtPath:requestString parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         User *user = [mappingResult firstObject];
@@ -128,12 +128,13 @@
     objectManager.requestSerializationMIMEType = RKMIMETypeJSON ;
     [objectManager.HTTPClient setDefaultHeader:@"Authorization" value:[CurrentUser sharedInstance].user.apiKey];
     [objectManager putObject:requestParams path:[NSString stringWithFormat:@"/api/v3/rides/%@/requests", request.requestedRide.rideId] parameters:requestParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        if ([mappingResult firstObject] != nil) {
-            block(YES);
-        } else {
-            block(NO);
-        }
-        [self updateRide:request.rideId];
+//        if ([mappingResult firstObject] != nil) {
+//            block(YES);
+//        } else {
+//            block(NO);
+//        }
+        block(YES);
+//        [self updateRide:request.rideId];
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         block(NO);
     }];
