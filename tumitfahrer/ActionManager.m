@@ -144,9 +144,10 @@
 
 + (NSString *)timeStringFromDate:(NSDate*)date {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-//    [formatter setTimeZone:[NSTimeZone localTimeZone]];
+    [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
     [formatter setDateFormat:@"HH:mm"];
-    [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"de_DE"]];
+    NSLog(@"<y< timezone: %@", formatter.timeZone);
+//    [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"de_DE"]];
     NSString *stringFromDate = [formatter stringFromDate:date];
     return stringFromDate;
 }
@@ -182,7 +183,7 @@
     
     NSDate* sourceDate = [NSDate date];
     
-    NSTimeZone* sourceTimeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
+    NSTimeZone* sourceTimeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
     NSTimeZone* destinationTimeZone = [NSTimeZone localTimeZone];
     
     NSInteger sourceGMTOffset = [sourceTimeZone secondsFromGMTForDate:sourceDate];
