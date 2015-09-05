@@ -137,8 +137,8 @@
     NSString *urlString = [API_ADDRESS stringByAppendingString:[NSString stringWithFormat:@"/api/v3/users/%@/devices", [CurrentUser sharedInstance].user.userId]];
     NSURL *url = [[NSURL alloc] initWithString:urlString];
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
+    [urlRequest setValue:[CurrentUser sharedInstance].user.apiKey forHTTPHeaderField:@"Authorization"];
     [urlRequest setHTTPMethod:@"GET"];
-    [urlRequest setValue:[CurrentUser sharedInstance].user.apiKey forHTTPHeaderField:@"apiKey"];
 
     return urlRequest;
 }

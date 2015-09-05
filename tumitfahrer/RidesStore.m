@@ -302,6 +302,12 @@ static int activity_id = 0;
             activity_id++;
 //            [self updateBadges];
         }
+        //Register for Notifications
+        UIApplication *application = [UIApplication sharedApplication];
+        AppDelegate *delegate = (AppDelegate*) application.delegate;
+        [delegate setupPushNotifications: application];
+        
+        
         block(YES);
         [self performSelector: @selector(dismissWaitAlert:)  withObject:waitAlert afterDelay:5.0];//needs some time after the loaded rides are displayed.
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {

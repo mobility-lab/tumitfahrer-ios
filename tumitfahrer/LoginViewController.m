@@ -128,10 +128,11 @@
         [[CurrentUser sharedInstance] initCurrentUser:user];
         [CurrentUser saveUserToPersistentStore:user];
         NSString *auth =  user.apiKey;
-        // check if fetch user has assigned a device token
-        [self checkDeviceToken];
+
         RKLogError(@"Authentication: %@", auth);
         [self storeCurrentUserInDefaults:auth];
+        // check if fetch user has assigned a device token
+//        [self checkDeviceToken];
         UIApplication *application = [UIApplication sharedApplication];
         AppDelegate *delegate = (AppDelegate*) application.delegate;
         [delegate setupPushNotifications:application];
@@ -143,13 +144,13 @@
 }
 
 -(void)checkDeviceToken {
-    
-    [[CurrentUser sharedInstance] hasDeviceTokenInWebservice:^(BOOL tokenExistsInDatabase) {
-        // device token is not in db, need to send it
-        if (!tokenExistsInDatabase && [CurrentUser sharedInstance].user.userId > 0) {
-            [[CurrentUser sharedInstance] sendDeviceTokenToWebservice];
-        }
-    }];
+//Everything is now done via start [delegate setupPushNotification]
+//    [[CurrentUser sharedInstance] hasDeviceTokenInWebservice:^(BOOL tokenExistsInDatabase) {
+//        // device token is not in db, need to send it
+//        if (!tokenExistsInDatabase && [CurrentUser sharedInstance].user.userId > 0) {
+//            [[CurrentUser sharedInstance] sendDeviceTokenToWebservice];
+//        }
+//    }];
 }
 
 -(void)storeCurrentUserInDefaults: (NSString*)auth {

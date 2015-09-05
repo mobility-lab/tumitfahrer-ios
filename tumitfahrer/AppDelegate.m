@@ -144,11 +144,15 @@ NSString *const SubscriptionTopic = @"/topics/global";
 }
 
 -(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    [UIApplication sharedApplication].applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber+1;
-    NSLog(@" <y<< GOT NOTIFICATION");
-    [[GCMService sharedInstance] appDidReceiveMessage:userInfo];
     
-    
+    NSNumber *userId = [userInfo valueForKey:@"user_id"];
+        NSLog(@" <y<< GOT NOTIFICATION for User:%@",userId);
+    if(userId == [CurrentUser sharedInstance].user.userId){
+        [UIApplication sharedApplication].applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber+1;
+        [[GCMService sharedInstance] appDidReceiveMessage:userInfo];
+    } else {
+        NSLog(@"<y< notification for wrong user! Discarded.");
+    }
 
     
 }
@@ -156,7 +160,10 @@ NSString *const SubscriptionTopic = @"/topics/global";
 didReceiveRemoteNotification:(NSDictionary *)userInfo
 fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
         [UIApplication sharedApplication].applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber+1;
-    NSLog(@"<y<< Notification received: %@", userInfo);
+    NSNumber *userId = [userInfo valueForKey:@"user_id"];
+    NSLog(@" <y<< GOT NOTIFICATION for User:%@",userId);
+    NSLog(@"<y<< Notification received for User=%@  notification: %@",userId, userInfo);
+    if(userId == [CurrentUser sharedInstance].user.userId || true){// || true -> nur zum testen 
     // This works only if the app started the GCM service
     [[GCMService sharedInstance] appDidReceiveMessage:userInfo];
     // Handle the received message
@@ -165,9 +172,14 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
     
     if (application.applicationState == UIApplicationStateActive ) {
         NSLog(@" <y<< ACTIVE");
+      ;
         NSDictionary *aps = [userInfo valueForKey:@"aps"];
+
         NSDictionary *alert = [aps valueForKey:@"alert"];
         [ActionManager showAlertViewWithTitle: [alert valueForKey:@"title"] description:[alert valueForKey:@"body"]];
+    }
+    } else {
+          NSLog(@"<y< notification for wrong user! Discarded.");
     }
 }
 
@@ -201,6 +213,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error {
 	NSLog(@" <y<  Failed to get token, error: %@", error);
 }
+
 -(void)setupPushNotifications: (UIApplication *)application {
     NSLog(@" <y<  setupPushNotifications -- get token");
     // [START_EXCLUDE]
@@ -231,10 +244,12 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
         UIUserNotificationType allNotificationTypes =
         (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
         UIUserNotificationSettings *settings =
-        [UIUserNotificationSettings settingsForTypes:allNotificationTypes categories:nil];
-        [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+        [UIUserNotificationSettings settingsForTypes: allNotificationTypes categories: nil];
+        [[UIApplication sharedApplication] registerUserNotificationSettings: settings ];
         [[UIApplication sharedApplication] registerForRemoteNotifications];
     }
+    
+    
     //
     // [START start_gcm_service]
     [[GCMService sharedInstance] startWithConfig:[GCMConfig defaultConfig]];
@@ -250,7 +265,19 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
             [[NSNotificationCenter defaultCenter] postNotificationName:weakSelf.registrationKey
                                                                 object:nil
                                                               userInfo:userInfo];
-            [weakSelf uploadRegistrationToken: registrationToken];
+            
+            //Check for registration token
+            [Device sharedInstance].deviceToken = registrationToken;
+            [ [CurrentUser sharedInstance] hasDeviceTokenInWebservice:^(BOOL keyIsOnline) {
+                if(keyIsOnline){
+                    NSLog(@"<y< registration key is on webserver. no need to upload");
+                } else {
+                    NSLog(@"<y< registration key is not on webserver. need to upload");
+                    [weakSelf uploadRegistrationToken: registrationToken];
+                }
+            }];
+        
+            
         } else {
             NSLog(@"Registration to GCM failed with error: %@", error.localizedDescription);
             NSDictionary *userInfo = @{@"error":error.localizedDescription};
