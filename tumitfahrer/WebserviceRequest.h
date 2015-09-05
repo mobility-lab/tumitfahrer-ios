@@ -13,7 +13,7 @@
 /**
  *  Class that handles requests to the webservice.
  */
-@interface WebserviceRequest : NSObject
+@interface WebserviceRequest : NSObject<NSURLConnectionDataDelegate>
 
 typedef void(^messageCompletionHandler)(Message *);
 typedef void(^userCompletionHandler)(User *);
@@ -77,7 +77,7 @@ typedef void(^requestCompletionHandler)(Request *);
  *  @param isConfirmed Status (true if confirmed).
  *  @param block       The completion handler. YES if successfully completed action.
  */
-+(void)acceptRideRequest:(Request *)request isConfirmed:(BOOL)isConfirmed block:(boolCompletionHandler)block;
+-(void)acceptRideRequest:(Request *)request isConfirmed:(BOOL)isConfirmed block:(boolCompletionHandler)block;
 /**
  *  Removes passenger from the ride.
  *

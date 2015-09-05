@@ -392,7 +392,8 @@
         }
     } else if(cellType == RequestCell) {
         Request *request = (Request *)object;
-        [WebserviceRequest acceptRideRequest:request isConfirmed:NO block:^(BOOL isAccepted) {
+        WebserviceRequest *wr = [WebserviceRequest alloc];
+        [wr acceptRideRequest:request isConfirmed:NO block:^(BOOL isAccepted) {
             if (isAccepted) {
                 [self removeRideRequest:request];
             } else {
@@ -420,9 +421,10 @@
     } else if(cellType == RequestCell) {
         
         Request *request = (Request *)object;
+        WebserviceRequest *wr = [WebserviceRequest alloc];
         [WebserviceRequest getUserWithId:request.passengerId block:^(User * user) {
             if (user != nil) {
-                [WebserviceRequest acceptRideRequest:request isConfirmed:YES block:^(BOOL isAccepted) {
+                [wr acceptRideRequest:request isConfirmed:YES block:^(BOOL isAccepted) {
                     if (isAccepted) {
                         [self moveRequestorToPassengers:user];
                     } else {

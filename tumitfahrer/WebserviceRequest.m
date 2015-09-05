@@ -20,6 +20,8 @@
 
 @implementation WebserviceRequest
 
+boolCompletionHandler boolCH;
+
 +(void)getConversationsForRideId:(NSInteger)rideId block:(boolCompletionHandler)block {
     
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
@@ -110,7 +112,7 @@
 +(void)getUserWithIdFromWebService:(NSNumber *)userId block:(userCompletionHandler)block {
     NSString *requestString = [NSString stringWithFormat:@"/api/v3/users/%@", userId];
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
-    [objectManager.HTTPClient setDefaultHeader:@"Authorization:" value:[CurrentUser sharedInstance].user.apiKey];//[ActionManager encryptCredentialsWithEmail:[CurrentUser sharedInstance].user.email encryptedPassword:[CurrentUser sharedInstance].user.password]];
+    [objectManager.HTTPClient setDefaultHeader:@"Authorization" value:[CurrentUser sharedInstance].user.apiKey];//[ActionManager encryptCredentialsWithEmail:[CurrentUser sharedInstance].user.email encryptedPassword:[CurrentUser sharedInstance].user.password]];
     
     [objectManager getObjectsAtPath:requestString parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         User *user = [mappingResult firstObject];
@@ -121,24 +123,58 @@
     }];
 }
 
-+(void)acceptRideRequest:(Request *)request isConfirmed:(BOOL)isConfirmed block:(boolCompletionHandler)block {
+-(void)acceptRideRequest:(Request *)rideRequest isConfirmed:(BOOL)isConfirmed block:(boolCompletionHandler)block {
     
-    NSDictionary *requestParams = @{@"passenger_id": request.passengerId, @"confirmed" : [NSNumber numberWithBool:isConfirmed]};
-    RKObjectManager *objectManager =  [RKObjectManager sharedManager];
-    objectManager.requestSerializationMIMEType = RKMIMETypeJSON ;
-    [objectManager.HTTPClient setDefaultHeader:@"Authorization" value:[CurrentUser sharedInstance].user.apiKey];
-    [objectManager putObject:requestParams path:[NSString stringWithFormat:@"/api/v3/rides/%@/requests", request.requestedRide.rideId] parameters:requestParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-//        if ([mappingResult firstObject] != nil) {
-//            block(YES);
-//        } else {
-//            block(NO);
-//        }
-        block(YES);
-//        [self updateRide:request.rideId];
-    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        block(NO);
-    }];
+//    NSDictionary *requestParams = @{@"passenger_id": request.passengerId, @"confirmed" : [NSNumber numberWithBool:isConfirmed]};
+//    RKObjectManager *objectManager =  [RKObjectManager sharedManager];
+//    objectManager.requestSerializationMIMEType = RKMIMETypeJSON ;
+//
+//    [objectManager.HTTPClient setDefaultHeader:@"Authorization" value:[CurrentUser sharedInstance].user.apiKey];
+//    [objectManager putObject:requestParams path:[NSString stringWithFormat:@"/api/v3/rides/%@/requests", request.requestedRide.rideId] parameters:requestParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+////        if ([mappingResult firstObject] != nil) {
+////            block(YES);
+////        } else {
+////            block(NO);
+////        }
+//        block(YES);
+//    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+//        block(NO);
+//    }];
+    //Going with
+    NSLog(@"acceptRideRequest confiremd: %d", isConfirmed);
+    //
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/api/v3/rides/%@/requests",API_ADDRESS, rideRequest.rideId]]];
+    [request setHTTPMethod:@"PUT"];
+    [request setValue:[CurrentUser sharedInstance].user.apiKey forHTTPHeaderField:@"Authorization"];
+    NSString *confirmed;
+    if(isConfirmed) confirmed = @"true";
+    else confirmed = @"false";
+    NSData *body = [[NSString stringWithFormat:@"{\"confirmed\":%@,\"passenger_id\":%@}", confirmed, rideRequest.passengerId] dataUsingEncoding:NSUTF8StringEncoding];
+    [request setHTTPBody:body];
+    [request setValue:@"application/json" forHTTPHeaderField: @"Content-Type"];
+    
+    
+    boolCH = block;
+    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
+    [conn start];
 }
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"WebserviceRequest-didRecieveResponse: %ld",(long)[httpResponse statusCode]);
+    NSLog(@"WebserviceRequest-didRecieveResponse: %@",response.debugDescription);
+    NSLog(@"WebserviceRequest-didRecieveResponse: %@",response.description);
+    if(httpResponse.statusCode == 200)  boolCH(YES);//Redefine if you need more than one NSURLConnection requests
+    else boolCH(NO);
+
+}
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    NSLog(@"WebserviceRequest-connectionDidFinishLoading");
+}
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    NSLog(@"WebserviceRequest-Error: %@",error);
+}
+
 
 +(void)removeRequestForRideId:(NSNumber *)rideId request:(Request *)request block:(boolCompletionHandler)block {
     RKObjectManager *objectManager =  [RKObjectManager sharedManager];
