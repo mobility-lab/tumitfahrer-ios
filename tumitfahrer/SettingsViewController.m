@@ -44,7 +44,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.headers = [[NSArray alloc] initWithObjects:@"Feedback", @"General", @"About TUMitfahrer", nil];
-        self.actionOptions = [[NSArray alloc] initWithObjects:@"Send Feedback", @"Report a problem", nil];
+        self.actionOptions = [[NSArray alloc] initWithObjects: @"Send feedback",  nil];
         self.actionIcons = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"FeedbackIconBlack"], [UIImage imageNamed:@"ProblemIconBlack"], nil];
         self.readOptions = [[NSArray alloc] initWithObjects:@"Reminder", @"Terms of Use", @"Licenses", @"Carsharing", nil];
         self.readIcons = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"ReminderIconBlack"], [UIImage imageNamed:@"PrivacyIconBlack"], [UIImage imageNamed:@"LicenseIconBlack"], [UIImage imageNamed:@"CarIconBlack"], nil];
@@ -126,12 +126,12 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 
-    if (indexPath.section == 0 && indexPath.row == 0) {
-        StomtViewController *stomtVC = [[StomtViewController alloc] init];
-        stomtVC.title = @"Feeback";
-        [self.navigationController pushViewController:stomtVC animated:YES];
-        return;
-    }
+//    if (indexPath.section == 0 && indexPath.row == 0) {
+//        StomtViewController *stomtVC = [[StomtViewController alloc] init];
+//        stomtVC.title = @"Feeback";
+//        [self.navigationController pushViewController:stomtVC animated:YES];
+//        return;
+//    }
     
     if(indexPath.section == 0) {
         FeedbackViewController *feedbackVC = [[FeedbackViewController alloc] init];
