@@ -161,8 +161,6 @@ boolCompletionHandler boolCH;
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
-    NSLog(@"WebserviceRequest-didRecieveResponse: %ld",(long)[httpResponse statusCode]);
-    NSLog(@"WebserviceRequest-didRecieveResponse: %@",response.debugDescription);
     NSLog(@"WebserviceRequest-didRecieveResponse: %@",response.description);
     if(httpResponse.statusCode == 200)  boolCH(YES);//Redefine if you need more than one NSURLConnection requests
     else boolCH(NO);
