@@ -28,6 +28,7 @@
 @dynamic destinationLatitude;
 @dynamic destinationLongitude;
 @dynamic freeSeats;
+@dynamic freeSeatsCurrent;
 @dynamic isPaid;
 @dynamic regularRideId;
 @dynamic isRideRequest;

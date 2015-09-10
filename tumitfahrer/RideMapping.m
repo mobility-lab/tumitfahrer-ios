@@ -29,7 +29,7 @@
                                                       @"destination_latitude" : @"destinationLatitude",
                                                       @"destination_longitude" : @"destinationLongitude",
                                                       @"meeting_point":@"meetingPoint",
-                                                     
+                                                      @"free_seats_current":@"freeSeatsCurrent",
                                                       @"free_seats":@"freeSeats",
                                                       @"ride_type":@"rideType",
                                                       @"is_ride_request":@"isRideRequest",

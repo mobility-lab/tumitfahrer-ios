@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		068F5848AB864309B2DEC0B8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BAEC5882914944C4B8E2DE24 /* libPods.a */; };
+		6E20A67C1BA057FC000E66B6 /* tumitfahrer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E50CCCF3191F7416003A9490 /* tumitfahrer.xcdatamodeld */; };
+		6E20A67D1BA057FD000E66B6 /* tumitfahrer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E50CCCF3191F7416003A9490 /* tumitfahrer.xcdatamodeld */; };
 		6E3A84101B9EEB29009E798E /* inspired_by_TUM_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6E3A840F1B9EEB29009E798E /* inspired_by_TUM_white.png */; };
 		6E3A84121B9EF52A009E798E /* dummy.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 6E3A84111B9EF52A009E798E /* dummy.jpeg */; };
 		6E4E133C1913F7B300D0C453 /* XCTest+GCovFlush.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4E133B1913F7B300D0C453 /* XCTest+GCovFlush.m */; };
@@ -91,7 +93,6 @@
 		E50CCCC1191E7A94003A9490 /* TimelinePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E50CCCBF191E7A94003A9490 /* TimelinePageViewController.m */; };
 		E50CCCC2191E7A94003A9490 /* TimelinePageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E50CCCC0191E7A94003A9490 /* TimelinePageViewController.xib */; };
 		E50CCCC5191F6FAC003A9490 /* ActivityMapping.m in Sources */ = {isa = PBXBuildFile; fileRef = E50CCCC4191F6FAC003A9490 /* ActivityMapping.m */; };
-		E50CCCF5191F7416003A9490 /* tumitfahrer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E50CCCF3191F7416003A9490 /* tumitfahrer.xcdatamodeld */; };
 		E50CCCFE191F7C74003A9490 /* ActivityStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E50CCCFD191F7C74003A9490 /* ActivityStore.m */; };
 		E50CCD01191F8968003A9490 /* RatingMapping.m in Sources */ = {isa = PBXBuildFile; fileRef = E50CCD00191F8968003A9490 /* RatingMapping.m */; };
 		E50CCD06191FAE8A003A9490 /* RidesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E50CCD04191FAE8A003A9490 /* RidesViewController.m */; };
@@ -323,6 +324,7 @@
 
 /* Begin PBXFileReference section */
 		21C7515A720A4BD98246E980 /* libPods-UI Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-UI Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6E20A67B1BA05704000E66B6 /* tumitfahrer 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "tumitfahrer 2.xcdatamodel"; sourceTree = "<group>"; };
 		6E3A840F1B9EEB29009E798E /* inspired_by_TUM_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = inspired_by_TUM_white.png; path = ../../../../Documents/inspired_by_TUM_white.png; sourceTree = "<group>"; };
 		6E3A84111B9EF52A009E798E /* dummy.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = dummy.jpeg; path = ../../../../Documents/dummy.jpeg; sourceTree = "<group>"; };
 		6E4E133A1913F7B300D0C453 /* XCTest+GCovFlush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XCTest+GCovFlush.h"; sourceTree = "<group>"; };
@@ -510,7 +512,7 @@
 		E522BAC518AE13F600ECD375 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		E522BAC718AE13F600ECD375 /* tumitfahrer-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "tumitfahrer-Prefix.pch"; sourceTree = "<group>"; };
 		E522BAC818AE13F600ECD375 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		E522BAC918AE13F600ECD375 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		E522BAC918AE13F600ECD375 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = tumitfahrer/AppDelegate.m; sourceTree = SOURCE_ROOT; };
 		E522BAD118AE13F600ECD375 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E522BAD718AE13F600ECD375 /* tumitfahrerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = tumitfahrerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E522BAD818AE13F600ECD375 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -1239,6 +1241,7 @@
 		E522BABF18AE13F600ECD375 /* tumitfahrer */ = {
 			isa = PBXGroup;
 			children = (
+				E50CCCF3191F7416003A9490 /* tumitfahrer.xcdatamodeld */,
 				E522BAC818AE13F600ECD375 /* AppDelegate.h */,
 				E522BAC918AE13F600ECD375 /* AppDelegate.m */,
 				E50CCC15191E5844003A9490 /* Categories */,
@@ -1247,7 +1250,6 @@
 				E59987C518E6DBCE00B01C62 /* Model */,
 				E50DB26C18F52E5900E87E62 /* RKMappings */,
 				E522BAC018AE13F600ECD375 /* Supporting Files */,
-				E50CCCF3191F7416003A9490 /* tumitfahrer.xcdatamodeld */,
 				E59987D418E6ECD800B01C62 /* UI Elements */,
 				E599882218E8155800B01C62 /* Utilities */,
 				E59987C418E6DBC300B01C62 /* ViewControllers */,
@@ -2381,7 +2383,6 @@
 				E526B616194C9C21006D3527 /* OwnerRequestViewController.m in Sources */,
 				E5CD595E1952C87C00E97DEC /* Rating.m in Sources */,
 				E5E2157F1908492200B0B150 /* FreeSeatsTableViewCell.m in Sources */,
-				E50CCCF5191F7416003A9490 /* tumitfahrer.xcdatamodeld in Sources */,
 				E5E215681907B82500B0B150 /* CustomBarButton.m in Sources */,
 				E5E215781908442100B0B150 /* SwitchTableViewCell.m in Sources */,
 				E593F09819824C0300C1AF32 /* Ride.m in Sources */,
@@ -2398,6 +2399,7 @@
 				E5A9BE0E19421F2C0072E9B0 /* IdsMapping.m in Sources */,
 				E5E2D68C1989135E00A81EB4 /* StomtAgreement.m in Sources */,
 				E50CCCC1191E7A94003A9490 /* TimelinePageViewController.m in Sources */,
+				6E20A67C1BA057FC000E66B6 /* tumitfahrer.xcdatamodeld in Sources */,
 				E526B643194DB84B006D3527 /* DescriptionCell.m in Sources */,
 				E59B9A6A1916D072008DE80B /* NavigationBarUtilities.m in Sources */,
 				E50DB27218F5DFB200E87E62 /* LocationController.m in Sources */,
@@ -2492,6 +2494,7 @@
 				6EFC23801926343200AAF263 /* RideSearchStoreTest.m in Sources */,
 				6EFC23821926447500AAF263 /* RideStoreTests.m in Sources */,
 				6EB7C1A7192CFDCD004AD7F5 /* CoreDataHelper.m in Sources */,
+				6E20A67D1BA057FD000E66B6 /* tumitfahrer.xcdatamodeld in Sources */,
 				6E4E133C1913F7B300D0C453 /* XCTest+GCovFlush.m in Sources */,
 				6EC837D2192605AE00007017 /* CurrentUserTests.m in Sources */,
 				6EB5C89A191CEFDA0026A886 /* FacultyManagerTests.m in Sources */,
@@ -2624,8 +2627,8 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Automotive Services Lab (RHS9DBXEYU)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Automotive Services Lab (RHS9DBXEYU)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/tumitfahrer/UbertestersSDK/**",
@@ -2648,7 +2651,7 @@
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "8f80980e-0208-48a4-9659-7c941d84a38e";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2660,8 +2663,8 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Automotive Services Lab (RHS9DBXEYU)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Automotive Services Lab (RHS9DBXEYU)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/tumitfahrer/UbertestersSDK/**",
@@ -2683,7 +2686,7 @@
 					"$(PROJECT_DIR)/SDKs/GoogleAnalyticsServicesiOS_3.07",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "8f80980e-0208-48a4-9659-7c941d84a38e";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -2784,9 +2787,10 @@
 		E50CCCF3191F7416003A9490 /* tumitfahrer.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				6E20A67B1BA05704000E66B6 /* tumitfahrer 2.xcdatamodel */,
 				E50CCCF4191F7416003A9490 /* tumitfahrer.xcdatamodel */,
 			);
-			currentVersion = E50CCCF4191F7416003A9490 /* tumitfahrer.xcdatamodel */;
+			currentVersion = 6E20A67B1BA05704000E66B6 /* tumitfahrer 2.xcdatamodel */;
 			path = tumitfahrer.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

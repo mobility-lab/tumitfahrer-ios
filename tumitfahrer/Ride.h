@@ -24,6 +24,7 @@
 @property (nonatomic, retain) NSNumber * destinationLatitude;
 @property (nonatomic, retain) NSNumber * destinationLongitude;
 @property (nonatomic, retain) NSNumber * freeSeats;
+@property (nonatomic, retain) NSNumber * freeSeatsCurrent;
 @property (nonatomic, retain) NSNumber * isPaid;
 @property (nonatomic, retain) NSNumber * regularRideId;
 @property (nonatomic, retain) NSNumber * isRideRequest;
