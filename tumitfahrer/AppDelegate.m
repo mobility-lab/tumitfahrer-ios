@@ -227,27 +227,41 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
         NSLog(@"Error configuring the Google context: %@", configureError);
     }
     _gcmSenderID = [[[GGLContext sharedInstance] configuration] gcmSenderID];
+    //New Attemp
+    if ([application respondsToSelector:@selector(isRegisteredForRemoteNotifications)])
+    {
+        // iOS 8 Notifications
+        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
+        
+        [application registerForRemoteNotifications];
+    }
+    else
+    {
+        // iOS < 8 Notifications
+        [application registerForRemoteNotificationTypes:
+         (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
+    }
     
     //
-        //register to receive notifications
-        UIRemoteNotificationType myTypes = UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIUserNotificationTypeNone;
-        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:myTypes];
-    // Register for remote notifications
-    if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_7_1) {
-        // iOS 7.1 or earlier
-        UIRemoteNotificationType allNotificationTypes =
-        (UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge);
-        [application registerForRemoteNotificationTypes:allNotificationTypes];
-    } else {
-        // iOS 8 or later
-        // [END_EXCLUDE]
-        UIUserNotificationType allNotificationTypes =
-        (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
-        UIUserNotificationSettings *settings =
-        [UIUserNotificationSettings settingsForTypes: allNotificationTypes categories: nil];
-        [[UIApplication sharedApplication] registerUserNotificationSettings: settings ];
-        [[UIApplication sharedApplication] registerForRemoteNotifications];
-    }
+//        //register to receive notifications
+//        UIRemoteNotificationType myTypes = UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIUserNotificationTypeNone;
+//        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:myTypes];
+//    // Register for remote notifications
+//    if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_7_1) {
+//        // iOS 7.1 or earlier
+//        UIRemoteNotificationType allNotificationTypes =
+//        (UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge);
+//        [application registerForRemoteNotificationTypes:allNotificationTypes];
+//    } else {
+//        // iOS 8 or later
+//        // [END_EXCLUDE]
+//        UIUserNotificationType allNotificationTypes =
+//        (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
+//        UIUserNotificationSettings *settings =
+//        [UIUserNotificationSettings settingsForTypes: allNotificationTypes categories: nil];
+//        [[UIApplication sharedApplication] registerUserNotificationSettings: settings ];
+//        [[UIApplication sharedApplication] registerForRemoteNotifications];
+//    }
     
     
     //
@@ -362,6 +376,11 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
 }
 
 -(void)setupNavigationController {
+    LoginViewController *loginVC = [[LoginViewController alloc] init];
+    loginVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    [self.window.rootViewController presentViewController:loginVC animated:NO completion:nil];
+    
+    
     // init controllers
     MenuViewController *leftMenu = [[MenuViewController alloc] init];
     
@@ -382,6 +401,9 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
     
     // set root view controller
     self.window.rootViewController = self.drawerController;
+    
+
+    
 }
 
 -(void)setupLeftMenu {

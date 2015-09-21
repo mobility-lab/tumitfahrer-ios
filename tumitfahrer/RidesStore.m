@@ -290,6 +290,10 @@ static int activity_id = 0;
 }
 
 -(void)fetchNewRides:(boolCompletionHandler)block {
+    if([CurrentUser sharedInstance].user.apiKey == nil){
+        block(NO);
+        return;
+    }
     UIAlertView *waitAlert = [ActionManager createPleaseWaitAlertView];
     [waitAlert show];
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
