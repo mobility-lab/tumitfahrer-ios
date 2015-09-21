@@ -216,6 +216,11 @@
 #pragma mark - offer ride cell
 
 -(void)joinButtonPressed {
+    if([self.ride.freeSeatsCurrent isEqual:[NSNumber numberWithInt:0]]){
+        [ActionManager showAlertViewWithTitle: @"Error" description:@"The ride is currently full."];
+        return;
+    }
+    
     if (![self isPassengerOfRide]) {
         
         Request *request = [self requestFoundInCoreData];
