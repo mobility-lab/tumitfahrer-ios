@@ -343,7 +343,7 @@
 		6EB5C899191CEFDA0026A886 /* FacultyManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FacultyManagerTests.m; sourceTree = "<group>"; };
 		6EB7C1A5192CFDCD004AD7F5 /* CoreDataHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreDataHelper.h; sourceTree = "<group>"; };
 		6EB7C1A6192CFDCD004AD7F5 /* CoreDataHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreDataHelper.m; sourceTree = "<group>"; };
-		6EBEFFD11B88A68600E63FE6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		6EBEFFD11B88A68600E63FE6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6EC837D1192605AE00007017 /* CurrentUserTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentUserTests.m; sourceTree = "<group>"; };
 		6EFC237F1926343200AAF263 /* RideSearchStoreTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RideSearchStoreTest.m; sourceTree = "<group>"; };
 		6EFC23811926447500AAF263 /* RideStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RideStoreTests.m; sourceTree = "<group>"; };
@@ -1176,6 +1176,7 @@
 		E522BAAD18AE13F600ECD375 = {
 			isa = PBXGroup;
 			children = (
+				6EBEFFD11B88A68600E63FE6 /* GoogleService-Info.plist */,
 				E522BABF18AE13F600ECD375 /* tumitfahrer */,
 				E522BADE18AE13F600ECD375 /* tumitfahrerTests */,
 				E522BAB818AE13F600ECD375 /* Frameworks */,
@@ -1261,7 +1262,6 @@
 		E522BAC018AE13F600ECD375 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				6EBEFFD11B88A68600E63FE6 /* GoogleService-Info.plist */,
 				E50785301959CEE200E7CD06 /* Video */,
 				E502639C19558D060041E21A /* Images */,
 				E5CD59441951C6DB00E97DEC /* Privacy */,
@@ -2627,8 +2627,8 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Sergej Truschin (AUPD4RMDPC)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Sergej Truschin (AUPD4RMDPC)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/tumitfahrer/UbertestersSDK/**",
@@ -2651,7 +2651,7 @@
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "028be9ea-0bbd-40a6-a350-97b63bc7dcb2";
+				PROVISIONING_PROFILE = "ed4feaa3-4025-4d40-acd4-9aa9fae4eaa8";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2685,7 +2685,7 @@
 					"$(PROJECT_DIR)/SDKs/GoogleAnalyticsServicesiOS_3.07",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "028be9ea-0bbd-40a6-a350-97b63bc7dcb2";
+				PROVISIONING_PROFILE = "ed4feaa3-4025-4d40-acd4-9aa9fae4eaa8";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

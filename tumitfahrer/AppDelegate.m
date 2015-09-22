@@ -146,12 +146,12 @@ NSString *const SubscriptionTopic = @"/topics/global";
 -(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     
     NSNumber *userId = [userInfo valueForKey:@"user_id"];
-        NSLog(@" <y<< GOT NOTIFICATION for User:%@",userId);
+        NSLog(@"GOT NOTIFICATION for User:%@",userId);
     if(userId == [CurrentUser sharedInstance].user.userId){
         [UIApplication sharedApplication].applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber+1;
         [[GCMService sharedInstance] appDidReceiveMessage:userInfo];
     } else {
-        NSLog(@"<y< notification for wrong user! Discarded.");
+        NSLog(@"notification for wrong user! Discarded.");
     }
 
     
@@ -161,8 +161,8 @@ didReceiveRemoteNotification:(NSDictionary *)userInfo
 fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
         [UIApplication sharedApplication].applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber+1;
     NSNumber *userId = [userInfo valueForKey:@"user_id"];
-    NSLog(@" <y<< GOT NOTIFICATION for User:%@",userId);
-    NSLog(@"<y<< Notification received for User=%@  notification: %@",userId, userInfo);
+    NSLog(@"GOT NOTIFICATION for User:%@",userId);
+    NSLog(@"Notification received for User=%@  notification: %@",userId, userInfo);
     if(userId == [CurrentUser sharedInstance].user.userId || true){// || true -> nur zum testen 
     // This works only if the app started the GCM service
     [[GCMService sharedInstance] appDidReceiveMessage:userInfo];
@@ -179,20 +179,20 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
         [ActionManager showAlertViewWithTitle: [alert valueForKey:@"title"] description:[alert valueForKey:@"body"]];
     }
     } else {
-          NSLog(@"<y< notification for wrong user! Discarded.");
+          NSLog(@" notification for wrong user! Discarded.");
     }
 }
 
 
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken {
-    NSLog(@" <y< GOT DEVICE TOKEN %@", deviceToken);
+    NSLog(@"GOT DEVICE TOKEN %@", deviceToken);
     
     //GCM implementation
     // Start the GGLInstanceID shared instance with the default config and request a registration
     // token to enable reception of notifications
     [[GGLInstanceID sharedInstance] startWithConfig:[GGLInstanceIDConfig defaultConfig]];
     _registrationOptions = @{kGGLInstanceIDRegisterAPNSOption:deviceToken,
-                             kGGLInstanceIDAPNSServerTypeSandboxOption:@YES};
+                             kGGLInstanceIDAPNSServerTypeSandboxOption:@NO};
     
     [[GGLInstanceID sharedInstance] tokenWithAuthorizedEntity:@"919031243448"
                                                         scope:kGGLInstanceIDScopeGCM

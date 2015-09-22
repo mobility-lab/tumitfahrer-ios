@@ -30,6 +30,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *personNameLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *personImageView;
 
+-(void) isDriver:(bool)isDriver;
 - (IBAction)rightButtonPressed:(id)sender;
 - (IBAction)leftButtonPressed:(id)sender;
 

@@ -152,7 +152,16 @@
         if (cell == nil) {
             cell = [RidePersonCell ridePersonCell];
         }
+        
         User *passenger = [[self.ride.passengers allObjects] objectAtIndex:indexPath.row];
+        if([passenger isEqual:[CurrentUser sharedInstance].user]){
+            [cell.leftButton setHidden:YES];
+            [cell.rightButton setHidden:YES];
+        } else {
+            [cell.leftButton setHidden:NO];
+            [cell.rightButton setHidden:NO];
+        }
+        
         cell.personNameLabel.text = passenger.firstName;
         if (passenger.profileImageData != nil) {
             cell.personImageView.image = [UIImage imageWithData:passenger.profileImageData];

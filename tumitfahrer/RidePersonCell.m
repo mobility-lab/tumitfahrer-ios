@@ -27,4 +27,8 @@
     [self.delegate rightButtonPressedWithObject:self.rightObject cellType:self.cellTypeEnum];
 }
 
+-(void) isDriver:(bool)isDriver {
+    [self.rightButton setHidden:isDriver];
+    [self.leftButton setHidden:isDriver];
+}
 @end

@@ -132,6 +132,8 @@
         if (cell == nil) {
             cell = [RidePersonCell ridePersonCell];
         }
+
+
         cell.delegate = self;
         if (self.ride.rideOwner != nil) {
             cell.personNameLabel.text = [self.ride.rideOwner.firstName stringByAppendingString:[NSString stringWithFormat:@"\nRating: %@", self.ride.rideOwner.ratingAvg]];
@@ -248,7 +250,6 @@
                 RKLogError(@"Load failed with error: %@", error);
             }];
         } else {
-             NSLog(@"<<< leave");
             [objectManager deleteObject:request path:[NSString stringWithFormat:@"/api/v3/rides/%@/requests/%d", self.ride.rideId, [request.requestId intValue]] parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
                 
                 [KGStatusBar showSuccessWithStatus:@"Request canceled"];
@@ -261,7 +262,6 @@
             }];
         }
     } else {
-        NSLog(@"<<< meh");
         [WebserviceRequest removePassengerWithId:[CurrentUser sharedInstance].user.userId rideId:self.ride.rideId block:^(BOOL fetched) {
             if (fetched) {
                 [[RidesStore sharedStore] removePassengerForRide:self.ride.rideId passenger:[CurrentUser sharedInstance].user];
