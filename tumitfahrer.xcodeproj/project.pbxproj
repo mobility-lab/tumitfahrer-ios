@@ -509,10 +509,10 @@
 		E522BABD18AE13F600ECD375 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E522BAC118AE13F600ECD375 /* tumitfahrer-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "tumitfahrer-Info.plist"; sourceTree = "<group>"; };
 		E522BAC318AE13F600ECD375 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		E522BAC518AE13F600ECD375 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		E522BAC518AE13F600ECD375 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = main.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		E522BAC718AE13F600ECD375 /* tumitfahrer-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "tumitfahrer-Prefix.pch"; sourceTree = "<group>"; };
 		E522BAC818AE13F600ECD375 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		E522BAC918AE13F600ECD375 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = tumitfahrer/AppDelegate.m; sourceTree = SOURCE_ROOT; };
+		E522BAC918AE13F600ECD375 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AppDelegate.m; path = tumitfahrer/AppDelegate.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		E522BAD118AE13F600ECD375 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E522BAD718AE13F600ECD375 /* tumitfahrerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = tumitfahrerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E522BAD818AE13F600ECD375 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
