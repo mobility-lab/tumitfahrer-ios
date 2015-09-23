@@ -426,9 +426,12 @@ NSString *const kRideType = @"Ride Type";
             addActionCell.actionButton.enabled = YES;
             return;
         }
-        
+        NSMutableArray *repDates = [[NSMutableArray alloc]init];
+        for(NSDate *date in self.repeatDates ){
+            [repDates addObject: [formatter stringFromDate:date]];
+        }
         queryParams = @{@"departure_place": departurePlace, @"destination": destination, @"price":@0,@"title":@"TITLE", @"free_seats": freeSeats, @"meeting_point": meetingPoint,@"departure_time": time, @"ride_type": [NSNumber numberWithInt:self.RideType], @"car": car, @"driver": [NSNumber numberWithBool:YES],@"is_ride_request":[NSNumber numberWithBool:NO], @"departure_latitude" : [NSNumber numberWithDouble:self.departureCoordinate.latitude], @"departure_longitude" : [NSNumber numberWithDouble:self.departureCoordinate.longitude], @"destination_latitude": [NSNumber numberWithDouble:self.destinationCoordinate.latitude],
-                        @"destination_longitude" : [NSNumber numberWithDouble:self.destinationCoordinate.longitude], @"repeat_dates" : self.repeatDates};
+                        @"destination_longitude" : [NSNumber numberWithDouble:self.destinationCoordinate.longitude], @"repeat_dates" : repDates};//self.repeatDates
         
         rideParams = @{@"ride": queryParams};
         

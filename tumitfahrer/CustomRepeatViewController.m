@@ -169,6 +169,9 @@
     
     NSString *descriptionLabel = @"";
     NSMutableArray *repeatDatesArray = [[NSMutableArray alloc] init];
+    
+    
+    
     if ([self.repeatDailySwitch isOn]) { // repeat daily
         for (NSDate *date = fromDate; [date compare:toDate] == NSOrderedAscending; date = [date dateByAddingTimeInterval:60*60*24*((int)self.dayStepper.value)]) {
             [repeatDatesArray addObject:date];
@@ -183,6 +186,7 @@
             }
             
             if ([[selectedDays objectAtIndex:weekday] boolValue]) {
+                
                 [repeatDatesArray addObject:date];
             }
         }
