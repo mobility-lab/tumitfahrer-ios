@@ -171,8 +171,8 @@
             [cell.leftButton setHidden:YES];
             [cell.rightButton setHidden:YES];
         } else {
-            [cell.leftButton setHidden:NO];
-            [cell.rightButton setHidden:NO];
+//            [cell.leftButton setHidden:NO];
+//            [cell.rightButton setHidden:NO];
         }
         
         cell.personNameLabel.text = passenger.firstName;

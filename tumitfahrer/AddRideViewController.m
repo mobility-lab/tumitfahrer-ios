@@ -432,7 +432,9 @@ NSString *const kRideType = @"Ride Type";
         if (car.length == 0 && [CurrentUser sharedInstance].user.car != nil) {
             car = [CurrentUser sharedInstance].user.car;
         }
-        
+        if(car==NULL || [car isEqualToString:@"(null)"]){
+            car = @"-";
+        }
         NSString *meetingPoint = [self.tableValues objectAtIndex:7];
         if (!meetingPoint || meetingPoint.length == 0) {
             [ActionManager showAlertViewWithTitle:@"No meeting place" description:@"To add a ride please specify the meeting place"];
