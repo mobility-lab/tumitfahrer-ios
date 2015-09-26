@@ -255,28 +255,6 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
     }
     
     //
-//        //register to receive notifications
-//        UIRemoteNotificationType myTypes = UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIUserNotificationTypeNone;
-//        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:myTypes];
-//    // Register for remote notifications
-//    if (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_7_1) {
-//        // iOS 7.1 or earlier
-//        UIRemoteNotificationType allNotificationTypes =
-//        (UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge);
-//        [application registerForRemoteNotificationTypes:allNotificationTypes];
-//    } else {
-//        // iOS 8 or later
-//        // [END_EXCLUDE]
-//        UIUserNotificationType allNotificationTypes =
-//        (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
-//        UIUserNotificationSettings *settings =
-//        [UIUserNotificationSettings settingsForTypes: allNotificationTypes categories: nil];
-//        [[UIApplication sharedApplication] registerUserNotificationSettings: settings ];
-//        [[UIApplication sharedApplication] registerForRemoteNotifications];
-//    }
-    
-    
-    //
     // [START start_gcm_service]
     [[GCMService sharedInstance] startWithConfig:[GCMConfig defaultConfig]];
 

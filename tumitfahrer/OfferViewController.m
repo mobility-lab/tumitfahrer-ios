@@ -136,7 +136,7 @@
             cell.carLabel.text = @"Not specified";
         }
         cell.informationLabel.text = self.ride.meetingPoint;
-        cell.freeSeatsLabel.text = [NSString stringWithFormat:@"%@/%@", self.ride.freeSeatsCurrent, self.ride.freeSeats];
+        cell.freeSeatsLabel.text = [NSString stringWithFormat:@"%d/%@",(int)self.ride.freeSeatsCurrent- (int)self.ride.freeSeatsCurrent, self.ride.freeSeats];
         
         return cell;
     } else if (indexPath.section == 1) { // show driver
