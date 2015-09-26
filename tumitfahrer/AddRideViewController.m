@@ -459,7 +459,7 @@ NSString *const kRideType = @"Ride Type";
             return;
         }
         
-        queryParams = @{@"departure_place": departurePlace, @"destination": destination, @"departure_time": time, @"ride_type": [NSNumber numberWithInt:self.RideType],@"is_ride_request":[NSNumber numberWithBool:YES], @"is_driving": [NSNumber numberWithBool:NO], @"meeting_point" : meetingPoint, @"destination_latitude": [NSNumber numberWithDouble:self.destinationCoordinate.latitude],  @"destination_longitude" : [NSNumber numberWithDouble:self.destinationCoordinate.longitude], @"departure_latitude" : [NSNumber numberWithDouble:self.departureCoordinate.latitude], @"departure_longitude" : [NSNumber numberWithDouble:self.departureCoordinate.longitude]};
+        queryParams = @{@"departure_place": departurePlace, @"destination": destination, @"departure_time": time, @"ride_type": [NSNumber numberWithInt:self.RideType],@"is_ride_request":[NSNumber numberWithBool:YES], @"is_driving": [NSNumber numberWithBool:NO], @"meeting_point" : meetingPoint, @"destination_latitude": [NSNumber numberWithDouble:self.destinationCoordinate.latitude],  @"destination_longitude" : [NSNumber numberWithDouble:self.destinationCoordinate.longitude], @"departure_latitude" : [NSNumber numberWithDouble:self.departureCoordinate.latitude], @"departure_longitude" : [NSNumber numberWithDouble:self.departureCoordinate.longitude], @"free_seats":[NSNumber numberWithInt:1]};
         
         rideParams = @{@"ride": queryParams};
     }

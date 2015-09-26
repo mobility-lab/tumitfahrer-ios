@@ -171,8 +171,8 @@
             [cell.leftButton setHidden:YES];
             [cell.rightButton setHidden:YES];
         } else {
-//            [cell.leftButton setHidden:NO];
-//            [cell.rightButton setHidden:NO];
+            [cell.leftButton setHidden:NO];
+            [cell.rightButton setHidden:NO];
         }
         
         cell.personNameLabel.text = passenger.firstName;
@@ -198,8 +198,10 @@
                 cell.rightButton.hidden = YES;
             }
         } else {
-            [cell.leftButton setImage:[UIImage imageNamed:@"DeleteIconBlackSmall"] forState:UIControlStateNormal];
-            [cell.rightButton setImage:[UIImage imageNamed:@"EmailIconBlack"] forState:UIControlStateNormal];
+//            [cell.leftButton setImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
+            cell.leftButton.hidden = YES;
+            [cell.rightButton setImage:[UIImage imageNamed:@"DeleteIconBlackSmall"] forState:UIControlStateNormal];
+            
         }
         return cell;
         
@@ -405,12 +407,6 @@
                     [self updateRide];
                 }
             }];
-        } else {
-            [WebserviceRequest removePassengerWithId:user.userId rideId:self.ride.rideId block:^(BOOL fetched) {
-                if (fetched) {
-                    [self updatePassengerCellsForPassenger:user];
-                }
-            }];
         }
     } else if(cellType == RequestCell) {
         Request *request = (Request *)object;
@@ -427,9 +423,9 @@
 
 // accepting ride request or sending him a message
 -(void)rightButtonPressedWithObject:(id)object cellType:(CellTypeEnum)cellType {
+    NSLog(@"rightButtonpressed");
     if (cellType == PassengerCell) {
         User *user = (User *)object;
-
         if ([self isPastRide]) {
             [WebserviceRequest giveRatingToUserWithId:user.userId rideId:self.ride.rideId ratingType:1 block:^(BOOL given) {
                 if (given) {
@@ -437,7 +433,11 @@
                 }
             }];
         } else {
-            [self contactPassengerButtonPressedForUser:user];
+            [WebserviceRequest removePassengerWithId:user.userId rideId:self.ride.rideId block:^(BOOL fetched) {
+                if (fetched) {
+                    [self updatePassengerCellsForPassenger:user];
+                }
+            }];
         }
         
     } else if(cellType == RequestCell) {
