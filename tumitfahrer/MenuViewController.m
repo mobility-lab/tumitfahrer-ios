@@ -113,7 +113,7 @@
 
 -(void)initCellIcons {
     self.timelineIcons = [NSArray arrayWithObjects:@"NewsFeedIcon", nil];
-    self.browseRidesIcons = [NSArray arrayWithObjects:@"CampusIcon", @"ActivityIcon",@"SearchIcon", nil];
+    self.browseRidesIcons = [NSArray arrayWithObjects:@"CampusIcon", @"ActivityIcon",@"GetACar", nil];
     self.addRidesIcons = [NSArray arrayWithObjects:@"AddIcon", @"SearchIcon", nil];
     self.profileIcons = [NSArray arrayWithObjects:@"ProfileIcon", @"ScheduleIcon", nil];
     self.allIcons = [NSArray arrayWithObjects:self.timelineIcons, self.browseRidesIcons, self.addRidesIcons, self.profileIcons, nil];
