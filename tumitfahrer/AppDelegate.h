@@ -24,7 +24,8 @@
 #import "ActionManager.h"
 
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, GGLInstanceIDDelegate, NSURLConnectionDataDelegate>
+
+@interface AppDelegate : UIResponder <UIAlertViewDelegate ,UIApplicationDelegate, GGLInstanceIDDelegate, NSURLConnectionDataDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) NSDictionary *refererAppLink;
