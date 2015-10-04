@@ -419,7 +419,6 @@ NSString *const kRideType = @"Ride Type";
         addActionCell.actionButton.enabled = YES;
         return;
     }
-    NSLog(@"<y< time: %@", time);
     NSDictionary *rideParams = nil;
     if(self.TableType == Driver) {
         

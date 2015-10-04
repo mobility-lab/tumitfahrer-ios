@@ -159,7 +159,6 @@
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
     [formatter setDateFormat:@"HH:mm"];
-    NSLog(@"<y< timezone: %@", formatter.timeZone);
 //    [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"de_DE"]];
     NSString *stringFromDate = [formatter stringFromDate:date];
     return stringFromDate;

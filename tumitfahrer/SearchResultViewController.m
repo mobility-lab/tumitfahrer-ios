@@ -141,7 +141,6 @@
 }
 
 -(void)addSearchResults:(NSArray *)newRides {
-    
     for (Ride *ride in newRides) {
         if ([self.searchResults containsObject:ride]) {
             continue;

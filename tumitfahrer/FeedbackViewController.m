@@ -81,7 +81,6 @@
     [request setValue:[CurrentUser sharedInstance].user.apiKey forHTTPHeaderField:@"Authorization"];
     NSString *postString = [NSString stringWithFormat:@"{\"title\":\"%@\", \"content\":\"%@\"}", self.titleTextField.text, self.contentTextView.text];
     [request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
-    NSLog(@"<y< sending feedback %@ - %@ - %@", request, request.allHTTPHeaderFields,request.HTTPBody);
     [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
         if(connectionError) {
             NSLog(@"Could not send feedback");
