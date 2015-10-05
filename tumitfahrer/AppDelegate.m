@@ -100,11 +100,12 @@ UINavigationController  *navControler;
     [self initUniversalAnalytics];
     
     [AmazonErrorHandler shouldNotThrowExceptions];
+    
     NSLog(@"launchOptions %@", launchOptions);
     if([launchOptions valueForKey:UIApplicationLaunchOptionsRemoteNotificationKey]!=nil){
-        NSDictionary *aps =[launchOptions valueForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-        NSNumber *rideID = [aps valueForKey:@"ride_id"];
-        if(rideID!=0){
+        NSDictionary *notif =[launchOptions valueForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+        NSNumber *rideID = [NSNumber numberWithInteger:[[notif valueForKey:@"ride_id"] integerValue]];
+        if(![rideID isEqual:[NSNumber numberWithInteger:0]]){
             [self setupNavigationControllerWithRide:rideID];
         } else {
             [self setupNavigationController];            
@@ -166,16 +167,15 @@ UINavigationController  *navControler;
 }
 
 -(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    
     if ( application.applicationState == UIApplicationStateInactive || application.applicationState == UIApplicationStateBackground  )
     {
         //opened from a push notification when the app was on background. we want to show the ride if we got an id
         NSDictionary *aps = [userInfo valueForKey:@"aps"];
         NSNumber *rideId =  [aps valueForKey:@"ride_id"];
-        if(rideId!=nil){
-            NSLog(@"getting Ride %@",rideId);
+        if(rideId!=nil && ![rideId isEqual:[NSNumber numberWithInt:0]]){
+            NSLog(@"2getting Ride %@",rideId);
             [[RidesStore sharedStore] fetchSingleRideFromWebserviceWithId:rideId block:^(Ride *fetchedRide) {
-                NSLog(@"got Ride");
+                NSLog(@"2got Ride");
                 UIViewController *vc = [ControllerUtilities viewControllerForRide:fetchedRide];
                 [navControler pushViewController:vc animated:YES];
             }];
@@ -184,7 +184,7 @@ UINavigationController  *navControler;
     }
     
     NSNumber *userId = [userInfo valueForKey:@"user_id"];
-        NSLog(@"GOT NOTIFICATION for User:%@",userId);
+    NSLog(@"GOT NOTIFICATION for User:%@",userId);
     if(userId == [CurrentUser sharedInstance].user.userId){
         [UIApplication sharedApplication].applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber+1;
         [[GCMService sharedInstance] appDidReceiveMessage:userInfo];
@@ -198,34 +198,47 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
         [UIApplication sharedApplication].applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber+1;
     NSNumber *userId = [userInfo valueForKey:@"user_id"];
     NSLog(@"GOT NOTIFICATION for User:%@",userId);
-    NSLog(@"Notification received for User=%@  notification: %@",userId, userInfo);
-
+    NSLog(@"Notification received for User=%@  notification: %@    %@",userId, userInfo, [userInfo valueForKey:@"ride_id"]);
     // This works only if the app started the GCM service
     [[GCMService sharedInstance] appDidReceiveMessage:userInfo];
-    // Handle the received message
-    // Invoke the completion handler passing the appropriate UIBackgroundFetchResult value
-    // ...
-    
-    if (application.applicationState == UIApplicationStateActive ) {
+
+    if ( application.applicationState == UIApplicationStateInactive || application.applicationState == UIApplicationStateBackground  )
+    {
+        
+        NSLog(@"app reactivated via notificaiton");
+        NSNumber *rideId = [NSNumber numberWithInteger: [[userInfo valueForKey:@"ride_id"] integerValue]];;
+        if(rideId!=nil && ![rideId isEqual:[NSNumber numberWithInt:0]]){
+            NSLog(@"1getting Ride %@",rideId);
+            [[RidesStore sharedStore] fetchSingleRideFromWebserviceWithId:rideId block:^(Ride *fetchedRide) {
+                NSLog(@"1got Ride");
+                UIViewController *vc = [ControllerUtilities viewControllerForRide:fetchedRide];
+                [navControler pushViewController:vc animated:NO];
+            }];
+
+        }
+        return;
+    } else if (application.applicationState == UIApplicationStateActive ) {
         NSDictionary *aps = [userInfo valueForKey:@"aps"];
         NSDictionary *alert = [aps valueForKey:@"alert"];
 
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[alert valueForKey:@"title"] message:[alert valueForKey:@"body"] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        if([aps valueForKey:@"ride_id"]!=0){
-            alertView.tag = [[aps valueForKey:@"ride_id"] intValue];
-        }
+//        int rideID = [[aps valueForKey:@"ride_id"] integerValue];
+        alertView.tag = [[userInfo valueForKey:@"ride_id"] integerValue];
+
         [alertView show];
+
     }
+    handler(YES);
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
-    NSLog(@"notification dismissed2");
+    NSLog(@"notification dismissed");
     if (buttonIndex == 0){
         //cancel button clicked. Do something here.
-        NSLog(@"notification canceled");
-        
-        NSNumber *rideId =  [NSNumber numberWithInt: (int)alertView.tag];
-        if(rideId!=nil){
+        NSLog(@"notification canceled tag: %ld", (long)alertView.tag);
+        NSNumber *rideId =  [NSNumber numberWithInteger: alertView.tag];
+        NSLog(@"notification dismissed. RideId %@", rideId);
+        if(rideId!=nil && ![rideId isEqual:[NSNumber numberWithInt:0]]){
             NSLog(@"getting Ride %@",rideId);
             [[RidesStore sharedStore] fetchSingleRideFromWebserviceWithId:rideId block:^(Ride *fetchedRide) {
                 NSLog(@"got Ride");
@@ -249,7 +262,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
     // token to enable reception of notifications
     [[GGLInstanceID sharedInstance] startWithConfig:[GGLInstanceIDConfig defaultConfig]];
     _registrationOptions = @{kGGLInstanceIDRegisterAPNSOption:deviceToken,
-                             kGGLInstanceIDAPNSServerTypeSandboxOption:@YES};
+                             kGGLInstanceIDAPNSServerTypeSandboxOption:@NO};
     
     [[GGLInstanceID sharedInstance] tokenWithAuthorizedEntity:@"919031243448"
                                                         scope:kGGLInstanceIDScopeGCM
@@ -441,8 +454,9 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
 }
 
 -(void)setupNavigationControllerWithRide:(NSNumber*)rideId {
-    if(rideId==0){//invalid rideID
+    if(rideId==nil || [rideId isEqual:[NSNumber numberWithInt:0]]){//invalid rideID
         [self setupNavigationController];
+        return;
     }
     LoginViewController *loginVC = [[LoginViewController alloc] init];
     loginVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
@@ -471,7 +485,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
     self.window.rootViewController = self.drawerController;
     
     
-    NSLog(@"getting Ride %@",rideId);
+    NSLog(@" getting Ride %@",rideId);
     [[RidesStore sharedStore] fetchSingleRideFromWebserviceWithId:rideId block:^(Ride *fetchedRide) {
         NSLog(@"got Ride");
         UIViewController *vc = [ControllerUtilities viewControllerForRide:fetchedRide];
