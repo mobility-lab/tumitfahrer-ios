@@ -31,7 +31,7 @@
 #import "UIColor+LayoutColors.h"
 
 static NSString * const SALT = @"toj369sbz1f316sx";
-static NSString * const API_ADDRESS = @"http://tumitfahrer.herokuapp.com";
+static NSString * const API_ADDRESS = @"https://test.tumitfahrer.de";//@"https://vmkrcmar61.informatik.tu-muenchen.de"; //ASL:tumitfahrer@
 
 # pragma mark - Constants
 static int const TableSingleRowHeight = 45;
@@ -112,22 +112,39 @@ typedef void(^arrayCompletionHandler)(NSArray *);
 
 # pragma mark - API mapping for RestKit
 
-static NSString *API_USERS = @"/api/v2/users";
-static NSString *API_USERS_RIDES = @"/api/v2/users/:userId/rides";
-static NSString *API_USERS_RATINGS = @"/api/v2/users/:userId/ratings";
-static NSString *API_PUT_USERS_RIDES = @"/api/v2/users/:userId/rides/:rideId";
-static NSString *API_USERS_DEVICES = @"/api/v2/users/:userId/devices";
-static NSString *API_SESSIONS = @"/api/v2/sessions";
-static NSString *API_RIDES = @"/api/v2/rides";
-static NSString *API_RIDES_REQUESTS = @"/api/v2/rides/:rideId/requests";
-static NSString *API_RIDES_REQUEST = @"/api/v2/rides/:rideId/requests/:requestId";
-static NSString *API_RIDES_CONVERSATIONS = @"/api/v2/rides/:rideId/conversations";
-static NSString *API_RIDES_CONVERSATION = @"/api/v2/rides/:rideId/conversations/:conversationId";
-static NSString *API_RIDES_CONVERSATIONS_MES = @"/api/v2/rides/:rideId/conversations/:conversationId/messages";
-static NSString *API_SEARCH = @"/api/v2/search";
-static NSString *API_ACTIVITIES = @"/api/v2/activities";
-static NSString *API_ACTIVITIES_BADGES = @"/api/v2/activities/badges";
+//static NSString *API_USERS = @"/api/v2/users";
+//static NSString *API_USERS_RIDES = @"/api/v2/users/:userId/rides";
+//static NSString *API_USERS_RATINGS = @"/api/v2/users/:userId/ratings";
+//static NSString *API_PUT_USERS_RIDES = @"/api/v2/users/:userId/rides/:rideId";
+//static NSString *API_USERS_DEVICES = @"/api/v2/users/:userId/devices";
+//static NSString *API_SESSIONS = @"/api/v2/sessions";
+//static NSString *API_RIDES = @"/api/v2/rides";//not called directly in the app
+//static NSString *API_RIDES_REQUESTS = @"/api/v2/rides/:rideId/requests";
+//static NSString *API_RIDES_REQUEST = @"/api/v2/rides/:rideId/requests/:requestId";
+//static NSString *API_RIDES_CONVERSATIONS = @"/api/v2/rides/:rideId/conversations";
+//static NSString *API_RIDES_CONVERSATION = @"/api/v2/rides/:rideId/conversations/:conversationId";
+//static NSString *API_RIDES_CONVERSATIONS_MES = @"/api/v2/rides/:rideId/conversations/:conversationId/messages";
+//static NSString *API_SEARCH = @"/api/v2/search";
+//static NSString *API_ACTIVITIES = @"/api/v2/activities";
+//static NSString *API_ACTIVITIES_BADGES = @"/api/v2/activities/badges";
 
+static NSString *API_USERS = @"/api/v3/users";
+static NSString *API_USERS_RIDES = @"/api/v3/users/:userId/rides";
+static NSString *API_USERS_RATINGS = @"/api/v3/users/:userId/ratings";
+static NSString *API_PUT_USERS_RIDES = @"/api/v3/users/:userId/rides/:rideId";
+static NSString *API_USERS_DEVICES = @"/api/v3/users/:userId/devices";
+static NSString *API_SESSIONS = @"/api/v3/sessions";
+static NSString *API_RIDES = @"/api/v3/rides";//not called directly in the app
+static NSString *API_RIDES_REQUESTS = @"/api/v3/rides/:rideId/requests";
+static NSString *API_RIDES_REQUEST = @"/api/v3/rides/:rideId/requests/:requestId";
+static NSString *API_RIDES_CONVERSATIONS = @"/api/v3/rides/:rideId/conversations";
+static NSString *API_RIDES_CONVERSATION = @"/api/v3/rides/:rideId/conversations/:conversationId";
+static NSString *API_RIDES_CONVERSATIONS_MES = @"/api/v3/rides/:rideId/conversations/:conversationId/messages";
+static NSString *API_SEARCH = @"/api/v3/search";
+static NSString *API_ACTIVITIES = @"/api/v3/activities";
+static NSString *API_ACTIVITIES_BADGES = @"/api/v3/activities/badges";
+static NSString *API_AVATAR = @"/api/v3/users/:userId/avatar";
+static NSString *API_CHANGE_PASSWORD = @"/api/v3/password";
 #else
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <CoreServices/CoreServices.h>

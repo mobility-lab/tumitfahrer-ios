@@ -2,8 +2,21 @@
 //  RideDetailViewController.m
 //  tumitfahrer
 //
-//  Created by Pawel Kwiecien on 5/2/14.
-//  Copyright (c) 2014 Pawel Kwiecien. All rights reserved.
+/*
+ * Copyright 2015 TUM Technische Universität München
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 //
 
 #import "OfferViewController.h"
@@ -123,8 +136,8 @@
             cell.carLabel.text = @"Not specified";
         }
         cell.informationLabel.text = self.ride.meetingPoint;
-        cell.freeSeatsLabel.text = [NSString stringWithFormat:@"%@", self.ride.freeSeats];
-        
+        cell.freeSeatsLabel.text = [NSString stringWithFormat:@"%d/%@",[self.ride.freeSeats intValue]- [self.ride.freeSeatsCurrent intValue], self.ride.freeSeats];
+
         return cell;
     } else if (indexPath.section == 1) { // show driver
         
@@ -132,6 +145,8 @@
         if (cell == nil) {
             cell = [RidePersonCell ridePersonCell];
         }
+
+
         cell.delegate = self;
         if (self.ride.rideOwner != nil) {
             cell.personNameLabel.text = [self.ride.rideOwner.firstName stringByAppendingString:[NSString stringWithFormat:@"\nRating: %@", self.ride.rideOwner.ratingAvg]];
@@ -216,10 +231,16 @@
 #pragma mark - offer ride cell
 
 -(void)joinButtonPressed {
+    if([self.ride.freeSeatsCurrent isEqual:[NSNumber numberWithInt:0]]){
+        [ActionManager showAlertViewWithTitle: @"Error" description:@"The ride is currently full."];
+        return;
+    }
+    
     if (![self isPassengerOfRide]) {
         
         Request *request = [self requestFoundInCoreData];
         RKObjectManager *objectManager = [RKObjectManager sharedManager];
+        objectManager.requestSerializationMIMEType = RKMIMETypeJSON ;
         
         if (request == nil) {
             NSDictionary *queryParams;
@@ -227,7 +248,9 @@
             NSString *userId = [NSString stringWithFormat:@"%@", [CurrentUser sharedInstance].user.userId];
             queryParams = @{@"passenger_id": userId};
             
-            [objectManager postObject:nil path:[NSString stringWithFormat:@"/api/v2/rides/%@/requests", self.ride.rideId] parameters:queryParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+
+            
+            [objectManager postObject:nil path:[NSString stringWithFormat:@"/api/v3/rides/%@/requests", self.ride.rideId] parameters:queryParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
                 [KGStatusBar showSuccessWithStatus:@"Request was sent"];
                 
                 Request *rideRequest = (Request *)[mappingResult firstObject];
@@ -240,7 +263,7 @@
                 RKLogError(@"Load failed with error: %@", error);
             }];
         } else {
-            [objectManager deleteObject:request path:[NSString stringWithFormat:@"/api/v2/rides/%@/requests/%d", self.ride.rideId, [request.requestId intValue]] parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+            [objectManager deleteObject:request path:[NSString stringWithFormat:@"/api/v3/rides/%@/requests/%d", self.ride.rideId, [request.requestId intValue]] parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
                 
                 [KGStatusBar showSuccessWithStatus:@"Request canceled"];
                 [[RidesStore sharedStore] deleteRideRequest:request];

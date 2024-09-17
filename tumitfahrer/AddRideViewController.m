@@ -2,8 +2,21 @@
 //  AddRideViewController.m
 //  tumitfahrer
 //
-//  Created by Pawel Kwiecien on 4/23/14.
-//  Copyright (c) 2014 Pawel Kwiecien. All rights reserved.
+/*
+ * Copyright 2015 TUM Technische Universität München
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 //
 
 #import "AddRideViewController.h"
@@ -28,6 +41,7 @@
 #import "MeetingPointViewController.h"
 #import "DestinationViewController.h"
 #import "FreeSeatsTableViewCell.h"
+#import "ConnectionManager.h"
 
 @interface AddRideViewController () <SegmentedControlCellDelegate, SwitchTableViewCellDelegate, CustomRepeatViewController, RMDateSelectionViewControllerDelegate, MeetingPointDelegate, DestinationViewControllerDelegate, FreeSeatsCellDelegate>
 
@@ -354,6 +368,12 @@ NSString *const kRideType = @"Ride Type";
 }
 
 -(void)addRideButtonPressed {
+    //Check Internet Connection, prompts an alert if no connection is available
+    if(![ConnectionManager serverIsOnline:YES]){
+        return;
+    }
+    
+    
     // prevent from adding same ride twice
     addActionCell.actionButton.enabled = NO;
     
@@ -389,8 +409,9 @@ NSString *const kRideType = @"Ride Type";
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyy-MM-dd HH:mm"];
     [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"de_DE"]];
+//    [formatter setTimeZone:[NSTimeZone localTimeZone]];
     NSDate *dateString = [formatter dateFromString:departureTime];
-    [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZ"];
+    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ssZZZ"];//'T' removed from timestring
     NSString *time = [formatter stringFromDate:dateString];
     
     if ([dateString compare:[NSDate date]] == NSOrderedAscending) {
@@ -398,7 +419,6 @@ NSString *const kRideType = @"Ride Type";
         addActionCell.actionButton.enabled = YES;
         return;
     }
-    
     NSDictionary *rideParams = nil;
     if(self.TableType == Driver) {
         
@@ -411,16 +431,21 @@ NSString *const kRideType = @"Ride Type";
         if (car.length == 0 && [CurrentUser sharedInstance].user.car != nil) {
             car = [CurrentUser sharedInstance].user.car;
         }
-        
+        if(car==NULL || [car isEqualToString:@"(null)"]){
+            car = @"-";
+        }
         NSString *meetingPoint = [self.tableValues objectAtIndex:7];
         if (!meetingPoint || meetingPoint.length == 0) {
             [ActionManager showAlertViewWithTitle:@"No meeting place" description:@"To add a ride please specify the meeting place"];
             addActionCell.actionButton.enabled = YES;
             return;
         }
-        
-        queryParams = @{@"departure_place": departurePlace, @"destination": destination, @"departure_time": time, @"free_seats": freeSeats, @"meeting_point": meetingPoint, @"ride_type": [NSNumber numberWithInt:self.RideType], @"car": car, @"is_driving": [NSNumber numberWithBool:YES], @"departure_latitude" : [NSNumber numberWithDouble:self.departureCoordinate.latitude], @"departure_longitude" : [NSNumber numberWithDouble:self.departureCoordinate.longitude], @"destination_latitude": [NSNumber numberWithDouble:self.destinationCoordinate.latitude],
-                        @"destination_longitude" : [NSNumber numberWithDouble:self.destinationCoordinate.longitude], @"repeat_dates" : self.repeatDates};
+        NSMutableArray *repDates = [[NSMutableArray alloc]init];
+        for(NSDate *date in self.repeatDates ){
+            [repDates addObject: [formatter stringFromDate:date]];
+        }
+        queryParams = @{@"departure_place": departurePlace, @"destination": destination, @"price":@0,@"title":@"TITLE", @"free_seats": freeSeats, @"meeting_point": meetingPoint,@"departure_time": time, @"ride_type": [NSNumber numberWithInt:self.RideType], @"car": car, @"driver": [NSNumber numberWithBool:YES],@"is_ride_request":[NSNumber numberWithBool:NO], @"departure_latitude" : [NSNumber numberWithDouble:self.departureCoordinate.latitude], @"departure_longitude" : [NSNumber numberWithDouble:self.departureCoordinate.longitude], @"destination_latitude": [NSNumber numberWithDouble:self.destinationCoordinate.latitude],
+                        @"destination_longitude" : [NSNumber numberWithDouble:self.destinationCoordinate.longitude], @"repeat_dates" : repDates};//self.repeatDates
         
         rideParams = @{@"ride": queryParams};
         
@@ -433,12 +458,17 @@ NSString *const kRideType = @"Ride Type";
             return;
         }
         
-        queryParams = @{@"departure_place": departurePlace, @"destination": destination, @"departure_time": time, @"ride_type": [NSNumber numberWithInt:self.RideType], @"is_driving": [NSNumber numberWithBool:NO], @"meeting_point" : meetingPoint};
+        queryParams = @{@"departure_place": departurePlace, @"destination": destination, @"departure_time": time, @"ride_type": [NSNumber numberWithInt:self.RideType],@"is_ride_request":[NSNumber numberWithBool:YES], @"is_driving": [NSNumber numberWithBool:NO], @"meeting_point" : meetingPoint, @"destination_latitude": [NSNumber numberWithDouble:self.destinationCoordinate.latitude],  @"destination_longitude" : [NSNumber numberWithDouble:self.destinationCoordinate.longitude], @"departure_latitude" : [NSNumber numberWithDouble:self.departureCoordinate.latitude], @"departure_longitude" : [NSNumber numberWithDouble:self.departureCoordinate.longitude], @"free_seats":[NSNumber numberWithInt:1]};
         
         rideParams = @{@"ride": queryParams};
     }
     
-    [objectManager postObject:nil path:[NSString stringWithFormat:@"/api/v2/users/%@/rides", [CurrentUser sharedInstance].user.userId] parameters:rideParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+//    [objectManager.HTTPClient setValue:@"application/json" forKey:@"Content-Type"];
+    objectManager.requestSerializationMIMEType = RKMIMETypeJSON ;
+    [objectManager.HTTPClient setDefaultHeader:@"Authorization" value:[CurrentUser sharedInstance].user.apiKey];
+    RKLogError(@"Ride Params: %@", rideParams);
+
+    [objectManager postObject:nil path:[NSString stringWithFormat:@"%@/%@/rides",API_USERS, [CurrentUser sharedInstance].user.userId] parameters:rideParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         
         for (Ride *ride in [mappingResult array]) {
             
@@ -461,16 +491,17 @@ NSString *const kRideType = @"Ride Type";
         
         [self resetTables];
         if(self.potentialRequestedRide != nil) {
-            [self addPassengerToNewRide:[mappingResult firstObject]];
+//            [self addPassengerToNewRide:[mappingResult firstObject]];
         } else {
-            [self redirectToRideDetailsWithRide:[mappingResult firstObject]];
+            
         }
-        
+        [self redirectToRideDetailsWithRide:[mappingResult firstObject]];
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         [ActionManager showAlertViewWithTitle:@"Error" description:@"Could not add a ride"];
         addActionCell.actionButton.enabled = YES;
         RKLogError(@"Load failed with error: %@", error);
     }];
+    
 }
 
 

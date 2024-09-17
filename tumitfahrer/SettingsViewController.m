@@ -2,8 +2,21 @@
 //  CampusRidesViewController.m
 //  tumitfahrer
 //
-//  Created by Pawel Kwiecien on 4/1/14.
-//  Copyright (c) 2014 Pawel Kwiecien. All rights reserved.
+/*
+ * Copyright 2015 TUM Technische Universität München
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 //
 
 #import "SettingsViewController.h"
@@ -20,6 +33,8 @@
 #import "ControllerUtilities.h"
 #import "TeamViewController.h"
 #import "StomtViewController.h"
+#import "CurrentUser.h"
+#import "AppDelegate.h"
 
 @interface SettingsViewController () <EAIntroDelegate>
 
@@ -42,7 +57,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.headers = [[NSArray alloc] initWithObjects:@"Feedback", @"General", @"About TUMitfahrer", nil];
-        self.actionOptions = [[NSArray alloc] initWithObjects:@"Send Feedback", @"Report a problem", nil];
+        self.actionOptions = [[NSArray alloc] initWithObjects: @"Send feedback",  nil];
         self.actionIcons = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"FeedbackIconBlack"], [UIImage imageNamed:@"ProblemIconBlack"], nil];
         self.readOptions = [[NSArray alloc] initWithObjects:@"Reminder", @"Terms of Use", @"Licenses", @"Carsharing", nil];
         self.readIcons = [[NSArray alloc] initWithObjects:[UIImage imageNamed:@"ReminderIconBlack"], [UIImage imageNamed:@"PrivacyIconBlack"], [UIImage imageNamed:@"LicenseIconBlack"], [UIImage imageNamed:@"CarIconBlack"], nil];
@@ -124,12 +139,12 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 
-    if (indexPath.section == 0 && indexPath.row == 0) {
-        StomtViewController *stomtVC = [[StomtViewController alloc] init];
-        stomtVC.title = @"Feeback";
-        [self.navigationController pushViewController:stomtVC animated:YES];
-        return;
-    }
+//    if (indexPath.section == 0 && indexPath.row == 0) {
+//        StomtViewController *stomtVC = [[StomtViewController alloc] init];
+//        stomtVC.title = @"Feeback";
+//        [self.navigationController pushViewController:stomtVC animated:YES];
+//        return;
+//    }
     
     if(indexPath.section == 0) {
         FeedbackViewController *feedbackVC = [[FeedbackViewController alloc] init];
@@ -185,13 +200,8 @@
 }
 
 - (IBAction)logoutButtonPressed:(id)sender {
-    
-    [[NSUserDefaults standardUserDefaults] setValue:nil forKey:@"emailLoggedInUser"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    LoginViewController *loginVC = [[LoginViewController alloc] init];
-    loginVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-    [self presentViewController:loginVC animated:YES completion:nil];
+    AppDelegate *delegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [delegate logoutCurrentUser];
 }
 
 #pragma mark - Button Handlers

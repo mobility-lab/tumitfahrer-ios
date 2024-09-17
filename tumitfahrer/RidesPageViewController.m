@@ -2,8 +2,21 @@
 //  RidesPageViewController.m
 //  tumitfahrer
 //
-//  Created by Pawel Kwiecien on 5/11/14.
-//  Copyright (c) 2014 Pawel Kwiecien. All rights reserved.
+/*
+ * Copyright 2015 TUM Technische Universität München
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 //
 
 #import "RidesPageViewController.h"
@@ -33,8 +46,8 @@
 -(instancetype)initWithContentType:(ContentType)contentType {
     self = [super init];
     if (self) {
-        NSArray *campusTitles = [NSArray arrayWithObjects:@"All Campus", @"Around you", @"Get a car", nil];
-        NSArray *activityTitles = [NSArray arrayWithObjects:@"All Activity", @"Around you", @"Get a car", nil];
+        NSArray *campusTitles = [NSArray arrayWithObjects:@"All Campus", @"Around you", nil];
+        NSArray *activityTitles = [NSArray arrayWithObjects:@"All Activity", @"Around you", nil];
         self.pageTitles = [NSArray arrayWithObjects:campusTitles, activityTitles, nil];
         self.pageColor = [UIColor colorWithRed:0 green:0.361 blue:0.588 alpha:1];
         self.RideType = contentType;
@@ -49,7 +62,6 @@
     
     self.pageController.dataSource = self;
     [[self.pageController view] setFrame:[[self view] bounds]];
-    
     RidesViewController *initialViewController = [self viewControllerAtIndex:0];
 
     NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
@@ -59,6 +71,7 @@
     [self addChildViewController:self.pageController];
     [[self view] addSubview:[self.pageController view]];
     [self.pageController didMoveToParentViewController:self];
+    self.logo.pageControl.numberOfPages = 2;
     self.view.backgroundColor = [UIColor customLightGray];
     self.automaticallyAdjustsScrollViewInsets = NO;
     
@@ -102,8 +115,10 @@
     UINavigationController *navController = self.navigationController;
     [NavigationBarUtilities setupNavbar:&navController withColor:self.pageColor];
     self.navigationController.navigationBar.translucent = YES;
-    
-    self.logo = [[LogoView alloc] initWithFrame:CGRectMake(0, 0, 200, 41) title:[[self.pageTitles objectAtIndex:self.RideType] objectAtIndex:0]];
+    if(self.logo==nil){
+        self.logo = [[LogoView alloc] initWithFrame:CGRectMake(0, 0, 200, 41) title:[[self.pageTitles objectAtIndex:self.RideType] objectAtIndex:0]];
+    }
+    self.logo.pageControl.numberOfPages = 2;
     [self.navigationItem setTitleView:self.logo];
 }
 
@@ -126,7 +141,7 @@
     
     index++;
     
-    if (index == 3) {
+    if (index == 2) {
         return nil;
     }
     
@@ -134,7 +149,6 @@
 }
 
 - (RidesViewController *)viewControllerAtIndex:(NSUInteger)index {
-    
     RidesViewController *ridesViewController = [[RidesViewController alloc] init];
     ridesViewController.index = index;
     ridesViewController.delegate = self;

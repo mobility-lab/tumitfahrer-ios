@@ -8,10 +8,20 @@
 
 /* Begin PBXBuildFile section */
 		068F5848AB864309B2DEC0B8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BAEC5882914944C4B8E2DE24 /* libPods.a */; };
+		6E20A67C1BA057FC000E66B6 /* tumitfahrer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E50CCCF3191F7416003A9490 /* tumitfahrer.xcdatamodeld */; };
+		6E20A67D1BA057FD000E66B6 /* tumitfahrer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E50CCCF3191F7416003A9490 /* tumitfahrer.xcdatamodeld */; };
+		6E3A84101B9EEB29009E798E /* inspired_by_TUM_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 6E3A840F1B9EEB29009E798E /* inspired_by_TUM_white.png */; };
+		6E3A84121B9EF52A009E798E /* dummy.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 6E3A84111B9EF52A009E798E /* dummy.jpeg */; };
 		6E4E133C1913F7B300D0C453 /* XCTest+GCovFlush.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4E133B1913F7B300D0C453 /* XCTest+GCovFlush.m */; };
 		6E4E133F1913F7BF00D0C453 /* UIApplication+GCovFlush.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4E133E1913F7BF00D0C453 /* UIApplication+GCovFlush.m */; };
+		6E52E8401B0B8A2300CCDEE3 /* ConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E52E83F1B0B8A2300CCDEE3 /* ConnectionManager.m */; };
+		6E6261751B40390B00F90134 /* ProfilePictureManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6261741B40390B00F90134 /* ProfilePictureManager.m */; };
+		6E89558D1B31889100DCDBC2 /* AuthenticationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E89558C1B31889100DCDBC2 /* AuthenticationManager.m */; };
+		6E97A2361B0E0DA4004FF9EF /* ChangePassword.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E97A2351B0E0DA4004FF9EF /* ChangePassword.xib */; };
+		6E97A2391B0E10E9004FF9EF /* ChangePasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E97A2381B0E10E9004FF9EF /* ChangePasswordViewController.m */; };
 		6EB5C89A191CEFDA0026A886 /* FacultyManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB5C899191CEFDA0026A886 /* FacultyManagerTests.m */; };
 		6EB7C1A7192CFDCD004AD7F5 /* CoreDataHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB7C1A6192CFDCD004AD7F5 /* CoreDataHelper.m */; };
+		6EBEFFD21B88A68600E63FE6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6EBEFFD11B88A68600E63FE6 /* GoogleService-Info.plist */; };
 		6EC837D2192605AE00007017 /* CurrentUserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EC837D1192605AE00007017 /* CurrentUserTests.m */; };
 		6EFC23801926343200AAF263 /* RideSearchStoreTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EFC237F1926343200AAF263 /* RideSearchStoreTest.m */; };
 		6EFC23821926447500AAF263 /* RideStoreTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EFC23811926447500AAF263 /* RideStoreTests.m */; };
@@ -69,7 +79,6 @@
 		E5078552195A252100E7CD06 /* MichaelPhoto@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E5078550195A252100E7CD06 /* MichaelPhoto@2x.jpg */; };
 		E5078565195AA90B00E7CD06 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5078564195AA90B00E7CD06 /* CoreText.framework */; };
 		E507856B195AAA2E00E7CD06 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5078567195AAA2E00E7CD06 /* HockeySDK.framework */; };
-		E507856C195AAA2E00E7CD06 /* HockeySDK.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E5078569195AAA2E00E7CD06 /* HockeySDK.xcconfig */; };
 		E507856D195AAA2E00E7CD06 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E507856A195AAA2E00E7CD06 /* HockeySDKResources.bundle */; };
 		E507C437193901B5005F1083 /* CustomAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = E507C436193901B5005F1083 /* CustomAnnotation.m */; };
 		E507C43F193A298D005F1083 /* RideRequestInformationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E507C43D193A298D005F1083 /* RideRequestInformationCell.m */; };
@@ -84,7 +93,6 @@
 		E50CCCC1191E7A94003A9490 /* TimelinePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E50CCCBF191E7A94003A9490 /* TimelinePageViewController.m */; };
 		E50CCCC2191E7A94003A9490 /* TimelinePageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E50CCCC0191E7A94003A9490 /* TimelinePageViewController.xib */; };
 		E50CCCC5191F6FAC003A9490 /* ActivityMapping.m in Sources */ = {isa = PBXBuildFile; fileRef = E50CCCC4191F6FAC003A9490 /* ActivityMapping.m */; };
-		E50CCCF5191F7416003A9490 /* tumitfahrer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E50CCCF3191F7416003A9490 /* tumitfahrer.xcdatamodeld */; };
 		E50CCCFE191F7C74003A9490 /* ActivityStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E50CCCFD191F7C74003A9490 /* ActivityStore.m */; };
 		E50CCD01191F8968003A9490 /* RatingMapping.m in Sources */ = {isa = PBXBuildFile; fileRef = E50CCD00191F8968003A9490 /* RatingMapping.m */; };
 		E50CCD06191FAE8A003A9490 /* RidesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E50CCD04191FAE8A003A9490 /* RidesViewController.m */; };
@@ -316,13 +324,26 @@
 
 /* Begin PBXFileReference section */
 		21C7515A720A4BD98246E980 /* libPods-UI Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-UI Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6E20A67B1BA05704000E66B6 /* tumitfahrer 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "tumitfahrer 2.xcdatamodel"; sourceTree = "<group>"; };
+		6E3A840F1B9EEB29009E798E /* inspired_by_TUM_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = inspired_by_TUM_white.png; path = ../../../../Documents/inspired_by_TUM_white.png; sourceTree = "<group>"; };
+		6E3A84111B9EF52A009E798E /* dummy.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = dummy.jpeg; path = ../../../../Documents/dummy.jpeg; sourceTree = "<group>"; };
 		6E4E133A1913F7B300D0C453 /* XCTest+GCovFlush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XCTest+GCovFlush.h"; sourceTree = "<group>"; };
 		6E4E133B1913F7B300D0C453 /* XCTest+GCovFlush.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XCTest+GCovFlush.m"; sourceTree = "<group>"; };
 		6E4E133D1913F7BF00D0C453 /* UIApplication+GCovFlush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+GCovFlush.h"; sourceTree = "<group>"; };
 		6E4E133E1913F7BF00D0C453 /* UIApplication+GCovFlush.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+GCovFlush.m"; sourceTree = "<group>"; };
+		6E52E83E1B0B8A2300CCDEE3 /* ConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionManager.h; sourceTree = "<group>"; };
+		6E52E83F1B0B8A2300CCDEE3 /* ConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConnectionManager.m; sourceTree = "<group>"; };
+		6E6261731B40390B00F90134 /* ProfilePictureManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfilePictureManager.h; sourceTree = "<group>"; };
+		6E6261741B40390B00F90134 /* ProfilePictureManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfilePictureManager.m; sourceTree = "<group>"; };
+		6E89558B1B31889100DCDBC2 /* AuthenticationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthenticationManager.h; sourceTree = "<group>"; };
+		6E89558C1B31889100DCDBC2 /* AuthenticationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuthenticationManager.m; sourceTree = "<group>"; };
+		6E97A2351B0E0DA4004FF9EF /* ChangePassword.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChangePassword.xib; sourceTree = "<group>"; };
+		6E97A2371B0E10E9004FF9EF /* ChangePasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangePasswordViewController.h; sourceTree = "<group>"; };
+		6E97A2381B0E10E9004FF9EF /* ChangePasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangePasswordViewController.m; sourceTree = "<group>"; };
 		6EB5C899191CEFDA0026A886 /* FacultyManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FacultyManagerTests.m; sourceTree = "<group>"; };
 		6EB7C1A5192CFDCD004AD7F5 /* CoreDataHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreDataHelper.h; sourceTree = "<group>"; };
 		6EB7C1A6192CFDCD004AD7F5 /* CoreDataHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreDataHelper.m; sourceTree = "<group>"; };
+		6EBEFFD11B88A68600E63FE6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6EC837D1192605AE00007017 /* CurrentUserTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentUserTests.m; sourceTree = "<group>"; };
 		6EFC237F1926343200AAF263 /* RideSearchStoreTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RideSearchStoreTest.m; sourceTree = "<group>"; };
 		6EFC23811926447500AAF263 /* RideStoreTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RideStoreTests.m; sourceTree = "<group>"; };
@@ -488,10 +509,10 @@
 		E522BABD18AE13F600ECD375 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E522BAC118AE13F600ECD375 /* tumitfahrer-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "tumitfahrer-Info.plist"; sourceTree = "<group>"; };
 		E522BAC318AE13F600ECD375 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		E522BAC518AE13F600ECD375 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		E522BAC518AE13F600ECD375 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = main.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		E522BAC718AE13F600ECD375 /* tumitfahrer-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "tumitfahrer-Prefix.pch"; sourceTree = "<group>"; };
 		E522BAC818AE13F600ECD375 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		E522BAC918AE13F600ECD375 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		E522BAC918AE13F600ECD375 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AppDelegate.m; path = tumitfahrer/AppDelegate.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		E522BAD118AE13F600ECD375 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E522BAD718AE13F600ECD375 /* tumitfahrerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = tumitfahrerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E522BAD818AE13F600ECD375 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -801,6 +822,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6E97A2341B0E0D90004FF9EF /* Change Password */ = {
+			isa = PBXGroup;
+			children = (
+				6E97A2351B0E0DA4004FF9EF /* ChangePassword.xib */,
+				6E97A2371B0E10E9004FF9EF /* ChangePasswordViewController.h */,
+				6E97A2381B0E10E9004FF9EF /* ChangePasswordViewController.m */,
+			);
+			name = "Change Password";
+			sourceTree = "<group>";
+		};
 		E50164791956E0B5004DA38A /* Backgrounds */ = {
 			isa = PBXGroup;
 			children = (
@@ -846,6 +877,8 @@
 		E502639C19558D060041E21A /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				6E3A84111B9EF52A009E798E /* dummy.jpeg */,
+				6E3A840F1B9EEB29009E798E /* inspired_by_TUM_white.png */,
 				E50164791956E0B5004DA38A /* Backgrounds */,
 				E50263A519558DCC0041E21A /* Team */,
 			);
@@ -1129,6 +1162,7 @@
 		E51FD4FE18F086300098AD11 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				6E97A2341B0E0D90004FF9EF /* Change Password */,
 				E526B5A4194A2FF7006D3527 /* Edit Department */,
 				E526B5A3194A1D0B006D3527 /* Edit Profile Field */,
 				E564464C192A976E00F636A5 /* GeneralInfoCell */,
@@ -1142,6 +1176,7 @@
 		E522BAAD18AE13F600ECD375 = {
 			isa = PBXGroup;
 			children = (
+				6EBEFFD11B88A68600E63FE6 /* GoogleService-Info.plist */,
 				E522BABF18AE13F600ECD375 /* tumitfahrer */,
 				E522BADE18AE13F600ECD375 /* tumitfahrerTests */,
 				E522BAB818AE13F600ECD375 /* Frameworks */,
@@ -1207,6 +1242,7 @@
 		E522BABF18AE13F600ECD375 /* tumitfahrer */ = {
 			isa = PBXGroup;
 			children = (
+				E50CCCF3191F7416003A9490 /* tumitfahrer.xcdatamodeld */,
 				E522BAC818AE13F600ECD375 /* AppDelegate.h */,
 				E522BAC918AE13F600ECD375 /* AppDelegate.m */,
 				E50CCC15191E5844003A9490 /* Categories */,
@@ -1215,7 +1251,6 @@
 				E59987C518E6DBCE00B01C62 /* Model */,
 				E50DB26C18F52E5900E87E62 /* RKMappings */,
 				E522BAC018AE13F600ECD375 /* Supporting Files */,
-				E50CCCF3191F7416003A9490 /* tumitfahrer.xcdatamodeld */,
 				E59987D418E6ECD800B01C62 /* UI Elements */,
 				E599882218E8155800B01C62 /* Utilities */,
 				E59987C418E6DBC300B01C62 /* ViewControllers */,
@@ -1676,6 +1711,12 @@
 				E5FEF3011944A9AD00E326BB /* WebserviceRequest.m */,
 				E5E2D6721983A72B00A81EB4 /* StomtUtilities.h */,
 				E5E2D6731983A72B00A81EB4 /* StomtUtilities.m */,
+				6E52E83E1B0B8A2300CCDEE3 /* ConnectionManager.h */,
+				6E52E83F1B0B8A2300CCDEE3 /* ConnectionManager.m */,
+				6E89558B1B31889100DCDBC2 /* AuthenticationManager.h */,
+				6E89558C1B31889100DCDBC2 /* AuthenticationManager.m */,
+				6E6261731B40390B00F90134 /* ProfilePictureManager.h */,
+				6E6261741B40390B00F90134 /* ProfilePictureManager.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -2066,7 +2107,7 @@
 		E522BAAE18AE13F600ECD375 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = "Pawel Kwiecien";
 				TargetAttributes = {
 					E522BAB518AE13F600ECD375 = {
@@ -2108,7 +2149,6 @@
 				E501647B1956E0C0004DA38A /* bg1@2x.jpg in Resources */,
 				E5FEF3691945E5CD00E326BB /* FeedbackViewController.xib in Resources */,
 				E5E215651907A95F00B0B150 /* SearchRideViewController.xib in Resources */,
-				E507856C195AAA2E00E7CD06 /* HockeySDK.xcconfig in Resources */,
 				E5CD59381951C39D00E97DEC /* Facebook-iOS-SDK.txt in Resources */,
 				E5FEF3521945A02300E326BB /* SearchResultViewController.xib in Resources */,
 				E50263BA19558F000041E21A /* PawelPhoto.jpg in Resources */,
@@ -2138,11 +2178,13 @@
 				E50CCC1B191E5885003A9490 /* TimelineCell.xib in Resources */,
 				E50263B619558F000041E21A /* DansenPhoto.jpg in Resources */,
 				E5CD59421951C3EA00E97DEC /* KGStatusBar.txt in Resources */,
+				6E3A84101B9EEB29009E798E /* inspired_by_TUM_white.png in Resources */,
 				E5FEF3641945E5BC00E326BB /* ReminderViewController.xib in Resources */,
 				E5CD592D1951C14900E97DEC /* afnetworking.txt in Resources */,
 				E526B5B2194AC8D9006D3527 /* EditDepartmentViewController.xib in Resources */,
 				E55BE532197C3B65009B47B6 /* RoadNightBackground.jpg in Resources */,
 				E526B612194C7DC8006D3527 /* OfferViewController.xib in Resources */,
+				6E3A84121B9EF52A009E798E /* dummy.jpeg in Resources */,
 				E5FC44D5190CF83100E8DB65 /* MenuTopHeaderView.xib in Resources */,
 				E5DE44E8192610E10034AF6F /* AddRideTableHeader.xib in Resources */,
 				E526B651194E00FB006D3527 /* TeamViewController.xib in Resources */,
@@ -2154,6 +2196,7 @@
 				E5FEF3AA1946FD0000E326BB /* RideDetailActionCell.xib in Resources */,
 				E58889F61913E14A0062D0DF /* RideInformationCell.xib in Resources */,
 				E50CCC21191E6A7E003A9490 /* LogoView.xib in Resources */,
+				6EBEFFD21B88A68600E63FE6 /* GoogleService-Info.plist in Resources */,
 				E50164871956E1E0004DA38A /* MainCampus@2x.jpg in Resources */,
 				E50263B319558F000041E21A /* AbiPhoto@2x.jpg in Resources */,
 				E501648F195706FF004DA38A /* CustomRepeatViewController.xib in Resources */,
@@ -2187,6 +2230,7 @@
 				E5CD593A1951C39D00E97DEC /* JSMessagesViewController.txt in Resources */,
 				E50263A019558D310041E21A /* BehrozPhoto@2x.jpg in Resources */,
 				E50263B519558F000041E21A /* AmrPhoto@2x.jpg in Resources */,
+				6E97A2361B0E0DA4004FF9EF /* ChangePassword.xib in Resources */,
 				E50CCD07191FAE8A003A9490 /* RidesViewController.xib in Resources */,
 				E507856D195AAA2E00E7CD06 /* HockeySDKResources.bundle in Resources */,
 				E526B5D5194C2A78006D3527 /* EmptyCell.xib in Resources */,
@@ -2339,7 +2383,6 @@
 				E526B616194C9C21006D3527 /* OwnerRequestViewController.m in Sources */,
 				E5CD595E1952C87C00E97DEC /* Rating.m in Sources */,
 				E5E2157F1908492200B0B150 /* FreeSeatsTableViewCell.m in Sources */,
-				E50CCCF5191F7416003A9490 /* tumitfahrer.xcdatamodeld in Sources */,
 				E5E215681907B82500B0B150 /* CustomBarButton.m in Sources */,
 				E5E215781908442100B0B150 /* SwitchTableViewCell.m in Sources */,
 				E593F09819824C0300C1AF32 /* Ride.m in Sources */,
@@ -2356,6 +2399,7 @@
 				E5A9BE0E19421F2C0072E9B0 /* IdsMapping.m in Sources */,
 				E5E2D68C1989135E00A81EB4 /* StomtAgreement.m in Sources */,
 				E50CCCC1191E7A94003A9490 /* TimelinePageViewController.m in Sources */,
+				6E20A67C1BA057FC000E66B6 /* tumitfahrer.xcdatamodeld in Sources */,
 				E526B643194DB84B006D3527 /* DescriptionCell.m in Sources */,
 				E59B9A6A1916D072008DE80B /* NavigationBarUtilities.m in Sources */,
 				E50DB27218F5DFB200E87E62 /* LocationController.m in Sources */,
@@ -2400,6 +2444,7 @@
 				E5FEF3721946181B00E326BB /* RideSearch.m in Sources */,
 				E5FD9EC719234A8500902502 /* TimelineMapViewController.m in Sources */,
 				E504D9EB190B963E0036FFA8 /* JsonParser.m in Sources */,
+				6E52E8401B0B8A2300CCDEE3 /* ConnectionManager.m in Sources */,
 				E58889E4191394BB0062D0DF /* HeaderImageView.m in Sources */,
 				E5FEF3631945E5BC00E326BB /* ReminderViewController.m in Sources */,
 				E517DB601950354400961344 /* Badge.m in Sources */,
@@ -2425,9 +2470,11 @@
 				E5E2D6741983A72B00A81EB4 /* StomtUtilities.m in Sources */,
 				E50263CC1955ADB00041E21A /* Photo.m in Sources */,
 				E504D9D2190A7FC50036FFA8 /* SPGooglePlacesAutocompleteUtilities.m in Sources */,
+				6E6261751B40390B00F90134 /* ProfilePictureManager.m in Sources */,
 				E58889DC191383570062D0DF /* OwnerOfferViewController.m in Sources */,
 				E522BAC618AE13F600ECD375 /* main.m in Sources */,
 				E507C437193901B5005F1083 /* CustomAnnotation.m in Sources */,
+				6E89558D1B31889100DCDBC2 /* AuthenticationManager.m in Sources */,
 				E50DB28518F86F8800E87E62 /* SessionMapping.m in Sources */,
 				E5FDDBF118F0059D00CE7B01 /* ActionManager.m in Sources */,
 				E58889E1191385110062D0DF /* HeaderContentView.m in Sources */,
@@ -2436,6 +2483,7 @@
 				E50DB29818FA7D4100E87E62 /* Faculty.m in Sources */,
 				E526B64B194DE05E006D3527 /* ControllerUtilities.m in Sources */,
 				E504D9C2190A6C940036FFA8 /* DestinationViewController.m in Sources */,
+				6E97A2391B0E10E9004FF9EF /* ChangePasswordViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2446,6 +2494,7 @@
 				6EFC23801926343200AAF263 /* RideSearchStoreTest.m in Sources */,
 				6EFC23821926447500AAF263 /* RideStoreTests.m in Sources */,
 				6EB7C1A7192CFDCD004AD7F5 /* CoreDataHelper.m in Sources */,
+				6E20A67D1BA057FD000E66B6 /* tumitfahrer.xcdatamodeld in Sources */,
 				6E4E133C1913F7B300D0C453 /* XCTest+GCovFlush.m in Sources */,
 				6EC837D2192605AE00007017 /* CurrentUserTests.m in Sources */,
 				6EB5C89A191CEFDA0026A886 /* FacultyManagerTests.m in Sources */,
@@ -2593,6 +2642,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "tumitfahrer/tumitfahrer-Prefix.pch";
 				INFOPLIST_FILE = "tumitfahrer/tumitfahrer-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/system",
@@ -2628,6 +2678,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "tumitfahrer/tumitfahrer-Prefix.pch";
 				INFOPLIST_FILE = "tumitfahrer/tumitfahrer-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/system",
@@ -2736,9 +2787,10 @@
 		E50CCCF3191F7416003A9490 /* tumitfahrer.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				6E20A67B1BA05704000E66B6 /* tumitfahrer 2.xcdatamodel */,
 				E50CCCF4191F7416003A9490 /* tumitfahrer.xcdatamodel */,
 			);
-			currentVersion = E50CCCF4191F7416003A9490 /* tumitfahrer.xcdatamodel */;
+			currentVersion = 6E20A67B1BA05704000E66B6 /* tumitfahrer 2.xcdatamodel */;
 			path = tumitfahrer.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

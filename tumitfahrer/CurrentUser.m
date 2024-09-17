@@ -2,8 +2,21 @@
 //  CurrentUser.m
 //  tumitfahrer
 //
-//  Created by Pawel Kwiecien on 4/8/14.
-//  Copyright (c) 2014 Pawel Kwiecien. All rights reserved.
+/*
+ * Copyright 2015 TUM Technische Universität München
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 //
 
 #import "CurrentUser.h"
@@ -42,7 +55,7 @@
 -(void)initCurrentUser:(User *)user {
     self.user = user;
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
-    [objectManager.HTTPClient setDefaultHeader:@"apiKey" value:[CurrentUser sharedInstance].user.apiKey];
+    [objectManager.HTTPClient setDefaultHeader:@"Authorization" value:[CurrentUser sharedInstance].user.apiKey];
     if (self.user.profileImageData == nil) {
         [AWSUploader sharedStore].delegate = self;
         [[AWSUploader sharedStore] downloadProfilePictureForUser:self.user];
@@ -106,13 +119,15 @@
     return (User *)[result firstObject];
 }
 
+
+
 #pragma mark - Device token methods
 
 - (void)hasDeviceTokenInWebservice:(boolCompletionHandler)block {
     
     [NSURLConnection sendAsynchronousRequest:[self buildGetDeviceTokenRequest] queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
         if(connectionError) {
-            NSLog(@"Could not retrieve device token");
+            NSLog(@"Could not retrieve device token. %@",connectionError.debugDescription);
             block(NO);
         } else {
             NSError *error;
@@ -121,6 +136,7 @@
                 for (NSString *deviceToken in deviceTokens) {
                     if ([deviceToken isEqualToString:[Device sharedInstance].deviceToken]) {
                         block(YES);
+                        NSLog(@"Device token machtes.");
                         return;
                     }
                 }
@@ -131,11 +147,11 @@
 
 - (NSURLRequest *)buildGetDeviceTokenRequest {
     
-    NSString *urlString = [API_ADDRESS stringByAppendingString:[NSString stringWithFormat:@"/api/v2/users/%@/devices", [CurrentUser sharedInstance].user.userId]];
+    NSString *urlString = [API_ADDRESS stringByAppendingString:[NSString stringWithFormat:@"/api/v3/users/%@/devices", [CurrentUser sharedInstance].user.userId]];
     NSURL *url = [[NSURL alloc] initWithString:urlString];
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
+    [urlRequest setValue:[CurrentUser sharedInstance].user.apiKey forHTTPHeaderField:@"Authorization"];
     [urlRequest setHTTPMethod:@"GET"];
-    [urlRequest setValue:[CurrentUser sharedInstance].user.apiKey forHTTPHeaderField:@"apiKey"];
 
     return urlRequest;
 }
@@ -147,9 +163,9 @@
         queryParams = @{@"platform": @"ios", @"token": [[Device sharedInstance] deviceToken], @"enabled":@"true"};
         NSDictionary *deviceParams = @{@"device": queryParams};
         
-        NSString *pathString = [NSString stringWithFormat:@"/api/v2/users/%@/devices", [CurrentUser sharedInstance].user.userId];
+        NSString *pathString = [NSString stringWithFormat:@"/api/v3/users/%@/devices", [CurrentUser sharedInstance].user.userId];
         [[RKObjectManager sharedManager] postObject:nil path:pathString parameters:deviceParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-            NSLog(@"success");
+            NSLog(@"Device token successfully sent.");
         } failure:^(RKObjectRequestOperation *operation, NSError *error) {
             NSLog(@"Could not send device token to DB. Error connecting data from server: %@", error.localizedDescription);
         }];
@@ -159,6 +175,7 @@
 #pragma mark - user utility functions
 
 -(void)didDownloadImageData:(NSData *)imageData user:(User *)user {
+    NSLog(@"<<didDownloadImageData - CurrentUser");
     self.user.profileImageData = imageData;
     [CurrentUser saveUserToPersistentStore:self.user];
 }
@@ -171,6 +188,7 @@
 }
 
 +(void)saveUserToPersistentStore:(User *)user {
+    NSLog(@"<<saveUserToPersistentStore");
     NSManagedObjectContext *context = user.managedObjectContext;
     NSError *error;
     if (![context saveToPersistentStore:&error]) {

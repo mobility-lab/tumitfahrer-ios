@@ -2,8 +2,21 @@
 //  EditRepartmentViewController.m
 //  tumitfahrer
 //
-//  Created by Pawel Kwiecien on 6/13/14.
-//  Copyright (c) 2014 Pawel Kwiecien. All rights reserved.
+/*
+ * Copyright 2015 TUM Technische Universität München
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 //
 
 #import "EditDepartmentViewController.h"
@@ -71,30 +84,65 @@
 }
 
 -(void)rightBarButtonPressed {
+    User *user = [CurrentUser sharedInstance].user;
+    NSString  *body = [NSString stringWithFormat:@"{\"user\": {\"car\":\"%@\", \"department\":\"%@\", \"first_name\":\"%@\", \"last_name\":\"%@\", \"phone_number\":\"%@\"}}",user.car, [NSNumber numberWithInt:(int)self.chosenFaculty], user.firstName, user.lastName, user.phoneNumber];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/api/v3/users/%@",API_ADDRESS, [CurrentUser sharedInstance].user.userId]]];
+    user.department = [NSNumber numberWithInt:(int) self.chosenFaculty];
     
-    RKObjectManager *objectManager = [RKObjectManager sharedManager];
-    [objectManager.HTTPClient setDefaultHeader:@"Authorization: Basic" value:[ActionManager encryptCredentialsWithEmail:[CurrentUser sharedInstance].user.email encryptedPassword:[CurrentUser sharedInstance].user.password]];
+    [request setHTTPMethod:@"PUT"];
+    [request setValue:[CurrentUser sharedInstance].user.apiKey  forHTTPHeaderField:@"Authorization"];
+    [request setHTTPBody:[body dataUsingEncoding:NSUTF8StringEncoding]];//[NSKeyedArchiver archivedDataWithRootObject:@{@"password":np}]];
+    [request setValue:@"application/json" forHTTPHeaderField: @"Content-Type"];
     
-    NSString *encryptedPassword = [CurrentUser sharedInstance].user.password;
+    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    [conn start];
+    
+    
+    
+//    RKObjectManager *objectManager = [RKObjectManager sharedManager];
+//     objectManager.requestSerializationMIMEType = RKMIMETypeJSON ;
+////    [objectManager.HTTPClient setDefaultHeader:@"Authorization: Basic" value:[ActionManager encryptCredentialsWithEmail:[CurrentUser sharedInstance].user.email encryptedPassword:[CurrentUser sharedInstance].user.password]];
+//    
+//
+//    NSMutableDictionary *queryParams = [NSMutableDictionary dictionaryWithObjectsAndKeys:[CurrentUser sharedInstance].user.car, @"car",[CurrentUser sharedInstance].user.phoneNumber, @"phone_number", [CurrentUser sharedInstance].user.firstName,@"first_name" , [CurrentUser sharedInstance].user.lastName,  @"last_name",  [CurrentUser sharedInstance].user.department,@"department", nil];
+//    
+//    NSDictionary *userParams = @{@"user": queryParams};
+//    NSNumber *facultyNumber =[NSNumber numberWithInt:(int)self.chosenFaculty];
+//    [queryParams setValue:facultyNumber forKey:@"department"];
+//
+//    [objectManager putObject:nil path:[NSString stringWithFormat:@"/api/v3/users/%@", [CurrentUser sharedInstance].user.userId] parameters:userParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+//        [CurrentUser sharedInstance].user.department = facultyNumber;
+//        [self.navigationController popViewControllerAnimated:YES];
+//        NSLog(@"Updated user deparment.");
+//        NSError *error;
+//        if (![[CurrentUser sharedInstance].user.managedObjectContext saveToPersistentStore:&error]) {
+//            NSLog(@"Whoops. Could not save edited values for user profile.");
+//        }
+//        
+//    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+//        RKLogError(@"Load failed with error: %@", error);
+//    }];
+    
+}
 
-    NSMutableDictionary *queryParams = [NSMutableDictionary dictionaryWithObjectsAndKeys:encryptedPassword, @"password", encryptedPassword, @"password_confirmation", [CurrentUser sharedInstance].user.car, @"car",[CurrentUser sharedInstance].user.phoneNumber, @"phone_number", [CurrentUser sharedInstance].user.firstName,@"first_name" , [CurrentUser sharedInstance].user.lastName,  @"last_name",  [CurrentUser sharedInstance].user.department,@"department", nil];
-    
-    NSDictionary *userParams = @{@"user": queryParams};
-    NSNumber *facultyNumber =[NSNumber numberWithInt:(int)self.chosenFaculty];
-    [queryParams setValue:facultyNumber forKey:@"department"];
 
-    [objectManager putObject:nil path:[NSString stringWithFormat:@"/api/v2/users/%@", [CurrentUser sharedInstance].user.userId] parameters:userParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        [CurrentUser sharedInstance].user.department = facultyNumber;
-        [self.navigationController popViewControllerAnimated:YES];
-        
-        NSError *error;
-        if (![[CurrentUser sharedInstance].user.managedObjectContext saveToPersistentStore:&error]) {
-            NSLog(@"Whoops. Could not save edited values for user profile.");
-        }
-        
-    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        RKLogError(@"Load failed with error: %@", error);
-    }];
-    
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    if([httpResponse statusCode]==200){
+        [ActionManager showAlertViewWithTitle:@"Success" description:@"Your department has been changed."];
+        [[self navigationController] popViewControllerAnimated:YES];
+        [CurrentUser saveUserToPersistentStore:[CurrentUser sharedInstance].user];
+    } else {
+        [ActionManager showAlertViewWithTitle:@"Failure" description:@"An error occured changing your department. Please try again later."];
+    }
+    NSLog(@"EditDepartment-didRecieveResponse: %ld",(long)[httpResponse statusCode]);
+    NSLog(@"EditDepartment-didRecieveResponse: %@",response.debugDescription);
+    NSLog(@"EditDepartment-didRecieveResponse: %@",response.description);
+}
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    NSLog(@"EditDepartment-connectionDidFinishLoading");
+}
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    NSLog(@"EditDepartment-Error: %@",error);
 }
 @end

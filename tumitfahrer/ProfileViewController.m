@@ -2,8 +2,21 @@
 //  ProfileViewController.m
 //  tumitfahrer
 //
-//  Created by Pawel Kwiecien on 4/5/14.
-//  Copyright (c) 2014 Pawel Kwiecien. All rights reserved.
+/*
+ * Copyright 2015 TUM Technische Universität München
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 //
 
 #import <QuartzCore/QuartzCore.h>
@@ -19,9 +32,12 @@
 #import "EditDepartmentViewController.h"
 #import "RidesStore.h"
 #import "User.h"
+#import "ChangePasswordViewController.h"
 #import "AWSUploader.h"
+#import "ProfilePictureManager.h"
+#import "AsyncImageDownloader.h"
 
-@interface ProfileViewController () <AWSUploaderDelegate, HeaderContentViewDelegate>
+@interface ProfileViewController () < HeaderContentViewDelegate>
 
 @property (strong, nonatomic) NSArray *cellDescriptions;
 @property (strong, nonatomic) NSArray *ownerCellImages;
@@ -72,9 +88,6 @@
     [buttonBack addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:buttonBack];
     
-    [[RidesStore sharedStore] fetchUserPastRidesFromCoreData];
-    [AWSUploader sharedStore].delegate = self;
-    
     self.initialImageData = [CurrentUser sharedInstance].user.profileImageData;
 }
 
@@ -85,38 +98,72 @@
 
     [self.navigationController setNavigationBarHidden:YES animated:NO];
     if (self.user == nil) {
+        NSLog(@"USER IS NILL");
         self.user = [CurrentUser sharedInstance].user;
     }
-    [self initProfilePic];
+    //Background
+    self.profileImageContentView.selectedImageData = UIImageJPEGRepresentation([UIImage imageNamed:@"bg1.jpg"], 1.0);
     
     [self updateCellDescriptions];
     [self.profileImageContentView.tableView reloadData];
 }
 
 -(void)viewDidAppear:(BOOL)animated {
-    if(self.user.profileImageData == nil) {
-        [[AWSUploader sharedStore] downloadProfilePictureForUser:self.user];
+   [self initProfilePicture];
+}
+
+
+
+-(void) initProfilePicture {
+    
+    //We want to chache the profile picture of the current user:
+    BOOL isCached = false;
+    if([self.user.userId isEqualToNumber:[CurrentUser sharedInstance].user.userId]){
+        NSDate *lastUpdate = [CurrentUser sharedInstance].profileImageLastUpdate;
+        NSDate *now = [NSDate date];
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        NSDateComponents *difference = [calendar components:NSCalendarUnitDay fromDate:now toDate:lastUpdate options:0];
+        if([difference day] <= 1){
+            NSLog(@"Profilepicture is chached");
+            isCached = true;
+        }
     }
-}
-
--(void)didDownloadImageData:(NSData *)imageData user:(User *)user {
-    UIImage *profileImage = [UIImage imageWithData:imageData];
-    self.profileImageContentView.rideDetailHeaderView.circularImage = profileImage;
-    [self.profileImageContentView.rideDetailHeaderView replaceImage:profileImage];
-    self.user.profileImageData = imageData;
-    self.initialImageData = imageData;
-    [CurrentUser saveUserToPersistentStore:[CurrentUser sharedInstance].user];
-}
-
--(void)initProfilePic {
-    self.profileImageContentView.selectedImageData = UIImageJPEGRepresentation([UIImage imageNamed:@"bg1.jpg"], 1.0);
-    if (self.user.profileImageData != nil) {
-        UIImage *profilePic = [UIImage imageWithData:self.user.profileImageData];
-        self.profileImageContentView.circularImage = profilePic;
-        [self.profileImageContentView.rideDetailHeaderView replaceImage:profilePic];
-    } else {
+    
+    //Set the last stored picture or a standard one
+    if(self.user.profileImageData == nil){
+        isCached = false;
+        NSLog(@"Setting a standart profile picture");
         [self.profileImageContentView.rideDetailHeaderView replaceImage:[UIImage imageNamed:@"MainCampus.jpg"]];
+    } else {
+        NSLog(@"Setting profile picture");
+        [self.profileImageContentView.rideDetailHeaderView replaceImage:[UIImage imageWithData:self.user.profileImageData]];
+        self.profileImageContentView.rideDetailHeaderView.circularImage = [UIImage imageWithData:self.user.profileImageData];
     }
+    
+    if(!isCached){//Download image
+        [[[AsyncImageDownloader alloc] initWithMediaURL:[NSString stringWithFormat:@"%@/api/v3/users/%@/avatar", API_ADDRESS, self.user.userId] successBlock:^(UIImage *image)  {
+            NSLog(@"<downloaded Image");
+            NSData *imageData = UIImagePNGRepresentation(image);
+            if(image==nil){
+                NSLog(@"<image is nil");
+            }
+            if(imageData==nil){
+                NSLog(@"<image data is nil");
+            }
+            if(image){
+                 [self.profileImageContentView.rideDetailHeaderView replaceImage:image];
+                self.profileImageContentView.rideDetailHeaderView.circularImage = image;
+                self.user.profileImageData = imageData;
+                self.initialImageData = imageData;
+                [CurrentUser saveUserToPersistentStore:[CurrentUser sharedInstance].user];
+                [CurrentUser sharedInstance].profileImageLastUpdate = [NSDate date];
+            }
+            
+        } failBlock:^(NSError *error) {
+            NSLog(@"Failed to download image due to %@!", error);
+        }] startDownload];
+    }
+    
 }
 
 -(void)updateCellDescriptions {
@@ -232,7 +279,11 @@
         EditDepartmentViewController *editDepartmentVC = [[EditDepartmentViewController alloc] init];
         editDepartmentVC.title = @"Department";
         [self.navigationController pushViewController:editDepartmentVC animated:YES];
-    } else {
+    } else if(indexPath.row == [self.cellDescriptions count]-2){ //Change PW
+        ChangePasswordViewController *changePW = [[ChangePasswordViewController alloc] init];
+        [self.navigationController pushViewController:changePW animated:YES];
+    
+    }else {
         EditProfileFieldViewController *editProfileVC = [[EditProfileFieldViewController alloc] init];
         editProfileVC.title = [self.editDescriptions objectAtIndex:indexPath.row];
         editProfileVC.initialDescription = [self.cellDescriptions objectAtIndex:indexPath.row];
@@ -249,6 +300,7 @@
     } else {
         [self.sideBarController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
     }
+    self.user = nil;
 }
 
 -(void)headerViewTapped {
@@ -330,6 +382,8 @@
     self.profileImageContentView.rideDetailHeaderView.circularImage = resizedImage;
     [self.profileImageContentView.rideDetailHeaderView replaceImage:resizedImage];
     self.user.profileImageData = resizedImageData;
+    ProfilePictureManager *ppm = [[ProfilePictureManager alloc] init];
+    [ppm uploadImage:resizedImage];
     
     NSError *error;
     if (![self.user.managedObjectContext saveToPersistentStore:&error]) {

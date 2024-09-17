@@ -59,6 +59,7 @@
 - (void)showWithStatus:(NSString *)status barColor:(UIColor*)barColor textColor:(UIColor*)textColor{
     if(!self.superview)
         [self.overlayWindow addSubview:self];
+    
     [self.overlayWindow setHidden:NO];
     [self.topBar setHidden:NO];
     self.topBar.backgroundColor = barColor;
@@ -93,11 +94,8 @@
     [UIView animateWithDuration:0.4 animations:^{
         self.stringLabel.alpha = 0.0;
     } completion:^(BOOL finished) {
-        [topBar removeFromSuperview];
-        topBar = nil;
-        
-        [overlayWindow removeFromSuperview];
-        overlayWindow = nil;
+        [topBar setHidden:YES];
+        [overlayWindow setHidden:YES];
     }];
 }
 

@@ -2,8 +2,21 @@
 //  RideDetailViewController.m
 //  tumitfahrer
 //
-//  Created by Pawel Kwiecien on 5/2/14.
-//  Copyright (c) 2014 Pawel Kwiecien. All rights reserved.
+/*
+ * Copyright 2015 TUM Technische Universität München
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 //
 
 #import "OwnerOfferViewController.h"
@@ -144,15 +157,24 @@
             cell.carLabel.text = @"Not specified";
         }
         cell.informationLabel.text = self.ride.meetingPoint;
-        cell.freeSeatsLabel.text = [NSString stringWithFormat:@"%@", self.ride.freeSeats];
-        
+        cell.freeSeatsLabel.text = [NSString stringWithFormat:@"%d/%@",[self.ride.freeSeats intValue]- [self.ride.freeSeatsCurrent intValue], self.ride.freeSeats];
+
         return cell;
     } else if (indexPath.section == 1 && [self.ride.passengers count] > 0) { // show passengers
         RidePersonCell *cell = [tableView dequeueReusableCellWithIdentifier:@"RidePersonCell"];
         if (cell == nil) {
             cell = [RidePersonCell ridePersonCell];
         }
+        
         User *passenger = [[self.ride.passengers allObjects] objectAtIndex:indexPath.row];
+        if([passenger isEqual:[CurrentUser sharedInstance].user]){
+            [cell.leftButton setHidden:YES];
+            [cell.rightButton setHidden:YES];
+        } else {
+            [cell.leftButton setHidden:NO];
+            [cell.rightButton setHidden:NO];
+        }
+        
         cell.personNameLabel.text = passenger.firstName;
         if (passenger.profileImageData != nil) {
             cell.personImageView.image = [UIImage imageWithData:passenger.profileImageData];
@@ -176,8 +198,10 @@
                 cell.rightButton.hidden = YES;
             }
         } else {
-            [cell.leftButton setImage:[UIImage imageNamed:@"DeleteIconBlackSmall"] forState:UIControlStateNormal];
-            [cell.rightButton setImage:[UIImage imageNamed:@"EmailIconBlack"] forState:UIControlStateNormal];
+//            [cell.leftButton setImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
+            cell.leftButton.hidden = YES;
+            [cell.rightButton setImage:[UIImage imageNamed:@"DeleteIconBlackSmall"] forState:UIControlStateNormal];
+            
         }
         return cell;
         
@@ -284,7 +308,7 @@
     
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
     NSDictionary *queryParams = @{@"reason": self.textView.text};
-    [objectManager deleteObject:self.ride path:[NSString stringWithFormat:@"/api/v2/rides/%@", self.ride.rideId] parameters:queryParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+    [objectManager deleteObject:self.ride path:[NSString stringWithFormat:@"/api/v3/rides/%@", self.ride.rideId] parameters:queryParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         
         [KGStatusBar showSuccessWithStatus:@"Ride successfully deleted"];
         [[CurrentUser sharedInstance].user removeRidesAsOwnerObject:self.ride];
@@ -301,7 +325,7 @@
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
     NSDictionary *queryParams = @{@"reason": self.textView.text, @"regular_ride_id": self.ride.regularRideId};
     NSNumber *regularRideId = self.ride.regularRideId;
-    [objectManager deleteObject:self.ride path:[NSString stringWithFormat:@"/api/v2/rides/%@", self.ride.rideId] parameters:queryParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+    [objectManager deleteObject:self.ride path:[NSString stringWithFormat:@"/api/v3/rides/%@", self.ride.rideId] parameters:queryParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
 
         [KGStatusBar showSuccessWithStatus:@"Regular rides successfully deleted"];
 
@@ -383,16 +407,11 @@
                     [self updateRide];
                 }
             }];
-        } else {
-            [WebserviceRequest removePassengerWithId:user.userId rideId:self.ride.rideId block:^(BOOL fetched) {
-                if (fetched) {
-                    [self updatePassengerCellsForPassenger:user];
-                }
-            }];
         }
     } else if(cellType == RequestCell) {
         Request *request = (Request *)object;
-        [WebserviceRequest acceptRideRequest:request isConfirmed:NO block:^(BOOL isAccepted) {
+        WebserviceRequest *wr = [WebserviceRequest alloc];
+        [wr acceptRideRequest:request isConfirmed:NO block:^(BOOL isAccepted) {
             if (isAccepted) {
                 [self removeRideRequest:request];
             } else {
@@ -404,9 +423,9 @@
 
 // accepting ride request or sending him a message
 -(void)rightButtonPressedWithObject:(id)object cellType:(CellTypeEnum)cellType {
+    NSLog(@"rightButtonpressed");
     if (cellType == PassengerCell) {
         User *user = (User *)object;
-
         if ([self isPastRide]) {
             [WebserviceRequest giveRatingToUserWithId:user.userId rideId:self.ride.rideId ratingType:1 block:^(BOOL given) {
                 if (given) {
@@ -414,15 +433,20 @@
                 }
             }];
         } else {
-            [self contactPassengerButtonPressedForUser:user];
+            [WebserviceRequest removePassengerWithId:user.userId rideId:self.ride.rideId block:^(BOOL fetched) {
+                if (fetched) {
+                    [self updatePassengerCellsForPassenger:user];
+                }
+            }];
         }
         
     } else if(cellType == RequestCell) {
         
         Request *request = (Request *)object;
+        WebserviceRequest *wr = [WebserviceRequest alloc];
         [WebserviceRequest getUserWithId:request.passengerId block:^(User * user) {
             if (user != nil) {
-                [WebserviceRequest acceptRideRequest:request isConfirmed:YES block:^(BOOL isAccepted) {
+                [wr acceptRideRequest:request isConfirmed:YES block:^(BOOL isAccepted) {
                     if (isAccepted) {
                         [self moveRequestorToPassengers:user];
                     } else {

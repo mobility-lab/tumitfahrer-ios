@@ -2,9 +2,21 @@
 //  AppDelegate.m
 //  tumitfahrer
 //
-//  Created by Pawel Kwiecien on 2/14/14.
-//  Copyright (c) 2014 Pawel Kwiecien. All rights reserved.
-//
+/*
+ * Copyright 2015 TUM Technische Universität München
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 #import <RestKit/RestKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import <AWSRuntime/AWSRuntime.h>
@@ -38,26 +50,39 @@
 #import "GAI.h"
 #import "StomtMapping.h"
 #import "StomtAgreementMapping.h"
+#import "Google/CloudMessaging.h"
+#import "GGLInstanceID.h"
+#import "ControllerUtilities.h"
 
 @interface AppDelegate ()
 
-@property (nonatomic,strong) MMDrawerController * drawerController;
-
+    @property (nonatomic,strong) MMDrawerController * drawerController;
+    //@property kGGLInstanceIDRegisterAPNSOption _registrationOptions;
+    @property(nonatomic, strong) void (^registrationHandler)
+    (NSString *registrationToken, NSError *error);
+    @property(nonatomic, assign) BOOL connectedToGCM;
+    @property(nonatomic, strong) NSString* registrationToken;
+    @property(nonatomic, assign) BOOL subscribedToTopic;
 @end
 
+NSString *const SubscriptionTopic = @"/topics/global";
+UINavigationController  *navControler;
+
 @implementation AppDelegate
+
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    // register app for receiving push notifications
-    [self setupPushNotifications];
-    
-    [self setupNavigationController];
+
     [self setupRestKit];
-//    RKLogConfigureByName("RestKit/ObjectMapping", RKLogLevelTrace);
-//    RKLogConfigureByName("RestKit/Network", RKLogLevelTrace);
+    
+    //Logging, remove for release version.
+    RKLogConfigureByName("RestKit/ObjectMapping", RKLogLevelTrace);
+    RKLogConfigureByName("RestKit/Network", RKLogLevelTrace);
+    
     [self setupCurrentUser];
     [self setupObservers];
     
@@ -75,6 +100,19 @@
     [self initUniversalAnalytics];
     
     [AmazonErrorHandler shouldNotThrowExceptions];
+    
+    NSLog(@"launchOptions %@", launchOptions);
+    if([launchOptions valueForKey:UIApplicationLaunchOptionsRemoteNotificationKey]!=nil){
+        NSDictionary *notif =[launchOptions valueForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+        NSNumber *rideID = [NSNumber numberWithInteger:[[notif valueForKey:@"ride_id"] integerValue]];
+        if(![rideID isEqual:[NSNumber numberWithInteger:0]]){
+            [self setupNavigationControllerWithRide:rideID];
+        } else {
+            [self setupNavigationController];            
+        }
+    } else {
+        [self setupNavigationController];
+    }
     
     [self.window makeKeyAndVisible];
     return YES;
@@ -101,6 +139,16 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    // Connect to the GCM server to receive non-APNS notifications
+    [[GCMService sharedInstance] connectWithHandler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Could not connect to GCM: %@", error.localizedDescription);
+        } else {
+            _connectedToGCM = true;
+            NSLog(@"Connected to GCM");
+            // ...
+        }
+    }];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -119,29 +167,243 @@
 }
 
 -(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    if ( application.applicationState == UIApplicationStateInactive || application.applicationState == UIApplicationStateBackground  )
+    {
+        //opened from a push notification when the app was on background. we want to show the ride if we got an id
+        NSDictionary *aps = [userInfo valueForKey:@"aps"];
+        NSNumber *rideId =  [aps valueForKey:@"ride_id"];
+        if(rideId!=nil && ![rideId isEqual:[NSNumber numberWithInt:0]]){
+            NSLog(@"2getting Ride %@",rideId);
+            [[RidesStore sharedStore] fetchSingleRideFromWebserviceWithId:rideId block:^(Ride *fetchedRide) {
+                NSLog(@"2got Ride");
+                UIViewController *vc = [ControllerUtilities viewControllerForRide:fetchedRide];
+                [navControler pushViewController:vc animated:YES];
+            }];
+        }
 
+    }
+    
+    NSNumber *userId = [userInfo valueForKey:@"user_id"];
+    NSLog(@"GOT NOTIFICATION for User:%@",userId);
+    if(userId == [CurrentUser sharedInstance].user.userId){
+        [UIApplication sharedApplication].applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber+1;
+        [[GCMService sharedInstance] appDidReceiveMessage:userInfo];
+    } else {
+        NSLog(@"notification for wrong user! Discarded.");
+    }
+}
+- (void)application:(UIApplication *)application
+didReceiveRemoteNotification:(NSDictionary *)userInfo
+fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
+        [UIApplication sharedApplication].applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber+1;
+    NSNumber *userId = [userInfo valueForKey:@"user_id"];
+    NSLog(@"GOT NOTIFICATION for User:%@",userId);
+    NSLog(@"Notification received for User=%@  notification: %@    %@",userId, userInfo, [userInfo valueForKey:@"ride_id"]);
+    // This works only if the app started the GCM service
+    [[GCMService sharedInstance] appDidReceiveMessage:userInfo];
+
+    if ( application.applicationState == UIApplicationStateInactive || application.applicationState == UIApplicationStateBackground  )
+    {
+        
+        NSLog(@"app reactivated via notificaiton");
+        NSNumber *rideId = [NSNumber numberWithInteger: [[userInfo valueForKey:@"ride_id"] integerValue]];;
+        if(rideId!=nil && ![rideId isEqual:[NSNumber numberWithInt:0]]){
+            NSLog(@"1getting Ride %@",rideId);
+            [[RidesStore sharedStore] fetchSingleRideFromWebserviceWithId:rideId block:^(Ride *fetchedRide) {
+                NSLog(@"1got Ride");
+                UIViewController *vc = [ControllerUtilities viewControllerForRide:fetchedRide];
+                [navControler pushViewController:vc animated:NO];
+            }];
+
+        }
+        return;
+    } else if (application.applicationState == UIApplicationStateActive ) {
+        NSDictionary *aps = [userInfo valueForKey:@"aps"];
+        NSDictionary *alert = [aps valueForKey:@"alert"];
+
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[alert valueForKey:@"title"] message:[alert valueForKey:@"body"] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//        int rideID = [[aps valueForKey:@"ride_id"] integerValue];
+        alertView.tag = [[userInfo valueForKey:@"ride_id"] integerValue];
+
+        [alertView show];
+
+    }
+    handler(YES);
 }
 
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    NSLog(@"notification dismissed");
+    if (buttonIndex == 0){
+        //cancel button clicked. Do something here.
+        NSLog(@"notification canceled tag: %ld", (long)alertView.tag);
+        NSNumber *rideId =  [NSNumber numberWithInteger: alertView.tag];
+        NSLog(@"notification dismissed. RideId %@", rideId);
+        if(rideId!=nil && ![rideId isEqual:[NSNumber numberWithInt:0]]){
+            NSLog(@"getting Ride %@",rideId);
+            [[RidesStore sharedStore] fetchSingleRideFromWebserviceWithId:rideId block:^(Ride *fetchedRide) {
+                NSLog(@"got Ride");
+                UIViewController *vc = [ControllerUtilities viewControllerForRide:fetchedRide];
+                [navControler pushViewController:vc animated:YES];
+            }];
+        }
+    }
+    else{
+        //other button indexes clicked
+    }
+}
+//- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex {
+//
+//}
 
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken {
-    const unsigned *tokenBytes = [deviceToken bytes];
-    NSString *hexToken = [NSString stringWithFormat:@"%08x%08x%08x%08x%08x%08x%08x%08x",
-                          ntohl(tokenBytes[0]), ntohl(tokenBytes[1]), ntohl(tokenBytes[2]),
-                          ntohl(tokenBytes[3]), ntohl(tokenBytes[4]), ntohl(tokenBytes[5]),
-                          ntohl(tokenBytes[6]), ntohl(tokenBytes[7])];
-    NSLog(@"Device token is: %@", hexToken);
+    NSLog(@"GOT DEVICE TOKEN %@", deviceToken);
+    //GCM implementation
+    // Start the GGLInstanceID shared instance with the default config and request a registration
+    // token to enable reception of notifications
+    [[GGLInstanceID sharedInstance] startWithConfig:[GGLInstanceIDConfig defaultConfig]];
+    _registrationOptions = @{kGGLInstanceIDRegisterAPNSOption:deviceToken,
+                             kGGLInstanceIDAPNSServerTypeSandboxOption:@NO};
     
-    [[Device sharedInstance] setDeviceToken:hexToken];
+    [[GGLInstanceID sharedInstance] tokenWithAuthorizedEntity:@"919031243448"
+                                                        scope:kGGLInstanceIDScopeGCM
+                                                      options:_registrationOptions
+                                                      handler:_registrationHandler];
+
 }
+- (void)onTokenRefresh {
+    // A rotation of the registration tokens is happening, so the app needs to request a new token.
+    NSLog(@"The GCM registration token needs to be changed.");
+    [[GGLInstanceID sharedInstance] tokenWithAuthorizedEntity:_gcmSenderID
+                                                        scope:kGGLInstanceIDScopeGCM
+                                                      options:_registrationOptions
+                                                      handler:_registrationHandler];
+}
+
 
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error {
-	NSLog(@"Failed to get token, error: %@", error);
+	NSLog(@" Failed to get token, error: %@", error);
 }
 
--(void)setupPushNotifications {
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
-     (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+-(void)setupPushNotifications: (UIApplication *)application {
+    NSLog(@"setupPushNotifications -- get token");
+    // [START_EXCLUDE]
+    _registrationKey = @"onRegistrationCompleted";
+    _messageKey = @"onMessageReceived";
+    // Configure the Google context: parses the GoogleService-Info.plist, and initializes
+    // the services that have entries in the file
+    NSError* configureError;
+    [[GGLContext sharedInstance] configureWithError:&configureError];
+    if (configureError != nil) {
+        NSLog(@"Error configuring the Google context: %@", configureError);
+    }
+    _gcmSenderID = [[[GGLContext sharedInstance] configuration] gcmSenderID];
+    //New Attemp
+    if ([application respondsToSelector:@selector(isRegisteredForRemoteNotifications)])
+    {
+        // iOS 8 Notifications
+        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
+        
+        [application registerForRemoteNotifications];
+    }
+    else
+    {
+        // iOS < 8 Notifications
+        [application registerForRemoteNotificationTypes:
+         (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
+    }
+    
+    //
+    // [START start_gcm_service]
+    [[GCMService sharedInstance] startWithConfig:[GCMConfig defaultConfig]];
+
+    __weak typeof(self) weakSelf = self;
+    // Handler for registration token request
+    _registrationHandler = ^(NSString *registrationToken, NSError *error){
+        if (registrationToken != nil) {
+            weakSelf.registrationToken = registrationToken;
+            NSLog(@"Registration Token: %@", registrationToken);
+            [weakSelf subscribeToTopic];
+            NSDictionary *userInfo = @{@"registrationToken":registrationToken};
+            [[NSNotificationCenter defaultCenter] postNotificationName:weakSelf.registrationKey
+                                                                object:nil
+                                                              userInfo:userInfo];
+            
+            //Check for registration token
+            [Device sharedInstance].deviceToken = registrationToken;
+            [ [CurrentUser sharedInstance] hasDeviceTokenInWebservice:^(BOOL keyIsOnline) {
+                if(keyIsOnline){
+                    NSLog(@"registration key is on webserver. no need to upload");
+                } else {
+                    NSLog(@"registration key is not on webserver. need to upload");
+                    [weakSelf uploadRegistrationToken: registrationToken];
+                }
+            }];
+        
+            
+        } else {
+            NSLog(@"Registration to GCM failed with error: %@", error.localizedDescription);
+            NSDictionary *userInfo = @{@"error":error.localizedDescription};
+            [[NSNotificationCenter defaultCenter] postNotificationName:weakSelf.registrationKey
+                                                                object:nil
+                                                              userInfo:userInfo];
+        }
+    };
+
 }
+
+-(void) uploadRegistrationToken: (NSString*) registrationToken {
+    NSLog(@"uploadDeviceToken");
+
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/api/v3/users/%@/devices",API_ADDRESS,[CurrentUser sharedInstance].user.userId]]];
+    [request setHTTPMethod:@"POST"];
+    NSString *bodyString =[NSString stringWithFormat: @"{\"device\":{\"token\":\"%@\", \"enabled\":true, \"platform\":\"ios\", \"language\":\"de\" }}", registrationToken ];
+    NSData *body = [bodyString dataUsingEncoding:NSUTF8StringEncoding];
+    [request setValue:[CurrentUser sharedInstance].user.apiKey forHTTPHeaderField:@"Authorization"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody: body];
+
+    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    [conn start];
+}
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"NSURLConnection-uploadDeviceToken-didRecieveResponse: %ld",(long)[httpResponse statusCode]);
+    NSLog(@"NSURLConnection-uploadDeviceToken-didRecieveResponse: %@",response.debugDescription);
+    NSLog(@"NSURLConnection-uploadDeviceToken-didRecieveResponse: %@",response);
+}
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    NSLog(@"ChangePasswordViewController-connectionDidFinishLoading");
+}
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    NSLog(@"ChangePasswordViewController-Error: %@",error);
+}
+
+- (void)subscribeToTopic {
+    NSLog(@"registration token %@", _registrationToken);
+    // If the app has a registration token and is connected to GCM, proceed to subscribe to the
+    // topic
+    if (_registrationToken && _connectedToGCM) {
+        [[GCMPubSub sharedInstance] subscribeWithToken:_registrationToken
+                                                 topic:SubscriptionTopic
+                                               options:nil
+                                               handler:^(NSError *error) {
+                                                   if (error) {
+                                                       // Treat the "already subscribed" error more gently
+                                                       if (error.code == 3001) {
+                                                           NSLog(@"Already subscribed to %@",
+                                                                 SubscriptionTopic);
+                                                       } else {
+                                                           NSLog(@"Subscription failed: %@",
+                                                                 error.localizedDescription);
+                                                       }
+                                                   } else {
+                                                       self.subscribedToTopic = true;
+                                                       NSLog(@"Subscribed to %@", SubscriptionTopic);
+                                                   }
+                                               }];
+    }
+}
+
 
 -(void)setupHockeyApp {
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"6ca33e4226218908f6d423fd04772a60"];
@@ -161,11 +423,16 @@
 }
 
 -(void)setupNavigationController {
+    LoginViewController *loginVC = [[LoginViewController alloc] init];
+    loginVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    [self.window.rootViewController presentViewController:loginVC animated:NO completion:nil];
+    
+    
     // init controllers
     MenuViewController *leftMenu = [[MenuViewController alloc] init];
     
     TimelinePageViewController *parentVC = [[TimelinePageViewController alloc] init];
-    UINavigationController *navControler = [[UINavigationController alloc] initWithRootViewController:parentVC];
+    navControler = [[UINavigationController alloc] initWithRootViewController:parentVC];
 
     self.drawerController = [[MMDrawerController alloc]
                              initWithCenterViewController:navControler
@@ -181,6 +448,49 @@
     
     // set root view controller
     self.window.rootViewController = self.drawerController;
+    
+
+    
+}
+
+-(void)setupNavigationControllerWithRide:(NSNumber*)rideId {
+    if(rideId==nil || [rideId isEqual:[NSNumber numberWithInt:0]]){//invalid rideID
+        [self setupNavigationController];
+        return;
+    }
+    LoginViewController *loginVC = [[LoginViewController alloc] init];
+    loginVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    [self.window.rootViewController presentViewController:loginVC animated:NO completion:nil];
+    
+    
+    // init controllers
+    MenuViewController *leftMenu = [[MenuViewController alloc] init];
+    
+    TimelinePageViewController *parentVC = [[TimelinePageViewController alloc] init];
+    navControler = [[UINavigationController alloc] initWithRootViewController:parentVC];
+    
+    self.drawerController = [[MMDrawerController alloc]
+                             initWithCenterViewController:navControler
+                             leftDrawerViewController:leftMenu
+                             rightDrawerViewController:nil];
+    [self.drawerController setShowsShadow:NO];
+    
+    [self.drawerController setMaximumLeftDrawerWidth:280];
+    [self.drawerController setRestorationIdentifier:@"MMDrawer"];
+    [self.drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModePanningNavigationBar];
+    [self.drawerController setCloseDrawerGestureModeMask:MMCloseDrawerGestureModeAll];
+    [self.drawerController setDrawerVisualStateBlock:[MMDrawerVisualState slideAndScaleVisualStateBlock]];
+    
+    // set root view controller
+    self.window.rootViewController = self.drawerController;
+    
+    
+    NSLog(@" getting Ride %@",rideId);
+    [[RidesStore sharedStore] fetchSingleRideFromWebserviceWithId:rideId block:^(Ride *fetchedRide) {
+        NSLog(@"got Ride");
+        UIViewController *vc = [ControllerUtilities viewControllerForRide:fetchedRide];
+        [navControler pushViewController:vc animated:YES];
+    }];
 }
 
 -(void)setupLeftMenu {
@@ -206,7 +516,7 @@
     
     // register date formatter compliant with the date format in the backend
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ssZZZZ"]; //'T'
     [[RKValueTransformer defaultValueTransformer] insertValueTransformer:dateFormatter atIndex:0];
     
     // add mappings to object manager
@@ -239,6 +549,7 @@
     [objectManager addResponseDescriptor:[SessionMapping postSessionResponseDescriptorWithMapping:postSessionMapping]];
     RKObjectMapping *postUserMapping =[UserMapping postUserMapping];
     [objectManager addResponseDescriptor:[UserMapping postUserResponseDescriptorWithMapping:postUserMapping]];
+
     [objectManager addResponseDescriptor:[UserMapping putUserResponseDescriptorWithMapping:postUserMapping]];
     RKEntityMapping *generalRidesMapping = [RideMapping generalRideMapping];
     [objectManager addResponseDescriptor:[RideMapping getRidesResponseDescriptorWithMapping:generalRidesMapping]];
@@ -276,6 +587,7 @@
     
     RKEntityMapping *getUserMapping =[UserMapping userMapping];
     [objectManager addResponseDescriptor:[UserMapping getUserResponseDescriptorWithMapping:getUserMapping]];
+    
     
     RKEntityMapping *getBadgesMapping =[BadgeMapping badgeMapping];
     [objectManager addResponseDescriptor:[BadgeMapping getBadgesResponseDescriptorWithMapping:getBadgesMapping]];
@@ -318,9 +630,27 @@
         if (user != nil) {
             [[CurrentUser sharedInstance] initCurrentUser:user];
             RKObjectManager *objectManager = [RKObjectManager sharedManager];
-            [objectManager.HTTPClient setDefaultHeader:@"apiKey" value:[CurrentUser sharedInstance].user.apiKey];
+            [objectManager.HTTPClient setDefaultHeader:@"Authorization" value:[CurrentUser sharedInstance].user.apiKey];
         }
     }
+}
+
+-(void) logoutCurrentUser {
+    [[NSUserDefaults standardUserDefaults] setValue:nil forKey:@"emailLoggedInUser"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    LoginViewController *loginVC = [[LoginViewController alloc] init];
+    loginVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    [self.window.rootViewController presentViewController:loginVC animated:YES completion:nil];
+    
+    RKObjectManager *objectManager = [RKObjectManager sharedManager];
+    [objectManager.HTTPClient setDefaultHeader:@"Authorization" value:[CurrentUser sharedInstance].user.apiKey];
+    [CurrentUser sharedInstance].user.apiKey = nil;
+    [objectManager deleteObject:nil path:API_SESSIONS parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        NSLog(@"logout sucessfull");
+    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+        NSLog(@"logout NOT sucessfull");
+    }];
 }
 
 -(void)setupObservers {

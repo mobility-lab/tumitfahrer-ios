@@ -2,8 +2,21 @@
 //  ReminderViewController.m
 //  tumitfahrer
 //
-//  Created by Pawel Kwiecien on 6/9/14.
-//  Copyright (c) 2014 Pawel Kwiecien. All rights reserved.
+/*
+ * Copyright 2015 TUM Technische Universität München
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 //
 
 #import "ReminderViewController.h"
@@ -103,7 +116,7 @@
         NSCalendar *calendar = [NSCalendar currentCalendar];
         NSDateComponents *components = [calendar components:(NSHourCalendarUnit | NSMinuteCalendarUnit)
                                                    fromDate:[NSDate date]];
-        components.timeZone = [NSTimeZone localTimeZone];
+//        components.timeZone = [NSTimeZone localTimeZone];
         [components setCalendar:calendar];
         components.hour = [hour intValue];
         components.minute = [minute intValue];
@@ -181,14 +194,14 @@
     [dateComps setSecond:[timeComponents second]];
     NSDate *itemDate = [calendar dateFromComponents:dateComps];
     localNotif.fireDate = itemDate;
-    localNotif.timeZone = [NSTimeZone defaultTimeZone];
+//    localNotif.timeZone = [NSTimeZone defaultTimeZone];
     
     // Notification details
     localNotif.alertBody = [NSString stringWithFormat:@"Reminder: Tomorrow you have a ride from %@ to %@ at %@", ride.departurePlace, ride.destination, ride.departureTime];
     // Set the action button
     localNotif.alertAction = @"View";
     localNotif.soundName = UILocalNotificationDefaultSoundName;
-    localNotif.applicationIconBadgeNumber = 1;
+    localNotif.applicationIconBadgeNumber =+1;
     [[UIApplication sharedApplication] scheduleLocalNotification:localNotif];
 }
 

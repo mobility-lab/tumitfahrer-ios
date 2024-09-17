@@ -2,8 +2,21 @@
 //  RegisterViewController.m
 //  tumitfahrer
 //
-//  Created by Pawel Kwiecien on 3/29/14.
-//  Copyright (c) 2014 Pawel Kwiecien. All rights reserved.
+/*
+ * Copyright 2015 TUM Technische Universität München
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 //
 
 #import "RegisterViewController.h"
@@ -13,6 +26,7 @@
 #import "LoginViewController.h"
 #import "FacultyManager.h"
 #import "CustomIOS7AlertView.h"
+#import "ConnectionManager.h"
 
 @interface RegisterViewController () <CustomIOS7AlertViewDelegate>
 
@@ -78,6 +92,9 @@
 }
 
 - (IBAction)registerButtonPressed:(id)sender {
+    //Check internet connection
+//    [ConnectionManager serverIsOnline:YES];
+    
     NSString *email = [[self.emailTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSString *firstName = [[self.firstNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSString *lastName = [[self.lastNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -92,19 +109,30 @@
 
     // send a register request to the backend
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
-    
     NSDictionary *queryParams;
     // add enum
     queryParams = @{@"email": self.emailTextField.text, @"first_name": self.firstNameTextField.text, @"last_name":self.lastNameTextField.text, @"department": [NSNumber numberWithInt:(int)[[FacultyManager sharedInstance] indexForFacultyName:self.departmentNameTextField.text]]};
     NSDictionary *userParams = @{@"user": queryParams};
-    
-    [objectManager postObject:nil path:@"/api/v2/users" parameters:userParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+     objectManager.requestSerializationMIMEType = RKMIMETypeJSON ;
+    [objectManager postObject:nil path:@"/api/v3/users" parameters:userParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+
+//        if([[[mappingResult firstObject] objectForKey:@"message"] isEqual:@"Could not create the user"]){
+////            //The network-operation was succesfull but not creating the user
+//////            [ActionManager showAlertViewWithTitle:@"Error" description:@"Could not create new user."];
+////            NSLog(@"EEEERRRORR");
+//        }
+
+        
         LoginViewController *loginVC = (LoginViewController*)self.presentingViewController;
         loginVC.statusLabel.text = @"Please check your email";
         [self storeEmailInDefaults];
         [self backToLoginButtonPressed:nil];
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        [ActionManager showAlertViewWithTitle:@"Error" description:@"Could not create new user"];
+        if(operation.HTTPRequestOperation.response.statusCode ==400){
+            [ActionManager showAlertViewWithTitle:@"Error" description: @"Not a valid mail address. Use one of these: tum.de, cs.tum.edu, mytum.de" ];
+        } else {
+            [ActionManager showAlertViewWithTitle:@"Error" description: @"An error occured." ];
+        }
         RKLogError(@"Load failed with error: %@", error);
     }];
 }

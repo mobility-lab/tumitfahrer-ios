@@ -2,8 +2,21 @@
 //  ParentPageViewController.m
 //  tumitfahrer
 //
-//  Created by Pawel Kwiecien on 5/10/14.
-//  Copyright (c) 2014 Pawel Kwiecien. All rights reserved.
+/*
+ * Copyright 2015 TUM Technische Universität München
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 //
 
 #import "TimelinePageViewController.h"
@@ -18,6 +31,7 @@
 #import "MenuViewController.h"
 #import "ActionManager.h"
 #import "ActivityStore.h"
+#import "LocationController.h"
 
 @interface TimelinePageViewController () <TimelineViewControllerDelegate>
 
@@ -83,7 +97,9 @@
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationController.navigationBar.translucent = NO;
     
-    self.logo = [[LogoView alloc] initWithFrame:CGRectMake(0, 0, 200, 41) title:[self.pageTitles objectAtIndex:0]];
+    if(self.logo==nil){//The logo still gets recreated the first time you come back
+        self.logo = [[LogoView alloc] initWithFrame:CGRectMake(0, 0, 200, 41) title:[self.pageTitles objectAtIndex:0]];
+    }
     [self.navigationItem setTitleView:self.logo];
     
     // right button of the navigation bar
@@ -117,6 +133,9 @@
     }
     
     index--;
+    if(index==2){//Around me, request location
+        [[LocationController sharedInstance] startUpdatingLocation];
+    }
     
     return [self viewControllerAtIndex:index];
     
@@ -127,6 +146,10 @@
     NSUInteger index = [(TimelineViewController *)viewController index];
     
     index++;
+    
+    if(index==2){//Around me, request location
+        [[LocationController sharedInstance] startUpdatingLocation];
+    }
     
     if (index == 3) {
         return nil;

@@ -2,8 +2,21 @@
 //  MenuViewController.m
 //  tumitfahrer
 //
-//  Created by Pawel Kwiecien on 3/29/14.
-//  Copyright (c) 2014 Pawel Kwiecien. All rights reserved.
+/*
+ * Copyright 2015 TUM Technische Universität München
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 //
 
 #import "MenuViewController.h"
@@ -22,6 +35,7 @@
 #import "CircularImageView.h"
 #import "WebserviceRequest.h"
 #import "Badge.h"
+#import "RidesViewController.h"
 
 @interface MenuViewController ()
 
@@ -66,7 +80,9 @@
     // section 0 - view controllers
     RidesPageViewController *campusRidesVC = [[RidesPageViewController alloc] initWithContentType:ContentTypeCampusRides];
     RidesPageViewController *activityRidesVC = [[RidesPageViewController alloc] initWithContentType:ContentTypeActivityRides];
-    self.browseRidesViewControllers = [NSArray arrayWithObjects:campusRidesVC, activityRidesVC, nil];
+    RidesViewController *getACar =  [[RidesViewController alloc] init];
+    [getACar setIndex:2];
+    self.browseRidesViewControllers = [NSArray arrayWithObjects:campusRidesVC, activityRidesVC,getACar, nil];
     
     
     // section 1 - view controllers
@@ -89,7 +105,7 @@
 
 -(void)initCellTitles {
     self.timelineSection = [NSArray arrayWithObjects:@"Timeline", nil];
-    self.browseRidesSection = [NSArray arrayWithObjects:@"Campus Rides", @"Activity Rides", nil];
+    self.browseRidesSection = [NSArray arrayWithObjects:@"Campus Rides", @"Activity Rides",@"Get a car",  nil];
     self.addRidesSection = [NSArray arrayWithObjects:@"Add", @"Search", nil];
     self.profileSection = [NSArray arrayWithObjects:@"Your Profile", @"Your Rides", nil];
     self.allMenuItems = [NSArray arrayWithObjects:self.timelineSection, self.browseRidesSection, self.addRidesSection, self.profileSection, nil];
@@ -97,7 +113,7 @@
 
 -(void)initCellIcons {
     self.timelineIcons = [NSArray arrayWithObjects:@"NewsFeedIcon", nil];
-    self.browseRidesIcons = [NSArray arrayWithObjects:@"CampusIcon", @"ActivityIcon", nil];
+    self.browseRidesIcons = [NSArray arrayWithObjects:@"CampusIcon", @"ActivityIcon",@"GetACar", nil];
     self.addRidesIcons = [NSArray arrayWithObjects:@"AddIcon", @"SearchIcon", nil];
     self.profileIcons = [NSArray arrayWithObjects:@"ProfileIcon", @"ScheduleIcon", nil];
     self.allIcons = [NSArray arrayWithObjects:self.timelineIcons, self.browseRidesIcons, self.addRidesIcons, self.profileIcons, nil];

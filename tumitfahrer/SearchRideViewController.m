@@ -2,8 +2,21 @@
 //  SearchRideViewController.m
 //  tumitfahrer
 //
-//  Created by Pawel Kwiecien on 4/23/14.
-//  Copyright (c) 2014 Pawel Kwiecien. All rights reserved.
+/*
+ * Copyright 2015 TUM Technische Universität München
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 //
 
 #import "SearchRideViewController.h"
@@ -197,11 +210,9 @@
         return;
     }
     NSDate *date = nil;
+    NSLog(@"departureTime %@", departureTime);
     if (departureTime != nil && departureTime.length > 0) {
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateFormat:@"yyyy-MM-dd HH:mm"];
-        [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"de_DE"]];
-        date = [formatter dateFromString:departureTime];
+        date = [ActionManager dateFromString:departureTime];
     }
     
     if (departurePlace.length == 0 && destination.length == 0 && departureTime.length == 0) {
@@ -214,9 +225,9 @@
     [queryParams setValue:departurePlaceThreshold forKey:@"departure_place_threshold"];
     [queryParams setValue:destination forKey:@"destination"];
     [queryParams setValue:destinationThreshold forKey:@"destination_threshold"];
-    [queryParams setValue:[NSNumber numberWithBool:self.searchType] forKey:@"ride_type"];
+    [queryParams setValue:[NSNumber numberWithInteger: self.searchType] forKey:@"ride_type"];
     if (date != nil) {
-        [queryParams setValue:date forKey:@"departure_time"];
+        [queryParams setValue:departureTime forKey:@"departure_time"];
     }
     
     [RecentPlaceUtilities createRecentPlaceWithName:departurePlace coordinate:self.departureCoordinate];

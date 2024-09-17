@@ -2,8 +2,21 @@
 //  UnimplementedActionManager.m
 //  tumitfahrer
 //
-//  Created by Pawel Kwiecien on 4/5/14.
-//  Copyright (c) 2014 Pawel Kwiecien. All rights reserved.
+/*
+ * Copyright 2015 TUM Technische Universität München
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 //
 
 #import "ActionManager.h"
@@ -14,6 +27,16 @@
 + (void)showAlertViewWithTitle:(NSString *)title description:(NSString *)description {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:description delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alert show];
+}
+
++ (UIAlertView *) createPleaseWaitAlertView {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Loading" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles: nil];
+    
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [indicator startAnimating];
+    
+    [alertView setValue:indicator forKey:@"accessoryView"];
+    return alertView;
 }
 
 #pragma mark - image handling
@@ -125,6 +148,7 @@
 
 + (NSString *)stringFromDate:(NSDate*)date {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+//    [formatter setTimeZone:[NSTimeZone localTimeZone]];
     [formatter setDateFormat:@"yyyy-MM-dd HH:mm"];
     [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"de_DE"]];
     NSString *stringFromDate = [formatter stringFromDate:date];
@@ -133,14 +157,16 @@
 
 + (NSString *)timeStringFromDate:(NSDate*)date {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
     [formatter setDateFormat:@"HH:mm"];
-    [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"de_DE"]];
+//    [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"de_DE"]];
     NSString *stringFromDate = [formatter stringFromDate:date];
     return stringFromDate;
 }
 
 + (NSString *)dateStringFromDate:(NSDate*)date {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+//    [formatter setTimeZone:[NSTimeZone localTimeZone]];
     [formatter setDateFormat:@"yyyy-MM-dd"];
     [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"de_DE"]];
     NSString *stringFromDate = [formatter stringFromDate:date];
@@ -149,7 +175,8 @@
 
 + (NSString *)webserviceStringFromDate:(NSDate *)date {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];
+//    [formatter setTimeZone:[NSTimeZone localTimeZone]];
+    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ssZZZZ"]; //'T' from timestring removed
     [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"de_DE"]];
     NSString *time = [formatter stringFromDate:date];
     return time;
@@ -157,6 +184,7 @@
 
 + (NSDate *)dateFromString:(NSString *)stringDate {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+//    [formatter setTimeZone:[NSTimeZone localTimeZone]];
     [formatter setDateFormat:@"yyyy-MM-dd HH:mm"];
     [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"de_DE"]];
     NSDate *date = [formatter dateFromString:stringDate];
@@ -167,8 +195,8 @@
     
     NSDate* sourceDate = [NSDate date];
     
-    NSTimeZone* sourceTimeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
-    NSTimeZone* destinationTimeZone = [NSTimeZone systemTimeZone];
+    NSTimeZone* sourceTimeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+    NSTimeZone* destinationTimeZone = [NSTimeZone localTimeZone];
     
     NSInteger sourceGMTOffset = [sourceTimeZone secondsFromGMTForDate:sourceDate];
     NSInteger destinationGMTOffset = [destinationTimeZone secondsFromGMTForDate:sourceDate];

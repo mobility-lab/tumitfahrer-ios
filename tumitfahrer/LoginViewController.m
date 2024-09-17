@@ -2,8 +2,21 @@
 //  LoginViewController.m
 //  tumitfahrer
 //
-//  Created by Pawel Kwiecien on 3/29/14.
-//  Copyright (c) 2014 Pawel Kwiecien. All rights reserved.
+/*
+ * Copyright 2015 TUM Technische Universität München
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 //
 
 #import "LoginViewController.h"
@@ -93,35 +106,49 @@
 
 - (IBAction)loginButtonPressed:(id)sender {
     
-    // firstly check if the user was previously stored in core data
-    User *user= [CurrentUser fetchUserFromCoreDataWithEmail:self.emailTextField.text encryptedPassword:[ActionManager createSHA512:self.passwordTextField.text]];
-    if (user != nil) {
-        // user fetched successfully from core data
-        [[CurrentUser sharedInstance] initCurrentUser:user];
-        [self storeCurrentUserInDefaults];
-        [self dismissViewControllerAnimated:YES completion:nil];
-    } else {
-        // new user, get account from webservice
-        [self createUserSession];
-    }
+//    // firstly check if the user was previously stored in core data
+//    User *user= [CurrentUser fetchUserFromCoreDataWithEmail:self.emailTextField.text encryptedPassword:[ActionManager createSHA512:self.passwordTextField.text]];
+//    if (user != nil) {
+//        // user fetched successfully from core data
+//        [[CurrentUser sharedInstance] initCurrentUser:user];
+//        [self storeCurrentUserInDefaults:user.authentication];
+//        [self dismissViewControllerAnimated:YES completion:nil];
+//    } else {
+//        // new user, get account from webservice
+//        [self createUserSession];
+//    }
+    [self createUserSession];
 }
 
 - (void)createUserSession {
     
     RKObjectManager *objectManager = [RKObjectManager sharedManager];
-    [objectManager.HTTPClient setDefaultHeader:@"Authorization: Basic" value:[ActionManager encryptCredentialsWithEmail:self.emailTextField.text password:self.passwordTextField.text]];
+    NSString *authStr = [NSString stringWithFormat:@"%@:%@", self.emailTextField.text, self.passwordTextField.text];
+    NSData *authData = [authStr dataUsingEncoding:NSUTF8StringEncoding ];
+    NSString *authValue = [NSString stringWithFormat:@"Basic %@", [authData base64EncodedStringWithOptions:NSDataBase64EncodingEndLineWithLineFeed]];
+    [objectManager.HTTPClient setDefaultHeader:@"Authorization" value:authValue]; //[ActionManagerencryptCredentialsWithEmail:self.emailTextField.text password:self.passwordTextField.text]
     
-    [objectManager postObject:nil path:@"/api/v2/sessions" parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+    RKLogError(@"authValue %@",authValue);
+    RKLogError(@"Email=%@, pw=%@, baseUrl=%@", self.emailTextField.text, self.passwordTextField.text, objectManager.baseURL);
+    
+    [objectManager postObject:nil path:API_SESSIONS parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        
+        
         
         User *user = (User *)[mappingResult firstObject];
+        
         user.password = [ActionManager createSHA512:self.passwordTextField.text];
         [[CurrentUser sharedInstance] initCurrentUser:user];
         [CurrentUser saveUserToPersistentStore:user];
-        
+        NSString *auth =  user.apiKey;
+
+        RKLogError(@"Authentication: %@", auth);
+        [self storeCurrentUserInDefaults:auth];
         // check if fetch user has assigned a device token
-        [self checkDeviceToken];
-        
-        [self storeCurrentUserInDefaults];        
+//        [self checkDeviceToken];
+        UIApplication *application = [UIApplication sharedApplication];
+        AppDelegate *delegate = (AppDelegate*) application.delegate;
+        [delegate setupPushNotifications:application];
         [self dismissViewControllerAnimated:YES completion:nil];
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         [ActionManager showAlertViewWithTitle:@"Invalid email/password" description:@"Could not login, please check your email and password."];
@@ -130,18 +157,19 @@
 }
 
 -(void)checkDeviceToken {
-    
-    [[CurrentUser sharedInstance] hasDeviceTokenInWebservice:^(BOOL tokenExistsInDatabase) {
-        // device token is not in db, need to send it
-        if (!tokenExistsInDatabase && [CurrentUser sharedInstance].user.userId > 0) {
-            [[CurrentUser sharedInstance] sendDeviceTokenToWebservice];
-        }
-    }];
+//Everything is now done via start [delegate setupPushNotification]
+//    [[CurrentUser sharedInstance] hasDeviceTokenInWebservice:^(BOOL tokenExistsInDatabase) {
+//        // device token is not in db, need to send it
+//        if (!tokenExistsInDatabase && [CurrentUser sharedInstance].user.userId > 0) {
+//            [[CurrentUser sharedInstance] sendDeviceTokenToWebservice];
+//        }
+//    }];
 }
 
--(void)storeCurrentUserInDefaults {
+-(void)storeCurrentUserInDefaults: (NSString*)auth {
     [[NSUserDefaults standardUserDefaults] setValue:self.emailTextField.text forKey:@"emailLoggedInUser"];
     [[NSUserDefaults standardUserDefaults] setValue:self.emailTextField.text forKey:@"storedEmail"];
+    [[NSUserDefaults standardUserDefaults] setValue:auth forKey:@"authorization"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
